@@ -1,0 +1,148 @@
+#include "pch.h"
+#include "MainScene.h"
+#include "ModelLoader.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "PixelShader.h"
+#include "VertexShader.h"
+#include "InputLayout.h"
+#include "VertexConstantBuffer.h"
+#include "PixelConstantBuffer.h"
+#include "Terrain.h"
+#include "PlayerCamera.h"
+#include "BoxCollider.h"
+#include "TerrainNode.h"
+
+
+using namespace DirectX::SimpleMath;
+
+MainScene::MainScene()
+{
+}
+
+void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* activeCamera, ViewingFrustum* frustum)
+{
+    m_playerCamera = activeCamera;
+
+    m_collisionDetector = std::make_unique<Collision>();
+
+    // create the scene light
+    auto lightPosition = DirectX::SimpleMath::Vector3(30.0f, 50.0f, -70.0f);
+
+    m_light = std::make_unique<Light>();
+    m_light->setAmbientColour(0.1f, 0.1f, 0.1f, 1.0f);
+    m_light->setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
+    m_light->setPosition(lightPosition.x, lightPosition.y, lightPosition.z);
+    m_light->setDirection(0.0f, 0.0f, 0.0f);
+
+    m_sunLight = std::make_unique<Light>();
+    m_sunLight->setAmbientColour(1.0f, 1.0f, 1.0f, 1.0f);
+    m_sunLight->setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
+    m_sunLight->setSpecularColour(1.0f, 1.0f, 1.0f, 1.0f);
+    m_sunLight->setSpecularPower(5.0f);
+    m_sunLight->setPosition(lightPosition.x, lightPosition.y, lightPosition.z);
+    m_sunLight->setDirection(1.0f, 1.0f, 1.0f);
+
+    m_terrainWidth = 128;
+    m_terrainHeight = 128;
+
+    m_terrainTransform = SimpleMath::Matrix::CreateScale(0.1) * SimpleMath::Matrix::CreateTranslation(-10.0f, 0.0f, 0.0f);
+
+    // create the models
+
+    auto sunModel = m_modelLoader.CreateSphere(5);
+    m_meshes.push_back(ParseMesh(deviceResources, sunModel, m_sunLight.get(), SimpleMath::Matrix::CreateTranslation(SimpleMath::Vector3(lightPosition)), L"Textures//sun2.dds"));
+
+    //auto playerCollider = std::make_unique<BoxCollider>(deviceResources, Matrix::CreateTranslation(m_playerCamera->getPosition()), Vector3(1.f, 1.f, 1.f));
+
+    //m_meshes.push_back(std::move(playerCollider));
+
+    // store the model mesh pointers in a vector
+    std::vector<Mesh*> meshPointers;
+
+    for (auto &mesh : m_meshes)
+    {
+        meshPointers.push_back(mesh.get());
+    }
+
+    // create the root node
+    m_rootNode = std::make_unique<SceneNode>(std::move(meshPointers), DirectX::SimpleMath::Matrix::Identity);
+
+
+    m_terrainNode = std::make_unique<TerrainNode>(deviceResources, m_terrainTransform, m_light.get(), m_playerCamera, frustum, m_collisionDetector.get());
+
+    m_rootNode->AddChild(std::move(m_terrainNode));
+
+
+    // create the effects
+    m_skyBox = std::make_unique<SkyBox>(deviceResources);
+    m_bloom = std::make_unique<BloomPostProcessEffect>(deviceResources);
+    m_lensFlare = std::make_unique<LensFlareEffect>(deviceResources, activeCamera, m_light.get());
+}
+
+void MainScene::Draw(DX::DeviceResources & deviceResources, const DX::StepTimer& timer) const
+{
+   //m_bloom->SetSceneRenderTarget(deviceResources);
+
+    if (ImGui::Begin("Collision output"))
+    {
+        ImGui::Text("Camera Position = %f, %f, %f", m_playerCamera->getPosition().x, m_playerCamera->getPosition().y, m_playerCamera->getPosition().z);
+    }
+
+    ImGui::End();
+
+   m_skyBox->Draw(deviceResources);
+   m_rootNode->Draw(deviceResources, m_transform);
+
+   //m_bloom->Bind(deviceResources);
+
+   //m_lensFlare->Draw(deviceResources);
+}
+
+std::unique_ptr<Mesh> MainScene::ParseMesh(
+    DX::DeviceResources & deviceResources, 
+    const MeshObject & modelMesh, 
+    Light * sceneLight, 
+    DirectX::SimpleMath::Matrix transform,
+    const wchar_t * textureFileName
+)
+{
+    std::vector<std::unique_ptr<Bindable>> bindables;
+
+    // Create the vertex buffer
+    bindables.push_back(std::make_unique<VertexBuffer>(deviceResources, modelMesh.verticies));
+
+    // Create the index buffer
+    bindables.push_back(std::make_unique<IndexBuffer>(deviceResources, modelMesh.indices));
+
+    // Create the vertex shader
+    auto vertexShader = std::make_unique<VertexShader>(deviceResources, L"light_vs.cso");
+    auto vertexShaderByteCode = vertexShader->GetBytecode();
+    bindables.push_back(std::move(vertexShader));
+
+    // Create the pixel shader
+    bindables.push_back(std::make_unique<PixelShader>(deviceResources, L"light_ps.cso"));
+
+    bindables.push_back(std::make_unique<Sampler>(deviceResources, D3D11_TEXTURE_ADDRESS_WRAP));
+
+    // Create the vertex input layout description.
+    std::vector<D3D11_INPUT_ELEMENT_DESC> layout{
+        { "POSITION",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,                               D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD",   0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "NORMAL",     0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 }
+    };
+
+    // Create the input layout
+    bindables.push_back(std::make_unique<InputLayout>(deviceResources, layout, vertexShaderByteCode));
+
+    // Create the rasterizer state
+    bindables.push_back(std::make_unique<RasterizerState>(deviceResources, D3D11_CULL_FRONT));
+
+    // create and return the mesh
+    return std::make_unique<Mesh>(deviceResources, std::move(bindables), sceneLight, textureFileName, transform);
+}
+
+std::unique_ptr<SceneNode> MainScene::ParseNode()
+{
+    return std::unique_ptr<SceneNode>();
+}
