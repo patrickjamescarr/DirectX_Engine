@@ -176,9 +176,11 @@ MeshObject ModelLoader::CreateSphere(float diameter)
     return sphere;
 }
 
-MeshObject ModelLoader::CreateTerrain(int width, int height, HeightMapType* m_heightMap, MeshPattern meshPattern)
+MeshObject ModelLoader::CreateTerrain(int width, int height, HeightMapType* m_heightMap, float scale, MeshPattern meshPattern)
 {
     MeshObject mesh;
+
+    mesh.scale = scale;
 
     // Calculate the number of vertices in the terrain mesh.
     mesh.vertexCount = (width - 1) * (height - 1) * 6;

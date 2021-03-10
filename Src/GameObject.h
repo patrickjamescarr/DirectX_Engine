@@ -17,7 +17,6 @@ protected:
 	void AddIndexBuffer(std::unique_ptr<IndexBuffer> indexBuffer);
     const IndexBuffer* m_indexBuffer = nullptr;
     std::vector<std::unique_ptr<Bindable>> binds;
-    int someNumber = 0;
     std::string name;
 private:
     

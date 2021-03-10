@@ -9,11 +9,14 @@
 #include "DepthStencil.h"
 
 
+Mesh::Mesh(DirectX::SimpleMath::Matrix transform)
+    : m_transform(transform)
+{
+}
+
 Mesh::Mesh(DX::DeviceResources & deviceResources, std::vector<std::unique_ptr<Bindable>> bindables, Light* light, const wchar_t* textureFileName, DirectX::SimpleMath::Matrix transform)
     : m_transform(transform)
 {
-    someNumber = 4;
-
     AddDefaultBindables(deviceResources, light, textureFileName);
 
     AddBindables(bindables);
@@ -41,8 +44,6 @@ void Mesh::AddDefaultBindables(DX::DeviceResources & deviceResources, Light * &l
 Mesh::Mesh(DX::DeviceResources & deviceResources, Light * light, const wchar_t * textureFileName, DirectX::SimpleMath::Matrix transform)
     : m_transform(transform)
 {
-    someNumber = 5;
-
     AddDefaultBindables(deviceResources, light, textureFileName);
 }
 

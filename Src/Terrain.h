@@ -8,6 +8,7 @@
 #include "PlayerCamera.h"
 #include "Types.h"
 #include "ViewingFrustum.h"
+#include "QuadTree.h"
 
 class Terrain : public Mesh
 {
@@ -34,7 +35,8 @@ public:
         const wchar_t* textureFileName, 
         DirectX::SimpleMath::Matrix transform, 
         int terrainWidth, 
-        int terrainHeight, 
+        int terrainHeight,
+        float scale,
         PlayerCamera* playerCamera,
         ViewingFrustum* frustum
     );
@@ -77,7 +79,13 @@ private:
     DX::DeviceResources& m_deviceResources;
     std::shared_ptr<VertexBuffer> m_vertexBuffer;
 
+    std::unique_ptr<QuadTree> m_quadTree;
+
     PlayerCamera* m_camera;
+
+    ViewingFrustum* m_frustum;
+
+    float m_scale;
 
     float m_randomHeightValue = 3.0f;
     int m_selectedTerrain;

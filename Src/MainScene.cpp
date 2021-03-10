@@ -27,7 +27,7 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     m_collisionDetector = std::make_unique<Collision>();
 
     // create the scene light
-    auto lightPosition = DirectX::SimpleMath::Vector3(30.0f, 50.0f, -70.0f);
+    auto lightPosition = DirectX::SimpleMath::Vector3(30.0f, 200.0f, -70.0f);
 
     m_light = std::make_unique<Light>();
     m_light->setAmbientColour(0.1f, 0.1f, 0.1f, 1.0f);

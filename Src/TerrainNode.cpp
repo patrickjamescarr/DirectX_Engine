@@ -18,7 +18,7 @@ TerrainNode::TerrainNode(
 
     m_transform = Matrix::CreateTranslation(10.0f, 0.0f, 0.0f);
 
-    auto terrain = std::make_unique<Terrain>(deviceResources, light, L"Textures//seafloor.dds", terrainPosition, m_terrainWidth, m_terrainHeight, playerCamera, frustum);
+    auto terrain = std::make_unique<Terrain>(deviceResources, light, L"Textures//seafloor.dds", terrainPosition, m_terrainWidth, m_terrainHeight, m_scale, playerCamera, frustum);
 
     m_meshes.push_back(std::move(terrain));
 

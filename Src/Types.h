@@ -7,6 +7,7 @@ struct MeshObject {
     int indexCount;
     std::vector<DirectX::VertexPositionNormalTexture> verticies;
     std::vector<uint32_t> indices;
+    float scale = 1.f;
 };
 
 struct HeightMapType

@@ -19,8 +19,9 @@ void ViewingFrustum::ConstructFrustum(float screenDepth, DirectX::SimpleMath::Ma
     projection._33 = r;
     projection._43 = -r * zMinimum;
 
+    
     // Create the frustum matrix from the view matrix and updated projection matrix.
-    Matrix matrix = view * projection;
+    Matrix matrix = DirectX::XMMatrixMultiply(view, projection);
 
     // Calculate near plane of frustum.
     m_planes[0].x = matrix._14 + matrix._13;

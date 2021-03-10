@@ -244,13 +244,18 @@
     <ClInclude Include="PlayerNode.h">
       <Filter>Header Files\Scene Graph</Filter>
     </ClInclude>
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="Types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ViewingFrustum.h" />
-    <ClInclude Include="TerrainShader.h" />
+    <ClInclude Include="ViewingFrustum.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Header Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -412,10 +417,15 @@
     <ClCompile Include="PlayerNode.cpp">
       <Filter>Source Files\Scene Graph</Filter>
     </ClCompile>
-    <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="QuadTree.cpp" />
-    <ClCompile Include="ViewingFrustum.cpp" />
-    <ClCompile Include="TerrainShader.cpp" />
+    <ClCompile Include="ViewingFrustum.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Source Files\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

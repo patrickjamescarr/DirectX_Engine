@@ -5,6 +5,7 @@
 class Mesh : public GameObject
 {
 public:
+    Mesh(DirectX::SimpleMath::Matrix transform);
 	Mesh(DX::DeviceResources& deviceResources, std::vector<std::unique_ptr<Bindable>> bindables, Light* light, const wchar_t* textureFileName, DirectX::SimpleMath::Matrix transform);
     void AddDefaultBindables(DX::DeviceResources & deviceResources, Light * &light, const wchar_t * &textureFileName);
     Mesh(DX::DeviceResources& deviceResources, Light* light, const wchar_t* textureFileName, DirectX::SimpleMath::Matrix transform);
@@ -14,9 +15,10 @@ public:
     void SetTransform(DirectX::SimpleMath::Matrix transform) noexcept;
 protected:
 	void AddBindables(std::vector<std::unique_ptr<Bindable>>& bindables);
+protected:
+    mutable DirectX::SimpleMath::Matrix m_accumulatedTransform;
 private:
 	mutable DirectX::SimpleMath::Matrix m_transform;
-    mutable DirectX::SimpleMath::Matrix m_accumulatedTransform;
 };
 
 

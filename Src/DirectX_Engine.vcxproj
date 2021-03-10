@@ -226,7 +226,6 @@
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TerrainNode.h" />
-    <ClInclude Include="TerrainShader.h" />
     <ClInclude Include="TerrainVertexBuffer.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Topology.h" />
@@ -292,7 +291,6 @@
     <ClCompile Include="SkyboxConstantBuffer.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainNode.cpp" />
-    <ClCompile Include="TerrainShader.cpp" />
     <ClCompile Include="TerrainVertexBuffer.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Topology.cpp" />

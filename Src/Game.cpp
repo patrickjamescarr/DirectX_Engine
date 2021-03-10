@@ -203,10 +203,9 @@ void Game::UpdateCameras()
     if (m_gameInputCommands.toggleCamera)
     {
         m_activeCamera = m_activeCamera == m_playerCamera ? m_renderToTextureCamera : m_playerCamera;
-
-        // update view frustum
-        m_frustum->ConstructFrustum(m_screeDepth, m_deviceResources->GetProjection(), m_activeCamera->getCameraMatrix());
     }
+
+
 
     // Rotation
     Vector3 rotation = m_activeCamera->getRotation();
@@ -238,6 +237,9 @@ void Game::UpdateCameras()
 
     m_activeCamera->Update();	//camera update.
     m_renderToTextureCamera->Update();
+
+    // update view frustum
+    m_frustum->ConstructFrustum(m_screeDepth, m_deviceResources->GetProjection(), m_activeCamera->getCameraMatrix());
 }
 #pragma endregion
 
@@ -374,9 +376,9 @@ void Game::CreateDeviceDependentResources()
     m_font = std::make_unique<SpriteFont>(device, L"SegoeUI_18.spritefont");
     m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
-    m_mainScene.Initialise(*m_deviceResources, m_playerCamera.get(), m_frustum.get());
-
     m_frustum = std::make_unique<ViewingFrustum>();
+
+    m_mainScene.Initialise(*m_deviceResources, m_playerCamera.get(), m_frustum.get());
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.

@@ -5,8 +5,17 @@ const int MAX_TRIANGLES = 10000;
 
 using namespace DirectX;
 
-QuadTree::QuadTree(DX::DeviceResources & deviceResources, MeshObject mesh)
+QuadTree::QuadTree(DX::DeviceResources & deviceResources, MeshObject mesh, std::vector<std::unique_ptr<Bindable>> binds)
+    : m_bindables(std::move(binds))
 {
+    Update(deviceResources, mesh);
+}
+
+void QuadTree::Update(DX::DeviceResources & deviceResources, MeshObject &mesh)
+{
+    // Set the scale for use in frustum culling calcs
+    m_scale = mesh.scale;
+
     // Get the number of vertices in the mesh.
     int vertexCount = mesh.vertexCount;
 
@@ -30,13 +39,31 @@ QuadTree::QuadTree(DX::DeviceResources & deviceResources, MeshObject mesh)
     m_vertexList.clear();
 }
 
-void QuadTree::Bind(DX::DeviceResources & deviceResources) noexcept
+
+void QuadTree::Render(DX::DeviceResources & deviceResources, ViewingFrustum* frustum) noexcept
 {
+    // Reset the number of triangles that are drawn for this frame.
+    m_drawCount = 0;
+
+    // Render each node that is visible starting at the parent node and moving down the tree.
+    RenderNode(m_parentNode.get(), frustum, deviceResources);
+
+    if (ImGui::Begin("Node Culling"))
+    {
+        ImGui::Text("IsItemHovered: %d", ImGui::IsItemHovered());
+        ImGui::Text("Node 1: Position x:%f z:%f Culled: %d", m_parentNode->nodes[0]->positionX, m_parentNode->nodes[0]->positionZ, m_parentNode->nodes[0]->culled);
+        ImGui::Text("Node 2: Position x:%f z:%f Culled: %d", m_parentNode->nodes[1]->positionX, m_parentNode->nodes[1]->positionZ, m_parentNode->nodes[1]->culled);
+        ImGui::Text("Node 3: Position x:%f z:%f Culled: %d", m_parentNode->nodes[2]->positionX, m_parentNode->nodes[2]->positionZ, m_parentNode->nodes[2]->culled);
+        ImGui::Text("Node 4: Position x:%f z:%f Culled: %d", m_parentNode->nodes[3]->positionX, m_parentNode->nodes[3]->positionZ, m_parentNode->nodes[3]->culled);
+    }
+
+
+    ImGui::End();
 }
 
 int QuadTree::GetDrawCount()
 {
-    return 0;
+    return m_drawCount;
 }
 
 void QuadTree::CalculateMeshDimensions(int vertexCount, float& centerX, float& centerZ, float& meshWidth)
@@ -108,14 +135,6 @@ void QuadTree::CreateTreeNode(Node* node, float positionX, float positionZ, floa
     node->vertexBuffer = 0;
     node->indexBuffer = 0;
 
-    // Initialize the children nodes of this node to null.
-    node->nodes[0] = 0;
-    node->nodes[1] = 0;
-    node->nodes[2] = 0;
-    node->nodes[3] = 0;
-
-    //Then count the number of triangles that are in the dimensions of this node from the mesh.
-
     // Count the number of triangles that are inside this node.
     numTriangles = CountTriangles(positionX, positionZ, width);
 
@@ -139,10 +158,10 @@ void QuadTree::CreateTreeNode(Node* node, float positionX, float positionZ, floa
             if (count > 0)
             {
                 // If there are triangles inside where this new node would be then create the child node.
-                node->nodes[i] = new Node;
+                node->nodes.push_back(std::make_unique<Node>());
 
                 // Extend the tree starting from this new child node now.
-                CreateTreeNode(node->nodes[i], (positionX + offsetX), (positionZ + offsetZ), (width / 2.0f), device);
+                CreateTreeNode(node->nodes[i].get(), (positionX + offsetX), (positionZ + offsetZ), (width / 2.0f), device);
             }
         }
 
@@ -164,6 +183,8 @@ void QuadTree::CreateTreeNode(Node* node, float positionX, float positionZ, floa
 
     // Initialize the vertex array 
     VertexPositionNormalTexture* vertices;
+
+    vertices = new VertexPositionNormalTexture[vertexCount];
 
     // Go through all the triangles in the vertex list.
     for (i = 0; i < m_triangleCount; i++)
@@ -240,73 +261,130 @@ void QuadTree::CreateTreeNode(Node* node, float positionX, float positionZ, floa
     return;
 }
 
-int QuadTree::CountTriangles(float, float, float)
+// Goes through the list of triangles from the terrain data and 
+// determines which ones are inside the given dimensions.
+int QuadTree::CountTriangles(float positionX, float positionZ, float width)
 {
-    return 0;
+    // Initialize the count to zero.
+    int count = 0;
+
+    // Go through all the triangles in the entire mesh and check which ones should be inside this node.
+    for (int i = 0; i < m_triangleCount; i++)
+    {
+        // If the triangle is inside the node then increment the count by one.
+        auto result = IsTriangleContained(i, positionX, positionZ, width);
+        if (result == true)
+        {
+            count++;
+        }
+    }
+
+    return count;
 }
 
-bool QuadTree::IsTriangleContained(int, float, float, float)
+// Calculates if the given triangle is completely inside the input cube dimensions or not.
+bool QuadTree::IsTriangleContained(int index, float positionX, float positionZ, float width)
 {
-    return false;
+    // Calculate the radius of this node.
+    float radius = width / 2.0f;
+
+    // Get the index into the vertex list.
+    int vertexIndex = index * 3;
+
+    // Get the three vertices of this triangle from the vertex list.
+    float x1 = m_vertexList[vertexIndex].position.x;
+    float z1 = m_vertexList[vertexIndex].position.z;
+    vertexIndex++;
+
+    float x2 = m_vertexList[vertexIndex].position.x;
+    float z2 = m_vertexList[vertexIndex].position.z;
+    vertexIndex++;
+
+    float x3 = m_vertexList[vertexIndex].position.x;
+    float z3 = m_vertexList[vertexIndex].position.z;
+
+    // Check to see if the minimum of the x coordinates of the triangle is inside the node.
+    float minimumX = std::min(x1, std::min(x2, x3));
+    if (minimumX > (positionX + radius))
+    {
+        return false;
+    }
+
+    // Check to see if the maximum of the x coordinates of the triangle is inside the node.
+    float maximumX = std::max(x1, std::max(x2, x3));
+    if (maximumX < (positionX - radius))
+    {
+        return false;
+    }
+
+    // Check to see if the minimum of the z coordinates of the triangle is inside the node.
+    float minimumZ = std::min(z1, std::min(z2, z3));
+    if (minimumZ > (positionZ + radius))
+    {
+        return false;
+    }
+
+    // Check to see if the maximum of the z coordinates of the triangle is inside the node.
+    float maximumZ = std::max(z1, std::max(z2, z3));
+    if (maximumZ < (positionZ - radius))
+    {
+        return false;
+    }
+
+    return true;
 }
 
-void QuadTree::ReleaseNode(Node *)
+void QuadTree::RenderNode(Node * node, ViewingFrustum * frustum, DX::DeviceResources& deviceResources)
 {
-}
-
-void QuadTree::RenderNode(Node * node, ViewingFrustum * frustum, ID3D11DeviceContext * deviceContext)
-{
-    bool result;
-    int count, i, indexCount;
-    unsigned int stride, offset;
-
     // Check to see if the node can be viewed, height doesn't matter in a quad tree.
-    result = frustum->CheckCube(node->positionX, 0.0f, node->positionZ, (node->width / 2.0f));
+    bool drawNode = frustum->CheckCube(node->positionX * m_scale, 0.0f, node->positionZ * m_scale, (node->width / 2.0f) * m_scale);
+
+    node->culled = !drawNode;
 
     // If it can't be seen then none of its children can either so don't continue down the tree, this is where the speed is gained.
-    if (!result)
+    if (!drawNode)
     {
         return;
     }
 
     // If it can be seen then check all four child nodes to see if they can also be seen.
-    count = 0;
-    for (i = 0; i < 4; i++)
+    if (!node->nodes.empty())
     {
-        if (node->nodes[i] != 0)
+        for (auto& node : node->nodes)
         {
-            count++;
-            // RenderNode(node->nodes[i], frustum, deviceContext, shader);
+            RenderNode(node.get(), frustum, deviceResources);
         }
-    }
 
-    // If there were any children nodes then there is no need to continue as parent nodes won't contain any triangles to render.
-    if (count != 0)
-    {
+        // If there were any children nodes then there is no need to continue as parent nodes won't contain any triangles to render.
         return;
     }
 
     // Otherwise if this node can be seen and has triangles in it then render these triangles.
 
     // Set vertex buffer stride and offset.
-    stride = sizeof(VertexPositionNormalTexture);
-    offset = 0;
+    unsigned int stride = sizeof(VertexPositionNormalTexture);
+    unsigned int offset = 0;
 
     // Set the vertex buffer to active in the input assembler so it can be rendered.
-    deviceContext->IASetVertexBuffers(0, 1, &node->vertexBuffer, &stride, &offset);
+    deviceResources.GetD3DDeviceContext()->IASetVertexBuffers(0, 1, &node->vertexBuffer, &stride, &offset);
 
     // Set the index buffer to active in the input assembler so it can be rendered.
-    deviceContext->IASetIndexBuffer(node->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    deviceResources.GetD3DDeviceContext()->IASetIndexBuffer(node->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
     // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
-    deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    deviceResources.GetD3DDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // Determine the number of indices in this node.
-    indexCount = node->triangleCount * 3;
+    int indexCount = node->triangleCount * 3;
 
-    // Call the terrain shader to render the polygons in this node.
-    // shader->RenderShader(deviceContext, indexCount);
+	// bind all of this obejcts bindables to the pipeline
+	for (auto& b : m_bindables)
+	{
+		b->Bind(deviceResources);
+	}
 
+	// draw the object
+    deviceResources.GetD3DDeviceContext()->DrawIndexed(indexCount, 0, 0);
 
     // Increase the count of the number of polygons that have been rendered during this frame.
     m_drawCount += node->triangleCount;

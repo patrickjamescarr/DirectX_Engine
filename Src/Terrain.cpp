@@ -7,7 +7,12 @@
 #include "RasterizerState.h"
 #include "InputLayout.h"
 #include "VertexBuffer.h"
-#include "QuadTree.h"
+#include "Topology.h"
+#include "DepthStencil.h"
+#include "DepthStencilState.h"
+#include "TransformConstantBuffer.h"
+#include "LightConstantBuffer.h"
+#include "Texture.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -18,14 +23,17 @@ Terrain::Terrain(
     DirectX::SimpleMath::Matrix transform, 
     int terrainWidth, 
     int terrainHeight, 
+    float scale,
     PlayerCamera* playerCamera,
     ViewingFrustum* frustum
 )
-    : Mesh{ deviceResources, light, textureFileName, transform }, 
+    : Mesh{ transform }, 
     m_terrainWidth(terrainWidth), 
     m_terrainHeight(terrainHeight),
+    m_scale(scale),
     m_deviceResources(deviceResources),
-    m_camera(playerCamera)
+    m_camera(playerCamera),
+    m_frustum(frustum)
 {
 
     // Create the structure to hold the terrain data.
@@ -46,22 +54,9 @@ Terrain::Terrain(
 		return;
 	}
 
-    m_terrain = m_modelLoader.CreateTerrain(m_terrainWidth, m_terrainHeight, m_heightMap);
-
-    auto quadTree = std::make_unique<QuadTree>(deviceResources, m_terrain);
+    m_terrain = m_modelLoader.CreateTerrain(m_terrainWidth, m_terrainHeight, m_heightMap, m_scale);
 
     std::vector<std::unique_ptr<Bindable>> bindables;
-
-    // Create the vertex buffer
-    auto terrainVertexBuffer = std::make_unique<TerrainVertexBuffer>(deviceResources, m_terrain);
-
-    // store a pointer to the vertex buffer so we can update the terrain verticies.
-    m_vertexBuffer = terrainVertexBuffer->GetVertexBuffer();
-
-    bindables.push_back(std::move(terrainVertexBuffer));
-
-    // Create the index buffer
-    bindables.push_back(std::make_unique<IndexBuffer>(deviceResources, m_terrain.indices));
 
     // Create the vertex shader
     auto vertexShader = std::make_unique<VertexShader>(deviceResources, L"terrain_vs.cso");
@@ -86,7 +81,17 @@ Terrain::Terrain(
     // Create the rasterizer state
     bindables.push_back(std::make_unique<RasterizerState>(deviceResources, D3D11_CULL_FRONT)); //  D3D11_FILL_WIREFRAME
 
-    Mesh::AddBindables(std::move(bindables));
+    bindables.push_back(std::make_unique<Topology>(deviceResources, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+
+    bindables.push_back(std::make_unique<DepthStencilState>(deviceResources, DepthStencilState::default));
+
+    bindables.push_back(std::make_unique<TransformConstantBuffer>(deviceResources, *this));
+
+    bindables.push_back(std::make_unique<LightConstantBuffer>(deviceResources, light));
+    
+    bindables.push_back(std::make_unique<Texture>(deviceResources, textureFileName));
+
+    m_quadTree = std::make_unique<QuadTree>(deviceResources, m_terrain, std::move(bindables));
 }
 
 void Terrain::CalculateHeightMapTextureCoordinates()
@@ -125,8 +130,12 @@ void Terrain::Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accu
 {
     // Quad tree draw in here instead of Mesh Draw
 
-   Mesh::Draw(deviceResources, accumulatedTransform);
-   DetectCameraCollision();
+    m_accumulatedTransform = accumulatedTransform;
+
+    m_quadTree->Render(deviceResources, m_frustum);
+
+    // Mesh::Draw(deviceResources, accumulatedTransform);
+    DetectCameraCollision();
 }
 
 void Terrain::Update()
@@ -496,9 +505,9 @@ void Terrain::Generate()
         return;
     }
 
-    m_terrain = m_modelLoader.CreateTerrain(m_terrainWidth, m_terrainHeight, m_heightMap);
+    m_terrain = m_modelLoader.CreateTerrain(m_terrainWidth, m_terrainHeight, m_heightMap, m_scale);
 
-    m_vertexBuffer->Update(m_deviceResources, m_terrain.verticies);
+    m_quadTree->Update(m_deviceResources, m_terrain);
 }
 
 bool Terrain::DetectCameraCollision() const
