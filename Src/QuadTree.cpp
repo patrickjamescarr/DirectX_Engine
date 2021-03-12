@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "QuadTree.h"
 
-const int MAX_TRIANGLES = 10000;
+const int MAX_TRIANGLES = 5000;
 
 using namespace DirectX;
+using namespace DirectX::SimpleMath;
 
 QuadTree::QuadTree(DX::DeviceResources & deviceResources, MeshObject mesh, std::vector<std::unique_ptr<Bindable>> binds)
     : m_bindables(std::move(binds))
@@ -36,7 +37,7 @@ void QuadTree::Update(DX::DeviceResources & deviceResources, MeshObject &mesh)
     CreateTreeNode(m_parentNode.get(), centerX, centerZ, width, deviceResources.GetD3DDevice());
 
     // Clear the vertex list since the quad tree now has the vertices in each node.
-    m_vertexList.clear();
+    //m_vertexList.clear();
 }
 
 
@@ -47,6 +48,11 @@ void QuadTree::Render(DX::DeviceResources & deviceResources, ViewingFrustum* fru
 
     // Render each node that is visible starting at the parent node and moving down the tree.
     RenderNode(m_parentNode.get(), frustum, deviceResources);
+
+    if (m_parentNode->nodes.empty())
+    {
+        return;
+    }
 
     if (ImGui::Begin("Node Culling"))
     {
@@ -59,6 +65,82 @@ void QuadTree::Render(DX::DeviceResources & deviceResources, ViewingFrustum* fru
 
 
     ImGui::End();
+}
+
+bool QuadTree::DetectCollision(DirectX::SimpleMath::Vector3 objectPosition, DirectX::SimpleMath::Matrix transform, CollisionIntersection& collisionIntersection)
+{
+    return CheckNodeForCollision(m_parentNode.get(), objectPosition, transform, collisionIntersection);
+}
+
+bool QuadTree::CheckNodeForCollision(Node * parentNode, DirectX::SimpleMath::Vector3 objectPosition, DirectX::SimpleMath::Matrix transform, CollisionIntersection& collisionIntersection)
+{
+    for (auto& node : parentNode->nodes)
+    {
+        // get scaled node position coordinates and size
+        // NOTE: could alternatively pass the pre-transformed position in 
+        auto nodePositionX = node->positionX * m_scale;
+        auto nodePositionZ = node->positionZ * m_scale;
+        auto size = node->width * m_scale;
+
+        // check to see if object position lies within the node
+
+        if (objectPosition.x < (nodePositionX - (size / 2))) continue; // left
+        if (objectPosition.z < (nodePositionZ - (size / 2))) continue; // top
+        if (objectPosition.x > (nodePositionX + (size / 2))) continue; // right
+        if (objectPosition.z > (nodePositionZ + (size / 2))) continue; // bottom
+
+        // point lies within this node
+
+        // if this node doesnt contain any children then check the verticies 
+        // within it for the collision point, otherwise check child nodes
+
+        if (!node->nodes.empty())
+        {
+            return CheckNodeForCollision(node.get(), objectPosition, transform, collisionIntersection);
+        }
+
+        auto vertexCount = node->vertexEndIndex - node->vertexStartIndex;
+        auto triangleCount = vertexCount / 3;
+
+        auto rayDirection = Vector3(0.0f, 1.0f, 0.0f);
+
+        // find the collision point
+        for (int i = 0; i < triangleCount; i++)
+        {
+            // Calculate the starting index into the vertex list.
+            auto vertexIndex = node->vertexStartIndex + (i * 3);
+
+            // Get the three vertices of this triangle from the vertex list.
+
+            auto scaleTransform = Matrix::CreateScale(m_scale);
+
+            auto v1 = Vector3::Transform(m_vertexList[vertexIndex].position, transform);
+
+            vertexIndex++;
+            auto v2 = Vector3::Transform(m_vertexList[vertexIndex].position, transform);
+
+            vertexIndex++;
+            auto v3 = Vector3::Transform(m_vertexList[vertexIndex].position, transform);
+
+            auto collision = m_collision.rayTriangleIntersectMT(
+                objectPosition,
+                rayDirection,
+                v1,
+                v2,
+                v3,
+                collisionIntersection.t, 
+                collisionIntersection.u, 
+                collisionIntersection.v
+            );
+
+            if (collision)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 int QuadTree::GetDrawCount()
@@ -114,10 +196,6 @@ void QuadTree::CalculateMeshDimensions(int vertexCount, float& centerX, float& c
 
 void QuadTree::CreateTreeNode(Node* node, float positionX, float positionZ, float width, ID3D11Device* device)
 {
-    int numTriangles, i, count, vertexCount, index, vertexIndex;
-    float offsetX, offsetZ;
-    unsigned long* indices;
-    bool result;
     D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
 
@@ -136,7 +214,7 @@ void QuadTree::CreateTreeNode(Node* node, float positionX, float positionZ, floa
     node->indexBuffer = 0;
 
     // Count the number of triangles that are inside this node.
-    numTriangles = CountTriangles(positionX, positionZ, width);
+    int numTriangles = CountTriangles(positionX, positionZ, width);
 
     // Case 1: If there are no triangles in this node then return as it is empty and requires no processing.
     if (numTriangles == 0)
@@ -147,15 +225,16 @@ void QuadTree::CreateTreeNode(Node* node, float positionX, float positionZ, floa
     // Case 2: If there are too many triangles in this node then split it into four equal sized smaller tree nodes.
     if (numTriangles > MAX_TRIANGLES)
     {
-        for (i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
         {
             // Calculate the position offsets for the new child node.
-            offsetX = (((i % 2) < 1) ? -1.0f : 1.0f) * (width / 4.0f);
-            offsetZ = (((i % 4) < 2) ? -1.0f : 1.0f) * (width / 4.0f);
+            float offsetX = (((i % 2) < 1) ? -1.0f : 1.0f) * (width / 4.0f);
+            float offsetZ = (((i % 4) < 2) ? -1.0f : 1.0f) * (width / 4.0f);
 
             // See if there are any triangles in the new node.
-            count = CountTriangles((positionX + offsetX), (positionZ + offsetZ), (width / 2.0f));
-            if (count > 0)
+            int triangleCount = CountTriangles((positionX + offsetX), (positionZ + offsetZ), (width / 2.0f));
+
+            if (triangleCount > 0)
             {
                 // If there are triangles inside where this new node would be then create the child node.
                 node->nodes.push_back(std::make_unique<Node>());
@@ -173,28 +252,38 @@ void QuadTree::CreateTreeNode(Node* node, float positionX, float positionZ, floa
     node->triangleCount = numTriangles;
 
     // Calculate the number of vertices.
-    vertexCount = numTriangles * 3;
+    int vertexCount = numTriangles * 3;
 
     // Create the index array.
-    indices = new unsigned long[vertexCount];
+    unsigned long* indices = new unsigned long[vertexCount];
 
     // Initialize the index for this new vertex and index array.
-    index = 0;
+    int index = 0;
 
     // Initialize the vertex array 
     VertexPositionNormalTexture* vertices;
 
     vertices = new VertexPositionNormalTexture[vertexCount];
 
+    int vertexIndex;
+    bool firstIndex = true;
+
     // Go through all the triangles in the vertex list.
-    for (i = 0; i < m_triangleCount; i++)
+    for (int i = 0; i < m_triangleCount; i++)
     {
         // If the triangle is inside this node then add it to the vertex array.
-        result = IsTriangleContained(i, positionX, positionZ, width);
+        bool result = IsTriangleContained(i, positionX, positionZ, width);
         if (result == true)
         {
             // Calculate the index into the vertex list.
             vertexIndex = i * 3;
+
+            // Set the starting index for this nodes verticies in the vertex list
+            if (firstIndex)
+            {
+                node->vertexStartIndex = vertexIndex;
+                firstIndex = false;
+            }
 
             // Get the three vertices of this triangle from the vertex list.
             vertices[index].position = m_vertexList[vertexIndex].position;
@@ -218,6 +307,9 @@ void QuadTree::CreateTreeNode(Node* node, float positionX, float positionZ, floa
             index++;
         }
     }
+
+    // Set the end index for this nodes verticies in the vertex list
+    node->vertexEndIndex = vertexIndex;
 
     // Set up the description of the vertex buffer.
     vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -391,3 +483,5 @@ void QuadTree::RenderNode(Node * node, ViewingFrustum * frustum, DX::DeviceResou
 
     return;
 }
+
+

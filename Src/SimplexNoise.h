@@ -5,7 +5,7 @@ public:
     SimplexNoise();
     ~SimplexNoise();
 
-    double noise(double xin, double yin, double zin);
+    double Generate(double xin, double yin, double zin);
 
 private:
     int grad3[12][3] = { {1,1,0},{-1,1,0},{1,-1,0},{-1,-1,0},

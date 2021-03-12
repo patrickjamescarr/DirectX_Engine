@@ -204,6 +204,8 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightConstantBuffer.h" />
     <ClInclude Include="MainScene.h" />
+    <ClInclude Include="MarchingCubes.h" />
+    <ClInclude Include="MarchingCubesHeader.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="ModelLoader.h" />
@@ -267,6 +269,7 @@
     <ClCompile Include="LightConstantBuffer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainScene.cpp" />
+    <ClCompile Include="MarchingCubes.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="ModelLoader.cpp" />

@@ -10,7 +10,7 @@ SimplexNoise::~SimplexNoise()
 {
 }
 
-double SimplexNoise::noise(double xin, double yin, double zin)
+double SimplexNoise::Generate(double xin, double yin, double zin)
 {
     double n0, n1, n2, n3; // Noise contributions from the four corners
      // Skew the input space to determine which simplex cell we're in

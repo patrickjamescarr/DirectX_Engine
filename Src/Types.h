@@ -23,3 +23,8 @@ enum MeshPattern
     Quilt = 1,
     Equilateral = 2
 };
+
+struct CollisionIntersection
+{
+    float t, u, v;
+};

@@ -3,7 +3,6 @@
 #include <iostream>
 #include <fstream>
 
-
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
@@ -251,12 +250,12 @@ MeshObject ModelLoader::CreateTerrain(int width, int height, HeightMapType* m_he
 
 void ModelLoader::AddVertex(HeightMapType * m_heightMap, int index3, MeshObject &mesh, int &indexCount)
 {
-    AddTerrainVertex(m_heightMap, index3, mesh, indexCount);
+    AddTerrainVertex(m_heightMap, index3, mesh);
     mesh.indices.push_back(indexCount);
     indexCount++;
 }
 
-void ModelLoader::AddTerrainVertex(HeightMapType * m_heightMap, int geometricIndex, MeshObject &mesh, int index)
+void ModelLoader::AddTerrainVertex(HeightMapType * m_heightMap, int geometricIndex, MeshObject &mesh)
 {
     VertexPositionNormalTexture vertex;
     vertex.position = DirectX::SimpleMath::Vector3(m_heightMap[geometricIndex].x, m_heightMap[geometricIndex].y, m_heightMap[geometricIndex].z);

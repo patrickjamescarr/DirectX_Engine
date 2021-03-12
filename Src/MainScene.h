@@ -35,7 +35,9 @@ private:
         const MeshObject& modelMesh, 
         Light * sceneLight, 
         DirectX::SimpleMath::Matrix transform,
-        const wchar_t * textureFileName
+        const wchar_t * textureFileName,
+        const wchar_t * vertexShaderFileName,
+        const wchar_t * pixelShaderFileName
     );
 	std::unique_ptr<SceneNode> ParseNode();
 

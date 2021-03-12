@@ -13,6 +13,7 @@
 #include "TransformConstantBuffer.h"
 #include "LightConstantBuffer.h"
 #include "Texture.h"
+#include "MarchingCubes.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -35,6 +36,9 @@ Terrain::Terrain(
     m_camera(playerCamera),
     m_frustum(frustum)
 {
+
+    //MarchingCubes mc;
+    //mc.GenerateTerrain(10, 10, 10);
 
     // Create the structure to hold the terrain data.
     m_heightMap = new HeightMapType[m_terrainWidth * m_terrainHeight];
@@ -135,7 +139,16 @@ void Terrain::Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accu
     m_quadTree->Render(deviceResources, m_frustum);
 
     // Mesh::Draw(deviceResources, accumulatedTransform);
-    DetectCameraCollision();
+    //DetectCameraCollision();
+
+    CollisionIntersection collisionIntersection;
+
+    auto collision = m_quadTree->DetectCollision(m_camera->getPosition(), Mesh::GetTransform(), collisionIntersection);
+
+    if (collision)
+    {
+        m_camera->adjustHeight(std::abs(collisionIntersection.t));
+    }
 }
 
 void Terrain::Update()
@@ -516,6 +529,11 @@ bool Terrain::DetectCameraCollision() const
     int v1, v2, v3, v4, v5, v6; //geometric indices.
 
     auto rayOrigin = m_camera->getPosition();
+
+
+    // TODO: use the quad tree to optimize collision detection
+
+
     auto rayDirection = Vector3(0.0f, 1.0f, 0.0f);
 
     bool hit = false;
@@ -588,7 +606,7 @@ void Terrain::GenerateNoise(NoiseType noiseType)
 
             if (noiseType == Perlin)
             {
-                m_heightMap[index].y = m_noise.noise(m_heightMap[index].x * scale, m_heightMap[index].y * scale, m_heightMap[index].z * scale) * 10.0f;
+                m_heightMap[index].y = m_noise.Generate(m_heightMap[index].x * scale, m_heightMap[index].y * scale, m_heightMap[index].z * scale) * 10.0f;
             }
             else
             {

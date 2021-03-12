@@ -256,6 +256,8 @@
     <ClInclude Include="QuadTree.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="MarchingCubes.h" />
+    <ClInclude Include="MarchingCubesHeader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -426,6 +428,7 @@
     <ClCompile Include="QuadTree.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="MarchingCubes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
