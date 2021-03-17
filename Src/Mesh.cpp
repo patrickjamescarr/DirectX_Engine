@@ -14,17 +14,24 @@ Mesh::Mesh(DirectX::SimpleMath::Matrix transform)
 {
 }
 
-Mesh::Mesh(DX::DeviceResources & deviceResources, std::vector<std::unique_ptr<Bindable>> bindables, Light* light, const wchar_t* textureFileName, DirectX::SimpleMath::Matrix transform)
+Mesh::Mesh(
+    DX::DeviceResources & deviceResources, 
+    std::vector<std::unique_ptr<Bindable>> bindables, 
+    Light* light, 
+    const wchar_t* textureFileName, 
+    DirectX::SimpleMath::Matrix transform,
+    D3D_PRIMITIVE_TOPOLOGY topology
+)
     : m_transform(transform)
 {
-    AddDefaultBindables(deviceResources, light, textureFileName);
+    AddDefaultBindables(deviceResources, light, textureFileName, topology);
 
     AddBindables(bindables);
 }
 
-void Mesh::AddDefaultBindables(DX::DeviceResources & deviceResources, Light * &light, const wchar_t * &textureFileName)
+void Mesh::AddDefaultBindables(DX::DeviceResources & deviceResources, Light * &light, const wchar_t * &textureFileName, D3D_PRIMITIVE_TOPOLOGY topology)
 {
-    AddBind(std::make_unique<Topology>(deviceResources, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+    AddBind(std::make_unique<Topology>(deviceResources, topology));
 
     AddBind(std::make_unique<DepthStencilState>(deviceResources, DepthStencilState::default));
 
@@ -44,7 +51,7 @@ void Mesh::AddDefaultBindables(DX::DeviceResources & deviceResources, Light * &l
 Mesh::Mesh(DX::DeviceResources & deviceResources, Light * light, const wchar_t * textureFileName, DirectX::SimpleMath::Matrix transform)
     : m_transform(transform)
 {
-    AddDefaultBindables(deviceResources, light, textureFileName);
+    AddDefaultBindables(deviceResources, light, textureFileName, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void Mesh::AddBindables(std::vector<std::unique_ptr<Bindable>>& bindables)

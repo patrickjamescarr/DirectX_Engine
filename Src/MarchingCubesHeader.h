@@ -6,8 +6,8 @@ typedef struct {
 } Triangle;
 
 typedef struct {
-    DirectX::SimpleMath::Vector3 p[8];
-    double val[8];
+    DirectX::SimpleMath::Vector3 point[8];
+    double densityValue[8];
 } GridCell;
 
 static constexpr int edgeTable[256] = {

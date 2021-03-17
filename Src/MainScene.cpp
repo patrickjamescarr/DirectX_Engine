@@ -57,9 +57,10 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
 
     // marching cubes
     MarchingCubes mc;
-    
-    auto mcModel = mc.GenerateTerrain(10, 10, 10);
-    m_meshes.push_back(ParseMesh(deviceResources, mcModel, m_sunLight.get(), Matrix::Identity, L"Textures//sun2.dds", L"terrain_vs.cso", L"terrain_ps.cso"));
+    //
+    auto mcModel = mc.Generate(100, 100, 100);
+
+    m_meshes.push_back(ParseMesh(deviceResources, mcModel, m_light.get(), Matrix::CreateTranslation(Vector3(4.567f, 0, 8.234f)), L"Textures//sun2.dds", L"terrain_vs.cso", L"terrain_ps.cso"));
 
 
     // store the model mesh pointers in a vector
@@ -111,7 +112,8 @@ std::unique_ptr<Mesh> MainScene::ParseMesh(
     Matrix transform,
     const wchar_t * textureFileName,
     const wchar_t * vertexShaderFileName,
-    const wchar_t * pixelShaderFileName
+    const wchar_t * pixelShaderFileName,
+    D3D_PRIMITIVE_TOPOLOGY topology
 )
 {
     std::vector<std::unique_ptr<Bindable>> bindables;
@@ -143,10 +145,10 @@ std::unique_ptr<Mesh> MainScene::ParseMesh(
     bindables.push_back(std::make_unique<InputLayout>(deviceResources, layout, vertexShaderByteCode));
 
     // Create the rasterizer state
-    bindables.push_back(std::make_unique<RasterizerState>(deviceResources, D3D11_CULL_NONE));
+    bindables.push_back(std::make_unique<RasterizerState>(deviceResources, D3D11_CULL_BACK)); //D3D11_FILL_WIREFRAME
 
     // create and return the mesh
-    return std::make_unique<Mesh>(deviceResources, std::move(bindables), sceneLight, textureFileName, transform);
+    return std::make_unique<Mesh>(deviceResources, std::move(bindables), sceneLight, textureFileName, transform, topology);
 }
 
 std::unique_ptr<SceneNode> MainScene::ParseNode()

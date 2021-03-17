@@ -6,8 +6,15 @@ class Mesh : public GameObject
 {
 public:
     Mesh(DirectX::SimpleMath::Matrix transform);
-	Mesh(DX::DeviceResources& deviceResources, std::vector<std::unique_ptr<Bindable>> bindables, Light* light, const wchar_t* textureFileName, DirectX::SimpleMath::Matrix transform);
-    void AddDefaultBindables(DX::DeviceResources & deviceResources, Light * &light, const wchar_t * &textureFileName);
+	Mesh(
+        DX::DeviceResources& deviceResources, 
+        std::vector<std::unique_ptr<Bindable>> bindables, 
+        Light* light, 
+        const wchar_t* textureFileName, 
+        DirectX::SimpleMath::Matrix transform,
+        D3D_PRIMITIVE_TOPOLOGY topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
+    );
+    void AddDefaultBindables(DX::DeviceResources & deviceResources, Light * &light, const wchar_t * &textureFileName, D3D_PRIMITIVE_TOPOLOGY topology);
     Mesh(DX::DeviceResources& deviceResources, Light* light, const wchar_t* textureFileName, DirectX::SimpleMath::Matrix transform);
 	virtual void Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accumulatedTransform) const;
 	virtual DirectX::SimpleMath::Matrix GetTransform() const noexcept override;
