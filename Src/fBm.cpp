@@ -18,6 +18,16 @@ float FBM::Generate(DirectX::SimpleMath::Vector2 point, float value, float ampli
     return value;
 }
 
+float FBM::Generate(DirectX::SimpleMath::Vector3 point, float value, float amplitude, int octaves, float lacunarity, float gain)
+{
+    for (int i = 0; i < octaves; i++) {
+        value += amplitude * m_simplex.Generate(point.x, point.y, point.z);
+        point *= lacunarity;
+        amplitude *= gain;
+    }
+    return value;
+}
+
 float FBM::random(Vector2 point)
 {
     auto val = fract(sin(point.Dot(Vector2(12.9898, 78.233))) * 43758.5453123);

@@ -4,11 +4,13 @@
 #include <iostream>
 #include <map>
 
-#define Epsilon 0.0003f
-
-
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
+
+MarchingCubes::MarchingCubes(DensityFunction * function) 
+    : m_function(function)
+{
+}
 
 MeshObject MarchingCubes::Generate(int xSize, int ySize, int zSize)
 {
@@ -16,9 +18,9 @@ MeshObject MarchingCubes::Generate(int xSize, int ySize, int zSize)
 
     int indexCount = 0;
 
-    for (int k = 0; k < (ySize - 1); k++)
+    for (int j = 0; j < (ySize - 1); j++)
     {
-        for (int j = 0; j < (zSize - 1); j++)
+        for (int k = 0; k < (zSize - 1); k++)
         {
             for (int i = 0; i < (xSize - 1); i++)
             {
@@ -29,12 +31,12 @@ MeshObject MarchingCubes::Generate(int xSize, int ySize, int zSize)
                 for (int i = 0; i < verts.size(); i++)
                 {
                     gridCell.point[i] = verts[i];
-                    gridCell.densityValue[i] = m_noise.Generate(verts[i].x, verts[i].y, verts[i].z) * m_multiplier;
+                    gridCell.densityValue[i] = m_function->execute(verts[i].x, verts[i].y, verts[i].z);
                 }
 
                 std::vector<Triangle> triangles;
 
-                mesh.vertexCount += Polygonise(gridCell, 5, triangles) * 3;
+                mesh.vertexCount += Polygonise(gridCell, m_isoLevel, triangles) * 3;
 
                 for (auto& tri : triangles)
                 {
@@ -53,13 +55,20 @@ MeshObject MarchingCubes::Generate(int xSize, int ySize, int zSize)
     return mesh;
 }
 
+void MarchingCubes::DisplayUI()
+{
+
+}
+
 void MarchingCubes::CalculateGradient(const DirectX::SimpleMath::Vector3 & pos, DirectX::SimpleMath::Vector3 & normal)
 {
-    float value = m_noise.Generate(pos.x, pos.y, pos.z) * m_multiplier;
+    float value = m_function->execute(pos.x, pos.y, pos.z);
 
-    normal.x = ((m_noise.Generate(pos.x + Epsilon, pos.y, pos.z) * m_multiplier) - value);
-    normal.y = ((m_noise.Generate(pos.x, pos.y + Epsilon, pos.z) * m_multiplier) - value);
-    normal.z = ((m_noise.Generate(pos.x, pos.y, pos.z + Epsilon) * m_multiplier) - value);
+    float unit = 1 * m_scale;
+
+    normal.x = ((m_function->execute(pos.x + unit, pos.y, pos.z)) - m_function->execute(pos.x - unit, pos.y, pos.z));
+    normal.y = ((m_function->execute(pos.x, pos.y + unit, pos.z)) - m_function->execute(pos.x, pos.y - unit, pos.z));
+    normal.z = ((m_function->execute(pos.x, pos.y, pos.z + unit)) - m_function->execute(pos.x, pos.y, pos.z - unit));
 
     normal.Normalize();
 }
@@ -89,16 +98,16 @@ std::vector<DirectX::SimpleMath::Vector3> MarchingCubes::GenerateCubeVerticies(i
     std::vector<DirectX::SimpleMath::Vector3> verts;
 
     // bottom layer
-    verts.push_back(Vector3(i * m_scale, (j + 1) * m_scale, k * m_scale));        // top left
-    verts.push_back(Vector3((i + 1) * m_scale, (j + 1) * m_scale, k * m_scale));  // top right
-    verts.push_back(Vector3((i + 1) * m_scale, j * m_scale, k * m_scale));        // bottom right
-    verts.push_back(Vector3(i * m_scale, j * m_scale, k * m_scale));              // bottom left
+    verts.push_back(Vector3(i, (j + 1), k) * m_scale);        // top left
+    verts.push_back(Vector3((i + 1), (j + 1), k) * m_scale);  // top right
+    verts.push_back(Vector3((i + 1), j, k) * m_scale);        // bottom right
+    verts.push_back(Vector3(i, j, k) * m_scale);              // bottom left
 
     // top layer
-    verts.push_back(Vector3(i * m_scale, (j + 1) * m_scale, (k + 1) * m_scale));        // top left
-    verts.push_back(Vector3((i + 1) * m_scale, (j + 1) * m_scale, (k + 1) * m_scale));  // top right
-    verts.push_back(Vector3((i + 1) * m_scale, j * m_scale, (k + 1) * m_scale));        // bottom right
-    verts.push_back(Vector3(i * m_scale, j * m_scale, (k + 1) * m_scale));              // bottom left
+    verts.push_back(Vector3(i, (j + 1), (k + 1)) * m_scale);        // top left
+    verts.push_back(Vector3((i + 1), (j + 1), (k + 1)) * m_scale);  // top right
+    verts.push_back(Vector3((i + 1), j, (k + 1)) * m_scale);        // bottom right
+    verts.push_back(Vector3(i, j, (k + 1)) * m_scale);              // bottom left
 
     return verts;
 }
@@ -195,8 +204,9 @@ int MarchingCubes::Polygonise(GridCell grid, double isolevel, std::vector<Triang
     }
 
 
-    /* Create the triangle */
-    int ntriang = 0;
+    /* Create the triangles */
+    int triangleCount = 0;
+
     for (int i = 0; triTable[cubeindex][i] != -1; i += 3) 
     {
         Triangle t;
@@ -204,10 +214,10 @@ int MarchingCubes::Polygonise(GridCell grid, double isolevel, std::vector<Triang
         t.p[1] = vertlist[triTable[cubeindex][i + 1]];
         t.p[2] = vertlist[triTable[cubeindex][i + 2]];
         triangles.push_back(t);
-        ntriang++;
+        triangleCount++;
     }
 
-    return(ntriang);
+    return(triangleCount);
 }
 
 /*

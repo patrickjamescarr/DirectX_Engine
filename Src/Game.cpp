@@ -82,7 +82,7 @@ void Game::Initialize(HWND window, int width, int height)
 
     //setup camera
     m_playerCamera->initPosition(Vector3(6.f, 0.f, 6.f));
-    m_playerCamera->setHeight(2.0f);
+    m_playerCamera->setHeight(1.0f);
     m_playerCamera->setRotation(Vector3(-90.0f, 0.0f, 0.0f));	//orientation is -90 becuase zero will be looking up at the sky straight up. 
 
     m_renderToTextureCamera->setPosition(Vector3(0.f, 10.f, 0.f));
@@ -260,7 +260,7 @@ void Game::Render()
     auto renderTargetView = m_deviceResources->GetRenderTargetView();
     auto depthTargetView = m_deviceResources->GetDepthStencilView();
 
-    // Draw Text to the screen
+    // Draw Text to the screen  
     m_sprites->Begin();
     m_font->DrawString(m_sprites.get(), L"Procedural Methods", XMFLOAT2(10, 10), Colors::Yellow);
     m_sprites->End();

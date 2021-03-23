@@ -17,6 +17,10 @@ IndexBuffer::IndexBuffer(DX::DeviceResources& deviceResources, const std::vector
 
 void IndexBuffer::CreateIndexBuffer(const std::vector<uint32_t> & indices, DX::DeviceResources & deviceResources)
 {
+    m_indexCount = (UINT)indices.size();
+
+    if (m_indexCount == 0) return;
+
     auto indexArray = new unsigned long[m_indexCount];
 
     for (int i = 0; i < m_indexCount; i++)

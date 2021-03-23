@@ -14,6 +14,14 @@ public:
         DirectX::SimpleMath::Matrix transform,
         D3D_PRIMITIVE_TOPOLOGY topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
     );
+    Mesh(DX::DeviceResources& deviceResources,
+        Light * sceneLight,
+        DirectX::SimpleMath::Matrix transform,
+        const wchar_t * textureFileName,
+        const wchar_t * vertexShaderFileName,
+        const wchar_t * pixelShaderFileName
+    );
+
     void AddDefaultBindables(DX::DeviceResources & deviceResources, Light * &light, const wchar_t * &textureFileName, D3D_PRIMITIVE_TOPOLOGY topology);
     Mesh(DX::DeviceResources& deviceResources, Light* light, const wchar_t* textureFileName, DirectX::SimpleMath::Matrix transform);
 	virtual void Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accumulatedTransform) const;

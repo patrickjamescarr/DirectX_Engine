@@ -7,6 +7,11 @@
 #include "DepthStencilState.h"
 #include "Topology.h"
 #include "DepthStencil.h"
+#include "VertexShader.h"
+#include "PixelShader.h"
+#include "Shader.h"
+#include "InputLayout.h"
+#include "Sampler.h"
 
 
 Mesh::Mesh(DirectX::SimpleMath::Matrix transform)
@@ -27,6 +32,34 @@ Mesh::Mesh(
     AddDefaultBindables(deviceResources, light, textureFileName, topology);
 
     AddBindables(bindables);
+}
+
+Mesh::Mesh(DX::DeviceResources & deviceResources, Light * light, DirectX::SimpleMath::Matrix transform, const wchar_t * textureFileName, const wchar_t * vertexShaderFileName, const wchar_t * pixelShaderFileName)
+{
+    AddDefaultBindables(deviceResources, light, textureFileName, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    // Create the vertex shader
+    auto vertexShader = std::make_unique<VertexShader>(deviceResources, vertexShaderFileName);
+    auto vertexShaderByteCode = vertexShader->GetBytecode();
+    AddBind(std::move(vertexShader));
+
+    // Create the pixel shader
+    AddBind(std::make_unique<PixelShader>(deviceResources, pixelShaderFileName));
+
+    AddBind(std::make_unique<Sampler>(deviceResources, D3D11_TEXTURE_ADDRESS_WRAP));
+
+    // Create the vertex input layout description.
+    std::vector<D3D11_INPUT_ELEMENT_DESC> layout{
+        { "POSITION",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,                               D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD",   0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "NORMAL",     0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 }
+    };
+
+    // Create the input layout
+    AddBind(std::make_unique<InputLayout>(deviceResources, layout, vertexShaderByteCode));
+
+    // Create the rasterizer state
+    AddBind(std::make_unique<RasterizerState>(deviceResources, D3D11_CULL_BACK)); //D3D11_FILL_WIREFRAME
 }
 
 void Mesh::AddDefaultBindables(DX::DeviceResources & deviceResources, Light * &light, const wchar_t * &textureFileName, D3D_PRIMITIVE_TOPOLOGY topology)

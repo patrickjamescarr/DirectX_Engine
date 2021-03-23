@@ -175,6 +175,7 @@
     <ClInclude Include="BloomConstantBuffer.h" />
     <ClInclude Include="BloomPostProcessEffect.h" />
     <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="BrownianFunction.h" />
     <ClInclude Include="BufferTypes.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GaussianBlurConstantBuffer.h" />
+    <ClInclude Include="GeometryShader.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_impl_dx11.h" />
@@ -206,6 +208,7 @@
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="MarchingCubes.h" />
     <ClInclude Include="MarchingCubesHeader.h" />
+    <ClInclude Include="MarchingCubesMesh.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="ModelLoader.h" />
@@ -214,6 +217,7 @@
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="PlayerNode.h" />
+    <ClInclude Include="DensityFunction.h" />
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="ReadData.h" />
@@ -222,11 +226,13 @@
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SimplexFunction.h" />
     <ClInclude Include="SimplexNoise.h" />
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="SkyboxConstantBuffer.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="Terrain.h" />
+    <ClInclude Include="TerrainDensityFunction.h" />
     <ClInclude Include="TerrainNode.h" />
     <ClInclude Include="TerrainVertexBuffer.h" />
     <ClInclude Include="Texture.h" />
@@ -243,6 +249,7 @@
     <ClCompile Include="BloomConstantBuffer.cpp" />
     <ClCompile Include="BloomPostProcessEffect.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
+    <ClCompile Include="BrownianFunction.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CollisionDetection.cpp" />
@@ -254,6 +261,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GaussianBlurConstantBuffer.cpp" />
+    <ClCompile Include="GeometryShader.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
@@ -270,6 +278,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="MarchingCubes.cpp" />
+    <ClCompile Include="MarchingCubesMesh.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
@@ -289,10 +298,12 @@
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SimplexFunction.cpp" />
     <ClCompile Include="SimplexNoise.cpp" />
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="SkyboxConstantBuffer.cpp" />
     <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="TerrainDensityFunction.cpp" />
     <ClCompile Include="TerrainNode.cpp" />
     <ClCompile Include="TerrainVertexBuffer.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -382,6 +393,36 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="test_gs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="test_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="test_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="texture_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

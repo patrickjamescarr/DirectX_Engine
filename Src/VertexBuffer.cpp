@@ -10,6 +10,8 @@ void VertexBuffer::CreateVertexBuffer(const std::vector<DirectX::VertexPositionN
 {
     auto vertexCount = verticies.size();
 
+    if (vertexCount == 0) return;
+
     // Create the vertex array.
     auto vertexArray = new VertexTypeNormal[vertexCount];
 
