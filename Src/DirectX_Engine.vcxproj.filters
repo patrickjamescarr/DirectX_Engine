@@ -68,6 +68,9 @@
     <Filter Include="Header Files\Proc Gen\Functions">
       <UniqueIdentifier>{128d36c2-cc2e-41ff-afc7-64e26bfd7f31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Marching Cubes">
+      <UniqueIdentifier>{32fef193-b6eb-4c0d-b4c3-e30ef2d3bbac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -287,6 +290,9 @@
       <Filter>Header Files\Proc Gen\Functions</Filter>
     </ClInclude>
     <ClInclude Include="MarchingCubesGeometryShader.h" />
+    <ClInclude Include="density.hlsli">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -500,7 +506,13 @@
       <Filter>Imgui</Filter>
     </None>
     <None Include="marching_cubes_header.hlsli">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Marching Cubes</Filter>
+    </None>
+    <None Include="simplex_noise.hlsli">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </None>
+    <None Include="simplex_header.hlsli">
+      <Filter>Shaders\Marching Cubes</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -557,14 +569,14 @@
     <FxCompile Include="test_gs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="marching_cubes_terrain_vs.hlsl">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </FxCompile>
     <FxCompile Include="marching_cubes_terrain_gs.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Marching Cubes</Filter>
     </FxCompile>
     <FxCompile Include="marching_cubes_terrain_ps.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="marching_cubes_terrain_vs.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Marching Cubes</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

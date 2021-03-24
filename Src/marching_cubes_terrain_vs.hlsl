@@ -1,5 +1,6 @@
-// Light vertex shader
+// marching cubes vertex shader
 // Standard issue vertex shader, apply matrices, pass info to pixel shader
+#include "marching_cubes_header.hlsli"
 
 cbuffer MatrixBuffer : register(b0)
 {
@@ -21,6 +22,7 @@ struct OutputType
     float2 tex : TEXCOORD0;
     float3 normal : NORMAL;
     float3 position3D : TEXCOORD2;
+    float density : TEXCOORD3;
 };
 
 OutputType main(InputType input)
@@ -28,6 +30,8 @@ OutputType main(InputType input)
     OutputType output;
 
     input.position.w = 1.0f;
+
+    output.density = 0.0f;
 
     // Calculate the position of the vertex against the world, view, and projection matrices.
     output.position = mul(input.position, worldMatrix);

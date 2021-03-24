@@ -1,9 +1,19 @@
 #include "pch.h"
 #include "SimplexNoise.h"
+#include <string>
 
 SimplexNoise::SimplexNoise()
 {
-    for (int i = 0; i < 512; i++) perm[i] = p[i & 255];
+    std::string thing = "";
+
+    for (int i = 0; i < 512; i++) 
+    {
+        perm[i] = p[i & 255];
+        auto pVal = perm[i];
+        thing += std::to_string(pVal) + ", ";
+    }
+
+
 }
 
 SimplexNoise::~SimplexNoise()
