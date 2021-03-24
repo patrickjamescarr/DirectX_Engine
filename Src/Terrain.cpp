@@ -132,14 +132,9 @@ Terrain::~Terrain()
 
 void Terrain::Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accumulatedTransform) const noexcept
 {
-    // Quad tree draw in here instead of Mesh Draw
-
     m_accumulatedTransform = accumulatedTransform;
 
     m_quadTree->Render(deviceResources, m_frustum);
-
-    // Mesh::Draw(deviceResources, accumulatedTransform);
-    //DetectCameraCollision();
 
     CollisionIntersection collisionIntersection;
 
@@ -154,7 +149,6 @@ void Terrain::Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accu
 void Terrain::Update()
 {
     DisplayGUI();
-    //UpdateVertexBuffer();
 }
 
 bool Terrain::CalculateNormals()
@@ -162,7 +156,6 @@ bool Terrain::CalculateNormals()
 	int i, j, index1, index2, index3, index, count;
 	float vertex1[3], vertex2[3], vertex3[3], vector1[3], vector2[3], sum[3], length;
 	DirectX::SimpleMath::Vector3* normals;
-
 
 	// Create a temporary array to hold the un-normalized normal vectors.
 	normals = new DirectX::SimpleMath::Vector3[(m_terrainHeight - 1) * (m_terrainWidth - 1)];
@@ -529,10 +522,6 @@ bool Terrain::DetectCameraCollision() const
     int v1, v2, v3, v4, v5, v6; //geometric indices.
 
     auto rayOrigin = m_camera->getPosition();
-
-
-    // TODO: use the quad tree to optimize collision detection
-
 
     auto rayDirection = Vector3(0.0f, 1.0f, 0.0f);
 

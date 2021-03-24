@@ -15,7 +15,7 @@
 #include "MarchingCubes.h";
 #include "SimplexFunction.h"
 #include "MarchingCubesMesh.h"
-
+#include "MarchingCubesGeometryShader.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -56,7 +56,8 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     auto sunModel = m_modelLoader.CreateSphere(5);
     m_meshes.push_back(ParseMesh(deviceResources, sunModel, m_sunLight.get(), Matrix::CreateTranslation(Vector3(lightPosition)), L"Textures//sun2.dds", L"light_vs.cso", L"light_ps.cso"));
 
-    auto mcMesh = std::make_unique<MarchingCubesMesh>(deviceResources, m_light.get(), Matrix::CreateTranslation(Vector3(5.f, 2.f, 5.f)), L"Textures//sun2.dds", L"test_vs.cso", L"test_ps.cso");
+    //auto mcMesh = std::make_unique<MarchingCubesMesh>(deviceResources, m_light.get(), Matrix::CreateTranslation(Vector3(5.f, 2.f, 5.f)), L"Textures//sun2.dds", L"test_vs.cso", L"test_ps.cso");
+    auto mcMesh = std::make_unique<MarchingCubesGeometryShader>(deviceResources, m_light.get(), Matrix::Identity);
 
     m_meshes.push_back(std::move(mcMesh));
 
@@ -73,9 +74,9 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     m_rootNode = std::make_unique<SceneNode>(std::move(meshPointers), Matrix::Identity);
 
 
-    //m_terrainNode = std::make_unique<TerrainNode>(deviceResources, m_terrainTransform, m_light.get(), m_playerCamera, frustum, m_collisionDetector.get());
+    m_terrainNode = std::make_unique<TerrainNode>(deviceResources, m_terrainTransform, m_light.get(), m_playerCamera, frustum, m_collisionDetector.get());
 
-    //m_rootNode->AddChild(std::move(m_terrainNode));
+    m_rootNode->AddChild(std::move(m_terrainNode));
 
 
     // create the effects
@@ -101,9 +102,6 @@ void MainScene::Draw(DX::DeviceResources & deviceResources, const DX::StepTimer&
    //m_bloom->Bind(deviceResources);
 
    //m_lensFlare->Draw(deviceResources);
-
-   // clear the geometry shader
-   deviceResources.GetD3DDeviceContext()->GSSetShader(0, 0, 0);
 }
 
 std::unique_ptr<Mesh> MainScene::ParseMesh(

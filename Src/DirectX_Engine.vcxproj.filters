@@ -286,6 +286,7 @@
     <ClInclude Include="TerrainDensityFunction.h">
       <Filter>Header Files\Proc Gen\Functions</Filter>
     </ClInclude>
+    <ClInclude Include="MarchingCubesGeometryShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -474,6 +475,7 @@
     <ClCompile Include="TerrainDensityFunction.cpp">
       <Filter>Source Files\Proc Gen\Functions</Filter>
     </ClCompile>
+    <ClCompile Include="MarchingCubesGeometryShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -496,6 +498,9 @@
     </None>
     <None Include="imgui.ini">
       <Filter>Imgui</Filter>
+    </None>
+    <None Include="marching_cubes_header.hlsli">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -552,10 +557,13 @@
     <FxCompile Include="test_gs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="test_vs.hlsl">
+    <FxCompile Include="marching_cubes_terrain_gs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="test_ps.hlsl">
+    <FxCompile Include="marching_cubes_terrain_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="marching_cubes_terrain_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

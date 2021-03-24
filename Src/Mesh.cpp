@@ -13,8 +13,9 @@
 #include "InputLayout.h"
 #include "Sampler.h"
 
+using namespace DirectX::SimpleMath;
 
-Mesh::Mesh(DirectX::SimpleMath::Matrix transform)
+Mesh::Mesh(Matrix transform)
     : m_transform(transform)
 {
 }
@@ -24,7 +25,7 @@ Mesh::Mesh(
     std::vector<std::unique_ptr<Bindable>> bindables, 
     Light* light, 
     const wchar_t* textureFileName, 
-    DirectX::SimpleMath::Matrix transform,
+    Matrix transform,
     D3D_PRIMITIVE_TOPOLOGY topology
 )
     : m_transform(transform)
@@ -34,9 +35,16 @@ Mesh::Mesh(
     AddBindables(bindables);
 }
 
-Mesh::Mesh(DX::DeviceResources & deviceResources, Light * light, DirectX::SimpleMath::Matrix transform, const wchar_t * textureFileName, const wchar_t * vertexShaderFileName, const wchar_t * pixelShaderFileName)
+Mesh::Mesh(
+    DX::DeviceResources & deviceResources, 
+    Light * light, Matrix transform, 
+    const wchar_t * textureFileName, 
+    const wchar_t * vertexShaderFileName, 
+    const wchar_t * pixelShaderFileName,
+    D3D_PRIMITIVE_TOPOLOGY topology
+)
 {
-    AddDefaultBindables(deviceResources, light, textureFileName, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    AddDefaultBindables(deviceResources, light, textureFileName, topology);
 
     // Create the vertex shader
     auto vertexShader = std::make_unique<VertexShader>(deviceResources, vertexShaderFileName);
@@ -62,7 +70,12 @@ Mesh::Mesh(DX::DeviceResources & deviceResources, Light * light, DirectX::Simple
     AddBind(std::make_unique<RasterizerState>(deviceResources, D3D11_CULL_BACK)); //D3D11_FILL_WIREFRAME
 }
 
-void Mesh::AddDefaultBindables(DX::DeviceResources & deviceResources, Light * &light, const wchar_t * &textureFileName, D3D_PRIMITIVE_TOPOLOGY topology)
+void Mesh::AddDefaultBindables(
+    DX::DeviceResources & deviceResources, 
+    Light * &light, 
+    const wchar_t * &textureFileName, 
+    D3D_PRIMITIVE_TOPOLOGY topology
+)
 {
     AddBind(std::make_unique<Topology>(deviceResources, topology));
 
@@ -81,7 +94,12 @@ void Mesh::AddDefaultBindables(DX::DeviceResources & deviceResources, Light * &l
     }
 }
 
-Mesh::Mesh(DX::DeviceResources & deviceResources, Light * light, const wchar_t * textureFileName, DirectX::SimpleMath::Matrix transform)
+Mesh::Mesh(
+    DX::DeviceResources & deviceResources, 
+    Light * light, const wchar_t * 
+    textureFileName, 
+    Matrix transform
+)
     : m_transform(transform)
 {
     AddDefaultBindables(deviceResources, light, textureFileName, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -110,12 +128,12 @@ void Mesh::Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accumul
 	GameObject::Draw(deviceResources);
 }
 
-DirectX::SimpleMath::Matrix Mesh::GetTransform() const noexcept
+Matrix Mesh::GetTransform() const noexcept
 {
 	return m_transform * m_accumulatedTransform;
 }
 
-void Mesh::SetTransform(DirectX::SimpleMath::Matrix transform) noexcept
+void Mesh::SetTransform(Matrix transform) noexcept
 {
     m_transform = transform;
 }

@@ -28,10 +28,6 @@ float4 main(InputType input) : SV_TARGET
     float	lightIntensity;
     float4	color;
 
-    float4 pos;
-
-    pos = input.position;
-
     // Invert the light direction for calculations.
     lightDir = normalize(input.position3D - lightPosition);
 

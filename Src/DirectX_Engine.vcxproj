@@ -207,6 +207,7 @@
     <ClInclude Include="LightConstantBuffer.h" />
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="MarchingCubes.h" />
+    <ClInclude Include="MarchingCubesGeometryShader.h" />
     <ClInclude Include="MarchingCubesHeader.h" />
     <ClInclude Include="MarchingCubesMesh.h" />
     <ClInclude Include="Mesh.h" />
@@ -278,6 +279,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="MarchingCubes.cpp" />
+    <ClCompile Include="MarchingCubesGeometryShader.cpp" />
     <ClCompile Include="MarchingCubesMesh.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="modelclass.cpp" />
@@ -322,6 +324,7 @@
   <ItemGroup>
     <None Include="Bloom.hlsli" />
     <None Include="imgui.ini" />
+    <None Include="marching_cubes_header.hlsli" />
     <None Include="packages.config" />
     <None Include="rocket.cmo" />
     <None Include="SegoeUI_18.spritefont" />
@@ -382,6 +385,16 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0_level_9_1</ShaderModel>
     </FxCompile>
+    <FxCompile Include="marching_cubes_terrain_gs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="terrain_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -404,7 +417,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="test_ps.hlsl">
+    <FxCompile Include="marching_cubes_terrain_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -414,7 +427,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="test_vs.hlsl">
+    <FxCompile Include="marching_cubes_terrain_vs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
