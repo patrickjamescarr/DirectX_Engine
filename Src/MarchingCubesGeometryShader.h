@@ -2,6 +2,11 @@
 #include "Mesh.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "PixelShader.h"
+#include "VertexShader.h"
+#include "GeometryShader.h"
+#include "RenderTarget.h"
+#include "Texture.h"
 
 class MarchingCubesGeometryShader :
     public Mesh
@@ -20,5 +25,10 @@ private:
 
     VertexBuffer* m_vertexBuffer;
     IndexBuffer* m_indexBuffer;
+
+    std::unique_ptr<RenderTarget> m_build_densities_RT;
+    std::unique_ptr<PixelShader> m_build_densities_PS;
+    std::unique_ptr<VertexShader> m_build_densities_VS;
+    std::unique_ptr<GeometryShader> m_build_densities_GS;
 };
 

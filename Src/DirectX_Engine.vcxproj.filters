@@ -578,5 +578,14 @@
     <FxCompile Include="marching_cubes_terrain_ps.hlsl">
       <Filter>Shaders\Marching Cubes</Filter>
     </FxCompile>
+    <FxCompile Include="mc_build_densities_gs.hlsl">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </FxCompile>
+    <FxCompile Include="mc_build_densities_ps.hlsl">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </FxCompile>
+    <FxCompile Include="mc_build_densities_vs.hlsl">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

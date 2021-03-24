@@ -100,7 +100,6 @@ void BloomPostProcessEffect::Bind(DX::DeviceResources & deviceResources) noexcep
 
     // Apply the brightness threshold
     deviceResources.GetD3DDeviceContext()->OMSetRenderTargets(1, m_bloomRenderTarget1.GetAddressOf(), nullptr);
-    deviceResources.GetD3DDeviceContext()->OMSetRenderTargets(1, m_bloomRenderTarget1.GetAddressOf(), nullptr);
 
     m_spriteBatch->Begin(SpriteSortMode_Immediate,
         nullptr, nullptr, nullptr, nullptr,

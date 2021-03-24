@@ -1,8 +1,10 @@
-#include "sampleNoise.hlsli" 
+#include "simplex_noise.hlsli" 
 
 float DENSITY(float3 ws)
 {
     float density = -ws.y;
 
-    density += noiseVol.Sample(TrilinearRepeat, ws).x;
+    density += GenerateSimplex(ws);
+
+    return density;
 }

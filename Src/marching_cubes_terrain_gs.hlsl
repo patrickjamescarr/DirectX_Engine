@@ -16,33 +16,17 @@ struct VSOutput
 
 [maxvertexcount(3)]
 void main(
-    point VSOutput input[1],
+    triangle VSOutput input[3],
     inout TriangleStream< GSOutput > output
 )
 {
-    GSOutput element;
-    element.position = input[0].position;
-    element.tex = input[0].tex;
-    element.normal = input[0].normal;
-    element.position3D = input[0].position3D;
-
-    output.Append(element);
-
-    float4 p2 = float4(input[0].position.x + 3, input[0].position.y + 3, input[0].position.z, input[0].position.w);
-    float4 p3 = float4(input[0].position.x + 6, input[0].position.y, input[0].position.z, input[0].position.w);
-
-    element.position = p2;
-    element.tex = input[0].tex;
-    element.normal = input[0].normal;
-    element.position3D = input[0].position3D;
-
-    output.Append(element);
-
-    element.position = p3;
-    element.tex = input[0].tex;
-    element.normal = input[0].normal;
-    element.position3D = input[0].position3D;
-
-    output.Append(element);
-
+    for (uint i = 0; i < 3; i++)
+    {
+        GSOutput element;
+        element.position = input[i].position;
+        element.tex = input[i].tex;
+        element.normal = input[i].normal;
+        element.position3D = input[i].position3D;
+        output.Append(element);
+    }
 }

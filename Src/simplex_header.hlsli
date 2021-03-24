@@ -1,4 +1,3 @@
-#pragma once
 int grad3[12][3] = { {1,1,0},{-1,1,0},{1,-1,0},{-1,-1,0},
     {1,0,1},{-1,0,1},{1,0,-1},{-1,0,-1},
     {0,1,1},{0,-1,1},{0,1,-1},{0,-1,-1} };
@@ -26,7 +25,7 @@ int p[256] = { 151,160,137,91,90,15,
 49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
 138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180 };
 
-// To remove the need for index wrapping, double the permutation table length
+// To remove the need for index wrapping, float the permutation table length
 int perm[512] = {
 151,160,137,91,90,15,
 131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
@@ -68,15 +67,15 @@ int simplex[64][4] = {
 {2,1,0,3},{0,0,0,0},{0,0,0,0},{0,0,0,0},{3,1,0,2},{0,0,0,0},{3,2,0,1},{3,2,1,0} };
 
 // This method is a *lot* faster than using (int)Math.floor(x)
-int fastfloor(double x) {
+int fastfloor(float x) {
     return x > 0 ? (int)x : (int)x - 1;
 }
-double dot(int g[], double x, double y) {
+float dot(int g[2], float x, float y) {
     return g[0] * x + g[1] * y;
 }
-double dot(int g[], double x, double y, double z) {
+float dot(int g[3], float x, float y, float z) {
     return g[0] * x + g[1] * y + g[2] * z;
 }
-double dot(int g[], double x, double y, double z, double w) {
+float dot(int g[4], float x, float y, float z, float w) {
     return g[0] * x + g[1] * y + g[2] * z + g[3] * w;
 }

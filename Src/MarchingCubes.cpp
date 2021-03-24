@@ -40,7 +40,7 @@ MeshObject MarchingCubes::Generate(int xSize, int ySize, int zSize)
 
                 for (auto& tri : triangles)
                 {
-                    auto normal = (tri.p[0] - tri.p[2]).Cross(tri.p[2] - tri.p[1]);
+                    // auto normal = (tri.p[0] - tri.p[2]).Cross(tri.p[2] - tri.p[1]);
 
                     AddMeshVertex(tri.p[0], mesh, indexCount);
                     AddMeshVertex(tri.p[1], mesh, indexCount);
