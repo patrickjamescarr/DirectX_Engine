@@ -41,9 +41,7 @@ private:
 private:
     DensityFunction* m_function;
 
-    float m_increment = 1 * m_scale;
     float m_scale = 0.03;
     float m_isoLevel = 0;
-
 };
 

@@ -7,6 +7,8 @@
 #include "GeometryShader.h"
 #include "RenderTarget.h"
 #include "Texture.h"
+#include "Bindable.h"
+#include "Sampler.h"
 
 class MarchingCubesGeometryShader :
     public Mesh
@@ -23,12 +25,19 @@ private:
     const wchar_t * m_vertexShaderFileName = L"test_vs.cso";
     const wchar_t * m_pixelShaderFileName = L"test_ps.cso";
 
-    VertexBuffer* m_vertexBuffer;
     IndexBuffer* m_indexBuffer;
 
-    std::unique_ptr<RenderTarget> m_build_densities_RT;
     std::unique_ptr<PixelShader> m_build_densities_PS;
     std::unique_ptr<VertexShader> m_build_densities_VS;
-    std::unique_ptr<GeometryShader> m_build_densities_GS;
+
+    RenderTarget* m_buildDensitiesRT;
+    std::vector < std::unique_ptr<Bindable>> m_densityVolumeRenderPass;
+    VertexBuffer<DirectX::VertexPosition>* m_densityVertexBuffer;
+
+    RenderTarget* m_generateVertsRT;
+    std::vector < std::unique_ptr<Bindable>> m_generateVertsRenderPass;
+    VertexBuffer<DirectX::VertexPosition>* m_generateVertsVertexBuffer;
+
+    std::unique_ptr<Sampler> m_gsSampler;
 };
 

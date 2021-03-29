@@ -1,5 +1,4 @@
-// Light vertex shader
-// Standard issue vertex shader, apply matrices, pass info to pixel shader
+// marching cubes build densities vertex shader
 
 cbuffer MatrixBuffer : register(b0)
 {
@@ -8,24 +7,20 @@ cbuffer MatrixBuffer : register(b0)
     matrix projectionMatrix;
 };
 
-struct InputType
+struct VSInput
 {
     float4 position : POSITION;
-    float2 tex : TEXCOORD0;
-    float3 normal : NORMAL;
 };
 
-struct OutputType
+struct VSOutput
 {
     float4 position : SV_POSITION;
-    float2 tex : TEXCOORD0;
-    float3 normal : NORMAL;
-    float3 position3D : TEXCOORD2;
+    float3 wsPosition : TEXCOORD0;
 };
 
-OutputType main(InputType input)
+VSOutput main(VSInput input)
 {
-    OutputType output;
+    VSOutput output;
 
     input.position.w = 1.0f;
 
@@ -34,17 +29,8 @@ OutputType main(InputType input)
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
 
-    // Store the texture coordinates for the pixel shader.
-    output.tex = input.tex;
-
-    // Calculate the normal vector against the world matrix only.
-    output.normal = mul(input.normal, (float3x3)worldMatrix);
-
-    // Normalize the normal vector.
-    output.normal = normalize(output.normal);
-
-    // world position of vertex (for point light)
-    output.position3D = (float3)mul(input.position, worldMatrix);
+    // world position of vertex
+    output.wsPosition = (float3)mul(input.position, worldMatrix);
 
     return output;
 }

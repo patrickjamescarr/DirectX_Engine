@@ -1,30 +1,20 @@
-struct v2gConnector {
-    float4 projCoord    : POSITION;
-    float4 wsCoord      : TEXCOORD;
-    float3 chunkCoord   : TEXCOORD1;
-    uint   nInstanceID  : BLAH;
+struct GSInput {
+    float4 position : SV_POSITION;
+    float3 wsPosition : TEXCOORD0;
 };
 
-struct g2fConnector {
-    float4 projCoord    : POSITION;
-    float4 wsCoord      : TEXCOORD;
-    float3 chunkCoord   : TEXCOORD1;
-    uint   RTIndex      : SV_RenderTargetArrayIndex;
+struct GSOutput {
+    float4 position : SV_POSITION;
+    float3 wsPosition : TEXCOORD0;
 };
 
-[maxvertexcount(3)]
-void main(triangle v2gConnector input[3],
-    inout TriangleStream<g2fConnector> Stream
+[maxvertexcount(1)]
+void main(point GSInput input[1],
+    inout TriangleStream<GSOutput> Stream
 )
 {
-    for (int v = 0; v < 3; v++)
-    {
-        g2fConnector g2f;
-        g2f.projCoord = input[v].projCoord;
-        g2f.wsCoord = input[v].wsCoord;
-        g2f.RTIndex = input[v].nInstanceID;
-        g2f.chunkCoord = input[v].chunkCoord;
-        Stream.Append(g2f);
-    }
-    Stream.RestartStrip();
+    GSOutput output;
+    output.position = input[0].position;
+    output.wsPosition = input[0].wsPosition;
+    Stream.Append(output);
 }

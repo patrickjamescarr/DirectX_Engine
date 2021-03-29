@@ -12,7 +12,7 @@
 #include "PlayerCamera.h"
 #include "BoxCollider.h"
 #include "TerrainNode.h"
-#include "MarchingCubes.h";
+#include "MarchingCubes.h"
 #include "SimplexFunction.h"
 #include "MarchingCubesMesh.h"
 #include "MarchingCubesGeometryShader.h"
@@ -118,7 +118,7 @@ std::unique_ptr<Mesh> MainScene::ParseMesh(
     std::vector<std::unique_ptr<Bindable>> bindables;
 
     // Create the vertex buffer
-    bindables.push_back(std::make_unique<VertexBuffer>(deviceResources, modelMesh.verticies));
+    bindables.push_back(std::make_unique<VertexBuffer<DirectX::VertexPositionNormalTexture>>(deviceResources, modelMesh.verticies));
 
     // Create the index buffer
     bindables.push_back(std::make_unique<IndexBuffer>(deviceResources, modelMesh.indices));

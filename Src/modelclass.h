@@ -74,7 +74,7 @@ private:
 	std::unique_ptr<DirectX::Model> m_model;
 	std::unique_ptr<ModelType[]> m_modelTxt;
 
-	std::unique_ptr<VertexBuffer> m_vertexBuffer1;
+	std::unique_ptr<VertexBuffer<DirectX::VertexPositionNormalTexture>> m_vertexBuffer1;
 	std::unique_ptr<IndexBuffer> m_indexBuffer1;
 
 };

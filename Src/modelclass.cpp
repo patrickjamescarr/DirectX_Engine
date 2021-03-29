@@ -100,7 +100,7 @@ int ModelClass::GetIndexCount()
 
 bool ModelClass::InitializeBuffers(DX::DeviceResources& deviceResources)
 {
-	m_vertexBuffer1 = std::make_unique<VertexBuffer>(deviceResources, preFabVertices);
+	m_vertexBuffer1 = std::make_unique<VertexBuffer<DirectX::VertexPositionNormalTexture>>(deviceResources, preFabVertices);
 	m_indexBuffer1 = std::make_unique<IndexBuffer>(deviceResources, preFabIndices);
 	return true;
 }

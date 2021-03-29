@@ -21,7 +21,7 @@ MarchingCubesMesh::MarchingCubesMesh(DX::DeviceResources & deviceResources, Ligh
     auto modelMesh = m_marchingCubes->Generate(m_width, m_height, m_depth);
 
     // create the vertex buffer and store a pointer to it
-    auto vertexBuffer = std::make_unique<VertexBuffer>(deviceResources, modelMesh.verticies);
+    auto vertexBuffer = std::make_unique<VertexBuffer<DirectX::VertexPositionNormalTexture>>(deviceResources, modelMesh.verticies);
     m_vertexBuffer = vertexBuffer.get();
     AddBind(std::move(vertexBuffer));
 

@@ -10,12 +10,12 @@ public:
     void Bind(DX::DeviceResources& deviceResources) noexcept override;
     void Update(DX::DeviceResources & deviceResources);
 
-    const std::shared_ptr<VertexBuffer>& GetVertexBuffer() {
+    const std::shared_ptr<VertexBuffer<DirectX::VertexPositionNormalTexture>>& GetVertexBuffer() {
         return m_terrainBuffer;
     }
 
 private:
-    std::shared_ptr<VertexBuffer> m_terrainBuffer;
+    std::shared_ptr<VertexBuffer<DirectX::VertexPositionNormalTexture>> m_terrainBuffer;
     const MeshObject& m_mesh;
 };
 

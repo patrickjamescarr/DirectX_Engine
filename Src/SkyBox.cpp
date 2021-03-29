@@ -42,7 +42,7 @@ SkyBox::SkyBox(DX::DeviceResources & deviceResources)
 	DirectX::GeometricPrimitive::CreateBox(cubeVertices, cubeIndices, DirectX::SimpleMath::Vector3(1, 1, 1), false);
 
 	// Create the vertex buffer
-	AddBind(std::make_unique<VertexBuffer>(deviceResources, cubeVertices));
+	AddBind(std::make_unique<VertexBuffer<DirectX::VertexPositionNormalTexture>>(deviceResources, cubeVertices));
 
 	// Create the index buffer
 	AddIndexBuffer(std::make_unique<IndexBuffer>(deviceResources, cubeIndices));

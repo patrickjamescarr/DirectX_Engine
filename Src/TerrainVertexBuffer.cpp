@@ -4,7 +4,7 @@
 TerrainVertexBuffer::TerrainVertexBuffer(DX::DeviceResources& deviceResources, const MeshObject& mesh)
     : m_mesh(mesh)
 {
-    m_terrainBuffer = std::make_shared<VertexBuffer>(deviceResources, mesh.verticies);
+    m_terrainBuffer = std::make_shared<VertexBuffer<DirectX::VertexPositionNormalTexture>>(deviceResources, mesh.verticies);
 }
 
 void TerrainVertexBuffer::Bind(DX::DeviceResources & deviceResources) noexcept

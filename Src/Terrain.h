@@ -77,7 +77,7 @@ private:
     CollisionDetection m_collider;
 
     DX::DeviceResources& m_deviceResources;
-    std::shared_ptr<VertexBuffer> m_vertexBuffer;
+    std::shared_ptr<VertexBuffer<DirectX::VertexPositionNormalTexture>> m_vertexBuffer;
 
     std::unique_ptr<QuadTree> m_quadTree;
 

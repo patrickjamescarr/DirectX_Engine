@@ -1,17 +1,23 @@
 // marching cubes pixel shader
 #include "density.hlsli"
 
-struct GSOutput
+cbuffer LightBuffer : register(b0)
 {
-    float4 position : SV_POSITION;
-    float2 tex : TEXCOORD0;
-    float3 normal : NORMAL;
-    float3 position3D : TEXCOORD2;
+    float4 ambientColor;
+    float4 diffuseColor;
+    float3 lightPosition;
+    float padding;
 };
 
-float main(GSOutput input) : SV_TARGET0
+struct PSInput
 {
-    float ret = DENSITY(input.position3D);
+    float4 position : SV_POSITION;
+    float3 wsPosition : TEXCOORD0;
+};
+
+float main(PSInput input) : SV_TARGET0
+{
+    float ret = DENSITY(input.position.xyz / 65.0f);
 
     return ret;
 }

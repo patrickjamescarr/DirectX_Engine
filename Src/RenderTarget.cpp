@@ -1,22 +1,27 @@
 #include "pch.h"
 #include "RenderTarget.h"
 
-RenderTarget::RenderTarget(DX::DeviceResources & deviceResources)
+RenderTarget::RenderTarget(DX::DeviceResources & deviceResources, CD3D11_TEXTURE2D_DESC textureDesc)
 {
-    auto width = deviceResources.GetBackBufferWidth();
-    auto height = deviceResources.GetBackBufferHeight();
-    auto backBufferFormat = deviceResources.GetBackBufferFormat();
+    DX::ThrowIfFailed(deviceResources.GetD3DDevice()->CreateTexture2D(&textureDesc, nullptr,
+        m_renderTexture2D.GetAddressOf()));
 
-    CD3D11_TEXTURE2D_DESC rtDesc(backBufferFormat, width / 2, height / 2,
-        1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
-
-    DX::ThrowIfFailed(deviceResources.GetD3DDevice()->CreateTexture2D(&rtDesc, nullptr,
-        m_renderTexture.GetAddressOf()));
-
-    DX::ThrowIfFailed(deviceResources.GetD3DDevice()->CreateRenderTargetView(m_renderTexture.Get(), nullptr,
+    DX::ThrowIfFailed(deviceResources.GetD3DDevice()->CreateRenderTargetView(m_renderTexture2D.Get(), nullptr,
         m_renderTarget.ReleaseAndGetAddressOf()));
 
-    DX::ThrowIfFailed(deviceResources.GetD3DDevice()->CreateShaderResourceView(m_renderTexture.Get(), nullptr,
+    DX::ThrowIfFailed(deviceResources.GetD3DDevice()->CreateShaderResourceView(m_renderTexture2D.Get(), nullptr,
+        m_shaderResourceView.ReleaseAndGetAddressOf()));
+}
+
+RenderTarget::RenderTarget(DX::DeviceResources & deviceResources, CD3D11_TEXTURE3D_DESC textureDesc)
+{
+    DX::ThrowIfFailed(deviceResources.GetD3DDevice()->CreateTexture3D(&textureDesc, nullptr,
+        m_renderTexture3D.GetAddressOf()));
+
+    DX::ThrowIfFailed(deviceResources.GetD3DDevice()->CreateRenderTargetView(m_renderTexture3D.Get(), nullptr,
+        m_renderTarget.ReleaseAndGetAddressOf()));
+
+    DX::ThrowIfFailed(deviceResources.GetD3DDevice()->CreateShaderResourceView(m_renderTexture3D.Get(), nullptr,
         m_shaderResourceView.ReleaseAndGetAddressOf()));
 }
 

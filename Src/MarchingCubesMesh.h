@@ -31,7 +31,7 @@ public:
     void Update();
     void ShowFBMControls();
 private:
-    VertexBuffer* m_vertexBuffer;
+    VertexBuffer<DirectX::VertexPositionNormalTexture>* m_vertexBuffer;
     IndexBuffer* m_indexBuffer;
 
     std::unique_ptr<MarchingCubes> m_marchingCubes;

@@ -569,15 +569,6 @@
     <FxCompile Include="test_gs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="marching_cubes_terrain_vs.hlsl">
-      <Filter>Shaders\Marching Cubes</Filter>
-    </FxCompile>
-    <FxCompile Include="marching_cubes_terrain_gs.hlsl">
-      <Filter>Shaders\Marching Cubes</Filter>
-    </FxCompile>
-    <FxCompile Include="marching_cubes_terrain_ps.hlsl">
-      <Filter>Shaders\Marching Cubes</Filter>
-    </FxCompile>
     <FxCompile Include="mc_build_densities_gs.hlsl">
       <Filter>Shaders\Marching Cubes</Filter>
     </FxCompile>
@@ -585,6 +576,15 @@
       <Filter>Shaders\Marching Cubes</Filter>
     </FxCompile>
     <FxCompile Include="mc_build_densities_vs.hlsl">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </FxCompile>
+    <FxCompile Include="mc_generate_vertices_gs.hlsl">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </FxCompile>
+    <FxCompile Include="mc_generate_vertices_ps.hlsl">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </FxCompile>
+    <FxCompile Include="mc_generate_vertices_vs.hlsl">
       <Filter>Shaders\Marching Cubes</Filter>
     </FxCompile>
   </ItemGroup>

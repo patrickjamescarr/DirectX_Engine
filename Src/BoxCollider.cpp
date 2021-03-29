@@ -22,7 +22,7 @@ BoxCollider::BoxCollider(DX::DeviceResources& deviceResources, DirectX::SimpleMa
     DirectX::GeometricPrimitive::CreateBox(cubeVertices, cubeIndices, dimentions, false);
 
     // Create the vertex buffer
-    bindables.push_back(std::make_unique<VertexBuffer>(deviceResources, cubeVertices));
+    bindables.push_back(std::make_unique<VertexBuffer<DirectX::VertexPositionNormalTexture>>(deviceResources, cubeVertices));
 
     // Create the index buffer
     AddIndexBuffer(std::make_unique<IndexBuffer>(deviceResources, cubeIndices));
