@@ -30,7 +30,7 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     m_collisionDetector = std::make_unique<Collision>();
 
     // create the scene light
-    auto lightPosition = Vector3(30.0f, 200.0f, -70.0f);
+    auto lightPosition = Vector3(30.0f, 20.0f, -70.0f);
 
     m_light = std::make_unique<Light>();
     m_light->setAmbientColour(0.1f, 0.1f, 0.1f, 1.0f);
@@ -56,8 +56,11 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     auto sunModel = m_modelLoader.CreateSphere(5);
     m_meshes.push_back(ParseMesh(deviceResources, sunModel, m_sunLight.get(), Matrix::CreateTranslation(Vector3(lightPosition)), L"Textures//sun2.dds", L"light_vs.cso", L"light_ps.cso"));
 
-    //auto mcMesh = std::make_unique<MarchingCubesMesh>(deviceResources, m_light.get(), Matrix::CreateTranslation(Vector3(5.f, 2.f, 5.f)), L"Textures//sun2.dds", L"test_vs.cso", L"test_ps.cso");
-    auto mcMesh = std::make_unique<MarchingCubesGeometryShader>(deviceResources, m_light.get(), Matrix::Identity);
+    auto mcMeshCpu = std::make_unique<MarchingCubesMesh>(deviceResources, m_light.get(), Matrix::CreateTranslation(Vector3(5.f, 2.f, 5.f)), L"Textures//sun2.dds", L"test_vs.cso", L"test_ps.cso");
+    
+    m_meshes.push_back(std::move(mcMeshCpu));
+    
+    auto mcMesh = std::make_unique<MarchingCubesGeometryShader>(deviceResources, m_light.get(), activeCamera, Matrix::Identity);
 
     m_meshes.push_back(std::move(mcMesh));
 
@@ -74,9 +77,9 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     m_rootNode = std::make_unique<SceneNode>(std::move(meshPointers), Matrix::Identity);
 
 
-    m_terrainNode = std::make_unique<TerrainNode>(deviceResources, m_terrainTransform, m_light.get(), m_playerCamera, frustum, m_collisionDetector.get());
+    //m_terrainNode = std::make_unique<TerrainNode>(deviceResources, m_terrainTransform, m_light.get(), m_playerCamera, frustum, m_collisionDetector.get());
 
-    m_rootNode->AddChild(std::move(m_terrainNode));
+    //m_rootNode->AddChild(std::move(m_terrainNode));
 
 
     // create the effects

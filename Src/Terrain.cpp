@@ -10,7 +10,7 @@
 #include "Topology.h"
 #include "DepthStencil.h"
 #include "DepthStencilState.h"
-#include "TransformConstantBuffer.h"
+#include "TransformConstantBufferVS.h"
 #include "LightConstantBuffer.h"
 #include "Texture.h"
 #include "MarchingCubes.h"
@@ -89,7 +89,7 @@ Terrain::Terrain(
 
     bindables.push_back(std::make_unique<DepthStencilState>(deviceResources, DepthStencilState::default));
 
-    bindables.push_back(std::make_unique<TransformConstantBuffer>(deviceResources, *this));
+    bindables.push_back(std::make_unique<TransformConstantBufferVS>(deviceResources, *this));
 
     bindables.push_back(std::make_unique<LightConstantBuffer>(deviceResources, light));
     
@@ -595,7 +595,8 @@ void Terrain::GenerateNoise(NoiseType noiseType)
 
             if (noiseType == Perlin)
             {
-                m_heightMap[index].y = m_noise.Generate(m_heightMap[index].x * scale, m_heightMap[index].y * scale, m_heightMap[index].z * scale) * 10.0f;
+                auto point = Vector3(m_heightMap[index].x, m_heightMap[index].y, m_heightMap[index].z) * scale;
+                m_heightMap[index].y = m_noise.Generate(point) * 10.0f;
             }
             else
             {

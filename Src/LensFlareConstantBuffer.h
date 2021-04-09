@@ -6,7 +6,7 @@
 class LensFlareConstantBuffer : public Bindable
 {
 public:
-    __declspec(align(16))
+    __declspec(align(16))  // buffer byteWidth needs to be a multiple of 16
     struct FlareBufferType {
         float brightness;
     };

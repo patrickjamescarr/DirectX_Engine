@@ -17,21 +17,18 @@ IndexBuffer::IndexBuffer(DX::DeviceResources& deviceResources, const std::vector
 
 void IndexBuffer::CreateIndexBuffer(const std::vector<uint32_t> & indices, DX::DeviceResources & deviceResources)
 {
-    m_indexCount = (UINT)indices.size();
+    m_indexCount = (uint32_t)indices.size();
 
     if (m_indexCount == 0) return;
 
-    auto indexArray = new unsigned long[m_indexCount];
+    auto indexArray = new uint32_t[m_indexCount];
 
-    for (int i = 0; i < m_indexCount; i++)
-    {
-        indexArray[i] = indices[i];
-    }
+    std::copy(indices.begin(), indices.end(), indexArray);
 
     // Set up the description of the static index buffer.
     D3D11_BUFFER_DESC indexBufferDesc;
     indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
+    indexBufferDesc.ByteWidth = sizeof(uint32_t) * m_indexCount;
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
     indexBufferDesc.MiscFlags = 0;

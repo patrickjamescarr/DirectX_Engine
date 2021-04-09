@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "VertexConstantBuffer.h"
 
-class TransformConstantBuffer : public Bindable
+class TransformConstantBufferVS : public Bindable
 {
 private:
 	//standard matrix buffer supplied to all shaders
@@ -14,7 +14,7 @@ private:
 		DirectX::XMMATRIX projection;
 	};
 public:
-	TransformConstantBuffer(DX::DeviceResources& deviceResources, const GameObject& parent);
+	TransformConstantBufferVS(DX::DeviceResources& deviceResources, const GameObject& parent, UINT slot = 0);
 	void Bind(DX::DeviceResources& deviceResources) noexcept override;
 private:
 	std::unique_ptr<VertexConstantBuffer<MatrixBufferType>> m_vertexConstantBuffer;

@@ -57,6 +57,11 @@ void Camera::Update()
 	//update lookat point
 	m_lookat = m_position + m_forward;
 
+    Vector3 thing;
+    Vector3 anotherThing;
+    Vector3 blah = thing + anotherThing;
+
+
 	//apply camera vectors and create camera matrix
 	m_cameraMatrix = (Matrix::CreateLookAt(m_position, m_lookat, Vector3::UnitY));
 }

@@ -1,16 +1,16 @@
 #include "pch.h"
-#include "TransformConstantBuffer.h"
+#include "TransformConstantBufferVS.h"
 
-TransformConstantBuffer::TransformConstantBuffer(DX::DeviceResources & deviceResources, const GameObject & parent) 
+TransformConstantBufferVS::TransformConstantBufferVS(DX::DeviceResources & deviceResources, const GameObject & parent, UINT slot)
 	: m_parent(parent)
 {
 	if (!m_vertexConstantBuffer)
 	{
-		m_vertexConstantBuffer = std::make_unique<VertexConstantBuffer<MatrixBufferType>>(deviceResources);
+		m_vertexConstantBuffer = std::make_unique<VertexConstantBuffer<MatrixBufferType>>(deviceResources, slot);
 	}
 }
 
-void TransformConstantBuffer::Bind(DX::DeviceResources & deviceResources) noexcept
+void TransformConstantBufferVS::Bind(DX::DeviceResources & deviceResources) noexcept
 {
 	const MatrixBufferType matrixBuffer =
 	{

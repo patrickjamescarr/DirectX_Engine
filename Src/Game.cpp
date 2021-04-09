@@ -195,6 +195,8 @@ void Game::Update(DX::StepTimer const& timer)
     if (m_input.Quit())
     {
         ExitGame();
+
+        //m_deviceResources->OutputDebugInfo();
     }
 }
 void Game::UpdateCameras()

@@ -178,6 +178,7 @@
     <ClInclude Include="BrownianFunction.h" />
     <ClInclude Include="BufferTypes.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraConstantBuffer.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionDetection.h" />
     <ClInclude Include="CubeTexture.h" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GaussianBlurConstantBuffer.h" />
+    <ClInclude Include="GeometryConstantBuffer.h" />
     <ClInclude Include="GeometryShader.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
@@ -208,6 +210,8 @@
     <ClInclude Include="LightConstantBuffer.h" />
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="MarchingCubes.h" />
+    <ClInclude Include="MarchingCubesConstantBufferGS.h" />
+    <ClInclude Include="MarchingCubesConstantBufferVS.h" />
     <ClInclude Include="MarchingCubesGeometryShader.h" />
     <ClInclude Include="MarchingCubesHeader.h" />
     <ClInclude Include="MarchingCubesMesh.h" />
@@ -239,7 +243,8 @@
     <ClInclude Include="TerrainVertexBuffer.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Topology.h" />
-    <ClInclude Include="TransformConstantBuffer.h" />
+    <ClInclude Include="TransformConstantBufferGS.h" />
+    <ClInclude Include="TransformConstantBufferVS.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexConstantBuffer.h" />
@@ -253,6 +258,7 @@
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="BrownianFunction.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraConstantBuffer.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CollisionDetection.cpp" />
     <ClCompile Include="CubeTexture.cpp" />
@@ -280,6 +286,8 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="MarchingCubes.cpp" />
+    <ClCompile Include="MarchingCubesConstantBufferGS.cpp" />
+    <ClCompile Include="MarchingCubesConstantBufferVS.cpp" />
     <ClCompile Include="MarchingCubesGeometryShader.cpp" />
     <ClCompile Include="MarchingCubesMesh.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -311,7 +319,8 @@
     <ClCompile Include="TerrainVertexBuffer.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Topology.cpp" />
-    <ClCompile Include="TransformConstantBuffer.cpp" />
+    <ClCompile Include="TransformConstantBufferGS.cpp" />
+    <ClCompile Include="TransformConstantBufferVS.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="ViewingFrustum.cpp" />
@@ -326,8 +335,10 @@
     <None Include="Bloom.hlsli" />
     <None Include="imgui.ini" />
     <None Include="marching_cubes_header.hlsli" />
+    <None Include="noise.hlsli" />
     <None Include="packages.config" />
     <None Include="rocket.cmo" />
+    <None Include="simplex_3d.hlsli" />
     <None Include="simplex_noise.hlsli" />
     <None Include="SegoeUI_18.spritefont" />
     <None Include="simplex_header.hlsli" />
@@ -347,6 +358,36 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="billboard_gs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="billboard_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="billboard_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="BloomCombine.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>

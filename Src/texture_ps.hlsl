@@ -1,6 +1,4 @@
 // Texture pixel/fragment shader
-Texture2D shaderTexture : register(t0);
-SamplerState SampleType : register(s0);
 
 struct InputType
 {
@@ -8,12 +6,14 @@ struct InputType
     float2 tex : TEXCOORD0;
 };
 
-float4 main(InputType input) : SV_TARGET
+float main(InputType input) : SV_TARGET
 {
-    float4 textureColor;
+    // invert the texture v coordinates
+    // input.tex.y *= -1;
 
-    // Sample the pixel color from the texture using the sampler at this texture coordinate location.
-    textureColor = shaderTexture.Sample(SampleType, input.tex);
+    float val;
 
-    return textureColor;
+    val = input.tex.x + input.tex.y;
+
+    return val;
 }

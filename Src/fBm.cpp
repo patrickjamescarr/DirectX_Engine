@@ -21,7 +21,7 @@ float FBM::Generate(DirectX::SimpleMath::Vector2 point, float value, float ampli
 float FBM::Generate(DirectX::SimpleMath::Vector3 point, float value, float amplitude, int octaves, float lacunarity, float gain)
 {
     for (int i = 0; i < octaves; i++) {
-        value += amplitude * m_simplex.Generate(point.x, point.y, point.z);
+        value += amplitude * m_simplex.Generate(point);
         point *= lacunarity;
         amplitude *= gain;
     }

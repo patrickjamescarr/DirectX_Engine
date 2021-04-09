@@ -53,6 +53,11 @@ DeviceResources::DeviceResources(
 {
 }
 
+DX::DeviceResources::~DeviceResources()
+{
+   // OutputDebugInfo();
+}
+
 // Configures the Direct3D device, and stores handles to it and the device context.
 void DeviceResources::CreateDeviceResources() 
 {
@@ -214,6 +219,8 @@ void DeviceResources::CreateDeviceResources()
         (void) m_d3dContext.As(&m_d3dContext1);
         (void) m_d3dContext.As(&m_d3dAnnotation);
     }
+
+    DX::ThrowIfFailed(m_d3dDevice->QueryInterface(IID_PPV_ARGS(&m_debug)));
 }
 
 // These resources need to be recreated every time the window size is changed.
@@ -427,13 +434,13 @@ void DeviceResources::HandleDeviceLost()
     m_d3dDevice1.Reset();
 
 #ifdef _DEBUG
-    {
-        ComPtr<ID3D11Debug> d3dDebug;
-        if (SUCCEEDED(m_d3dDevice.As(&d3dDebug)))
-        {
-            d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_SUMMARY);
-        }
-    }
+    //{
+    //    ComPtr<ID3D11Debug> d3dDebug;
+    //    if (SUCCEEDED(m_d3dDevice.As(&d3dDebug)))
+    //    {
+    //        d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_SUMMARY);
+    //    }
+    //}
 #endif
 
     m_d3dDevice.Reset();
@@ -483,6 +490,16 @@ void DeviceResources::Present()
     else
     {
         ThrowIfFailed(hr);
+    }
+}
+
+void DX::DeviceResources::OutputDebugInfo()
+{
+    // dump output only if we actually grabbed a debug interface
+    if (m_debug != nullptr)
+    {
+        m_debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+        m_debug = nullptr;
     }
 }
 

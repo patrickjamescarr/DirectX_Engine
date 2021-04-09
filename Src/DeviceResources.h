@@ -24,6 +24,7 @@ namespace DX
             DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D24_UNORM_S8_UINT,
             UINT backBufferCount = 2,
             D3D_FEATURE_LEVEL minFeatureLevel = D3D_FEATURE_LEVEL_9_1) noexcept;
+        ~DeviceResources();
 
         void CreateDeviceResources();
         void CreateWindowSizeDependentResources();
@@ -32,6 +33,7 @@ namespace DX
         void HandleDeviceLost();
         void RegisterDeviceNotify(IDeviceNotify* deviceNotify) { m_deviceNotify = deviceNotify; }
         void Present();
+        void OutputDebugInfo();
 
         // Device Accessors.
         RECT GetOutputSize() const { return m_outputSize; }
@@ -49,6 +51,7 @@ namespace DX
         ID3D11RenderTargetView*	GetRenderTargetView() const { return m_d3dRenderTargetView.Get(); }
         ID3D11RenderTargetView**GetRenderTargetViewAddress() { return m_d3dRenderTargetView.GetAddressOf(); }
         ID3D11DepthStencilView* GetDepthStencilView() const { return m_d3dDepthStencilView.Get(); }
+        ID3D11DepthStencilView** GetDepthStencilViewAddress() { return m_d3dDepthStencilView.GetAddressOf(); }
         DXGI_FORMAT             GetBackBufferFormat() const { return m_backBufferFormat; }
         DXGI_FORMAT             GetDepthBufferFormat() const { return m_depthBufferFormat; }
         D3D11_VIEWPORT          GetScreenViewport() const { return m_screenViewport; }
@@ -92,6 +95,8 @@ namespace DX
     private:
         void GetHardwareAdapter(IDXGIAdapter1** ppAdapter);
 
+        // Debug
+        Microsoft::WRL::ComPtr<ID3D11Debug>             m_debug;
         // Direct3D objects.
         Microsoft::WRL::ComPtr<ID3D11Device>            m_d3dDevice;
         Microsoft::WRL::ComPtr<ID3D11Device1>           m_d3dDevice1;

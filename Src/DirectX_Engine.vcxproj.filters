@@ -71,6 +71,18 @@
     <Filter Include="Shaders\Marching Cubes">
       <UniqueIdentifier>{32fef193-b6eb-4c0d-b4c3-e30ef2d3bbac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Bindable\Shaders">
+      <UniqueIdentifier>{cbc4b019-12e0-4aa6-a5ee-4ed91368d71a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Bindable\States">
+      <UniqueIdentifier>{143e3b17-6ee0-4142-a33d-157de3132da4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Bindable\Constant Buffers">
+      <UniqueIdentifier>{724104cc-68e3-4462-b502-3c9c5e74a70c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Bindable\Constant Buffers">
+      <UniqueIdentifier>{7d8565a0-2b77-4522-90b1-9f8590126a78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -115,15 +127,6 @@
     <ClInclude Include="VertexBuffer.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="ConstantBuffer.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
-    <ClInclude Include="VertexConstantBuffer.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
-    <ClInclude Include="PixelConstantBuffer.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
     <ClInclude Include="InputLayout.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
@@ -145,49 +148,16 @@
     <ClInclude Include="MainScene.h">
       <Filter>Header Files\Scene Graph</Filter>
     </ClInclude>
-    <ClInclude Include="VertexShader.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
-    <ClInclude Include="PixelShader.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
-    <ClInclude Include="TransformConstantBuffer.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
-    <ClInclude Include="LightConstantBuffer.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
     <ClInclude Include="CubeTexture.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="RasterizerState.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
-    <ClInclude Include="DepthStencil.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
-    <ClInclude Include="DepthStencilState.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
     <ClInclude Include="Sampler.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="SkyboxConstantBuffer.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
-    <ClInclude Include="BloomConstantBuffer.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
     <ClInclude Include="RenderTarget.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
-    <ClInclude Include="GaussianBlurConstantBuffer.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
-    <ClInclude Include="LensFlareConstantBuffer.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
     <ClInclude Include="LensFlareEffect.h">
@@ -283,9 +253,6 @@
     <ClInclude Include="DensityFunction.h">
       <Filter>Header Files\Proc Gen\Functions</Filter>
     </ClInclude>
-    <ClInclude Include="GeometryShader.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
     <ClInclude Include="TerrainDensityFunction.h">
       <Filter>Header Files\Proc Gen\Functions</Filter>
     </ClInclude>
@@ -293,6 +260,56 @@
     <ClInclude Include="density.hlsli">
       <Filter>Shaders\Marching Cubes</Filter>
     </ClInclude>
+    <ClInclude Include="BloomConstantBuffer.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="LightConstantBuffer.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="LensFlareConstantBuffer.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyboxConstantBuffer.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexConstantBuffer.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelConstantBuffer.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussianBlurConstantBuffer.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryShader.h">
+      <Filter>Header Files\Bindable\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexShader.h">
+      <Filter>Header Files\Bindable\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelShader.h">
+      <Filter>Header Files\Bindable\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencilState.h">
+      <Filter>Header Files\Bindable\States</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencil.h">
+      <Filter>Header Files\Bindable\States</Filter>
+    </ClInclude>
+    <ClInclude Include="RasterizerState.h">
+      <Filter>Header Files\Bindable\States</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraConstantBuffer.h" />
+    <ClInclude Include="GeometryConstantBuffer.h" />
+    <ClInclude Include="TransformConstantBufferVS.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformConstantBufferGS.h" />
+    <ClInclude Include="MarchingCubesConstantBufferVS.h" />
+    <ClInclude Include="MarchingCubesConstantBufferGS.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -361,12 +378,6 @@
     <ClCompile Include="PixelShader.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
-    <ClCompile Include="TransformConstantBuffer.cpp">
-      <Filter>Source Files\Bindable</Filter>
-    </ClCompile>
-    <ClCompile Include="LightConstantBuffer.cpp">
-      <Filter>Source Files\Bindable</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
@@ -385,19 +396,7 @@
     <ClCompile Include="Sampler.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
-    <ClCompile Include="SkyboxConstantBuffer.cpp">
-      <Filter>Source Files\Bindable</Filter>
-    </ClCompile>
-    <ClCompile Include="BloomConstantBuffer.cpp">
-      <Filter>Source Files\Bindable</Filter>
-    </ClCompile>
     <ClCompile Include="RenderTarget.cpp">
-      <Filter>Source Files\Bindable</Filter>
-    </ClCompile>
-    <ClCompile Include="GaussianBlurConstantBuffer.cpp">
-      <Filter>Source Files\Bindable</Filter>
-    </ClCompile>
-    <ClCompile Include="LensFlareConstantBuffer.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
     <ClCompile Include="LensFlareEffect.cpp">
@@ -482,6 +481,28 @@
       <Filter>Source Files\Proc Gen\Functions</Filter>
     </ClCompile>
     <ClCompile Include="MarchingCubesGeometryShader.cpp" />
+    <ClCompile Include="CameraConstantBuffer.cpp" />
+    <ClCompile Include="BloomConstantBuffer.cpp">
+      <Filter>Source Files\Bindable\Constant Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="GaussianBlurConstantBuffer.cpp">
+      <Filter>Source Files\Bindable\Constant Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="LensFlareConstantBuffer.cpp">
+      <Filter>Source Files\Bindable\Constant Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="LightConstantBuffer.cpp">
+      <Filter>Source Files\Bindable\Constant Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyboxConstantBuffer.cpp">
+      <Filter>Source Files\Bindable\Constant Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformConstantBufferVS.cpp">
+      <Filter>Source Files\Bindable\Constant Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformConstantBufferGS.cpp" />
+    <ClCompile Include="MarchingCubesConstantBufferVS.cpp" />
+    <ClCompile Include="MarchingCubesConstantBufferGS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -512,6 +533,12 @@
       <Filter>Shaders\Marching Cubes</Filter>
     </None>
     <None Include="simplex_header.hlsli">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </None>
+    <None Include="noise.hlsli">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </None>
+    <None Include="simplex_3d.hlsli">
       <Filter>Shaders\Marching Cubes</Filter>
     </None>
   </ItemGroup>
@@ -585,6 +612,15 @@
       <Filter>Shaders\Marching Cubes</Filter>
     </FxCompile>
     <FxCompile Include="mc_generate_vertices_vs.hlsl">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </FxCompile>
+    <FxCompile Include="billboard_gs.hlsl">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </FxCompile>
+    <FxCompile Include="billboard_vs.hlsl">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </FxCompile>
+    <FxCompile Include="billboard_ps.hlsl">
       <Filter>Shaders\Marching Cubes</Filter>
     </FxCompile>
   </ItemGroup>

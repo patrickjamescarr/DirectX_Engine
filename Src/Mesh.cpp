@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Mesh.h"
-#include "TransformConstantBuffer.h"
+#include "TransformConstantBufferVS.h"
 #include "LightConstantBuffer.h"
 #include "Texture.h"
 #include "RasterizerState.h"
@@ -81,7 +81,7 @@ void Mesh::AddDefaultBindables(
 
     AddBind(std::make_unique<DepthStencilState>(deviceResources, DepthStencilState::default));
 
-    AddBind(std::make_unique<TransformConstantBuffer>(deviceResources, *this));
+    AddBind(std::make_unique<TransformConstantBufferVS>(deviceResources, *this));
 
     if (light)
     {
