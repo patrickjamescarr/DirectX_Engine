@@ -310,6 +310,9 @@
     <ClInclude Include="TransformConstantBufferGS.h" />
     <ClInclude Include="MarchingCubesConstantBufferVS.h" />
     <ClInclude Include="MarchingCubesConstantBufferGS.h" />
+    <ClInclude Include="Simplex2.h" />
+    <ClInclude Include="OnScreenQuad.h" />
+    <ClInclude Include="OnScreenQuadConstantBufferVS.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -503,6 +506,9 @@
     <ClCompile Include="TransformConstantBufferGS.cpp" />
     <ClCompile Include="MarchingCubesConstantBufferVS.cpp" />
     <ClCompile Include="MarchingCubesConstantBufferGS.cpp" />
+    <ClCompile Include="Simplex2.cpp" />
+    <ClCompile Include="OnScreenQuad.cpp" />
+    <ClCompile Include="OnScreenQuadConstantBufferVS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

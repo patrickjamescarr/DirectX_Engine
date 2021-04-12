@@ -1,7 +1,5 @@
 // marching cubes generate verts geometry shader
-
 #include "marching_cubes_header.hlsli"
-#include "density.hlsli"
 
 Texture3D density_vol : register(t0);
 Texture2D shaderTexture : register(t1);
@@ -99,26 +97,7 @@ void main(
     inout TriangleStream< GSOutput > Stream
 )
 {
-    //GSOutput element;
-
-    //element.wsCoordAmbo = ApplyMatrices(input[0].wsCellCoords[0]);
-    //element.wsNormal = float3(1, 0, 1);
-    //Stream.Append(element);
-
-    //element.wsCoordAmbo = ApplyMatrices(input[0].wsCellCoords[1]);
-    //element.wsNormal = float3(1, 0, 1);
-    //Stream.Append(element);
-
-    //element.wsCoordAmbo = ApplyMatrices(input[0].wsCellCoords[2]);
-    //element.wsNormal = float3(1, 0, 1);
-    //Stream.Append(element);
-
-    //Stream.RestartStrip();
-
     gridCell cell;
-
-    float dims = 65.0f;
-
 
     // bottom layer
     cell.p[0] = (float3)input[0].wsCellCoords[0];        // top left
@@ -246,9 +225,17 @@ void main(
 
     for (int i = 0; (int)triTable_c_buff[(cubeindex * 16) + i] != -1; i += 3)
     {
-        float4 p0 = float4(vertlist[(int)triTable_c_buff[(cubeindex * 16) + i]].xyz, 1.0f);
-        float4 p1 = float4(vertlist[(int)triTable_c_buff[(cubeindex * 16) + (i + 1)]].xyz, 1.0f);
-        float4 p2 = float4(vertlist[(int)triTable_c_buff[(cubeindex * 16) + (i + 2)]].xyz, 1.0f);
+        int t0_index = (cubeindex * 16) + i;
+        int t1_index = (cubeindex * 16) + (i + 1);
+        int t2_index = (cubeindex * 16) + (i + 2);
+
+        int v0_index = (int)triTable_c_buff[t0_index];
+        int v1_index = (int)triTable_c_buff[t1_index];
+        int v2_index = (int)triTable_c_buff[t2_index];
+
+        float4 p0 = float4(vertlist[v0_index].xyz, 1.0f);
+        float4 p1 = float4(vertlist[v1_index].xyz, 1.0f);
+        float4 p2 = float4(vertlist[v2_index].xyz, 1.0f);
 
         GSOutput element;
 
@@ -264,7 +251,8 @@ void main(
         element.wsNormal = CalculateNormal(p2.xyz);
         Stream.Append(element);
 
-        Stream.RestartStrip();
+
     }
+    Stream.RestartStrip();
 }
 

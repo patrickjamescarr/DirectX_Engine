@@ -56,7 +56,7 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     auto sunModel = m_modelLoader.CreateSphere(5);
     m_meshes.push_back(ParseMesh(deviceResources, sunModel, m_sunLight.get(), Matrix::CreateTranslation(Vector3(lightPosition)), L"Textures//sun2.dds", L"light_vs.cso", L"light_ps.cso"));
 
-    auto mcMeshCpu = std::make_unique<MarchingCubesMesh>(deviceResources, m_light.get(), Matrix::CreateTranslation(Vector3(5.f, 2.f, 5.f)), L"Textures//sun2.dds", L"test_vs.cso", L"test_ps.cso");
+    auto mcMeshCpu = std::make_unique<MarchingCubesMesh>(deviceResources, m_light.get(), Matrix::Identity, L"Textures//sun2.dds", L"test_vs.cso", L"test_ps.cso");
     
     m_meshes.push_back(std::move(mcMeshCpu));
     
@@ -86,6 +86,7 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     m_skyBox = std::make_unique<SkyBox>(deviceResources);
     m_bloom = std::make_unique<BloomPostProcessEffect>(deviceResources);
     m_lensFlare = std::make_unique<LensFlareEffect>(deviceResources, activeCamera, m_light.get());
+
 }
 
 void MainScene::Draw(DX::DeviceResources & deviceResources, const DX::StepTimer& timer) const
@@ -101,6 +102,7 @@ void MainScene::Draw(DX::DeviceResources & deviceResources, const DX::StepTimer&
 
    m_skyBox->Draw(deviceResources);
    m_rootNode->Draw(deviceResources, m_transform);
+
 
    //m_bloom->Bind(deviceResources);
 

@@ -46,9 +46,9 @@ private:
 
     int m_functionType = Simplex;
 
-    int m_width = 33;
-    int m_depth = 33;
-    int m_height = 33;
+    int m_width = 10;
+    int m_depth = 10;
+    int m_height = 10;
 
 };
 

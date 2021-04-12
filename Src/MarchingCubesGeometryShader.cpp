@@ -12,6 +12,7 @@
 #include "LightConstantBuffer.h"
 #include "MarchingCubesConstantBufferVS.h";
 #include "SimplexNoise.h"
+#include "TerrainDensityFunction.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -24,29 +25,33 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
 )
     : Mesh(transform)
 {
-    int dims = 10;
-
     m_densityeVertexCount = 0;
 
     // 2d texure test
     {
-        std::vector<VertexPositionTexture> verts;
+        std::vector<VertexPositionNormalTexture> verts;
+        
+        auto scaledDim = m_dimention;
 
-        VertexPositionTexture topLeft;
-        topLeft.position = Vector3(0, dims, 0.5f);
-        topLeft.textureCoordinate = Vector2(0, 0);
+        VertexPositionNormalTexture topLeft;
+        topLeft.position = Vector3(0, scaledDim, 0);
+        topLeft.textureCoordinate = Vector2(0, 1);
+        topLeft.normal = Vector3(-1, 1, 0.5);
 
-        VertexPositionTexture topRight;
-        topRight.position = Vector3(dims, dims, 0.5f);
-        topRight.textureCoordinate = Vector2(1, 0);
+        VertexPositionNormalTexture topRight;
+        topRight.position = Vector3(scaledDim, scaledDim, 0);
+        topRight.textureCoordinate = Vector2(1, 1);
+        topRight.normal = Vector3(1, 1, 0.5);
 
-        VertexPositionTexture bottomLeft;
-        bottomLeft.position = Vector3(0, 0, 0.5f);
-        bottomLeft.textureCoordinate = Vector2(0, 1);
+        VertexPositionNormalTexture bottomLeft;
+        bottomLeft.position = Vector3(0, 0, 0);
+        bottomLeft.textureCoordinate = Vector2(0, 0);
+        bottomLeft.normal = Vector3(-1, -1, 0.5);
 
-        VertexPositionTexture bottomRight;
-        bottomRight.position = Vector3(dims, 0, 0.5f);
-        bottomRight.textureCoordinate = Vector2(1, 1);
+        VertexPositionNormalTexture bottomRight;
+        bottomRight.position = Vector3(scaledDim, 0, 0);
+        bottomRight.textureCoordinate = Vector2(1, 0);
+        bottomRight.normal = Vector3(1, -1, 0.5);
 
         verts.push_back(topLeft);
         verts.push_back(bottomRight);
@@ -55,7 +60,7 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
         verts.push_back(topRight);
         verts.push_back(bottomRight);
 
-        std::vector<uint32_t> indices;
+        std::vector<uint32_t> indices;        
 
         for (int i = 0; i < 6; i++)
         {
@@ -64,18 +69,18 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
 
         m_texture2dTestPass.push_back(std::make_unique<Topology>(deviceResources, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
         m_texture2dTestPass.push_back(std::make_unique<DepthStencilState>(deviceResources, DepthStencilState::default));
-        m_texture2dTestPass.push_back(std::make_unique<MarchingCubesConstantBufferVS>(deviceResources, *this, dims));
+        m_texture2dTestPass.push_back(std::make_unique<MarchingCubesConstantBufferVS>(deviceResources, *this, m_dimention));
 
-        m_texture2dTestPass.push_back(std::make_unique<VertexBuffer<VertexPositionTexture>>(deviceResources, verts));
+        m_texture2dTestPass.push_back(std::make_unique<VertexBuffer<VertexPositionNormalTexture>>(deviceResources, verts));
 
-        CD3D11_TEXTURE2D_DESC textureDesc(DXGI_FORMAT_R16_FLOAT, dims, dims,
+        CD3D11_TEXTURE2D_DESC textureDesc(DXGI_FORMAT_R16_FLOAT, 10, 10,
             1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
 
         // 3D texture description for storing the density values
         CD3D11_TEXTURE3D_DESC densityVolTexDesc;
-        densityVolTexDesc.Height = dims;
-        densityVolTexDesc.Width = dims;
-        densityVolTexDesc.Depth = dims;
+        densityVolTexDesc.Height = m_dimention;
+        densityVolTexDesc.Width = m_dimention;
+        densityVolTexDesc.Depth = m_dimention;
         densityVolTexDesc.MipLevels = 1;
         densityVolTexDesc.Format = DXGI_FORMAT_R16_FLOAT;
         densityVolTexDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
@@ -83,7 +88,7 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
         densityVolTexDesc.CPUAccessFlags = 0;
         densityVolTexDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
-        auto rt = std::make_unique<RenderTarget>(deviceResources, densityVolTexDesc);
+        auto rt = std::make_unique<RenderTarget>(deviceResources, textureDesc);
         m_texture2dRT = rt.get();
         m_texture2dTestPass.push_back(std::move(rt));
 
@@ -103,31 +108,35 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
         // Create the vertex input layout description.
         std::vector<D3D11_INPUT_ELEMENT_DESC> layout{
             { "POSITION",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,                               D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "TEXCOORD",   0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 }
+            { "TEXCOORD",   0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "NORMAL",     0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 }
         };
 
         // Create the input layout
         m_texture2dTestPass.push_back(std::make_unique<InputLayout>(deviceResources, layout, vsBytecode));
     }
 
+    m_quad = std::make_unique<OnScreenQuad>(deviceResources, 100, 100, Matrix::CreateTranslation(3.5, 2.5, 0), m_texture2dRT);
+
     // configure generate verticies render pass
     {
         std::vector<VertexPositionTexture> generationVerts;
         m_generateVertexCount = 0;
 
-        float textureCoordinatesStep = 1.0f / dims;
+        float textureCoordinatesStep = 1.0f / m_dimention;
 
-        for (int j = 0; j < (dims - 1); j++)
+        TerrainDensityFunction density(nullptr);
+
+        for (int j = 0; j < (m_dimention - 1); j++)
         {
-            for (int k = 0; k < (dims - 1); k++)
+            for (int k = 0; k < (m_dimention - 1); k++)
             {
-                for (int i = 0; i < (dims - 1); i++)
+                for (int i = 0; i < (m_dimention - 1); i++)
                 {
                     VertexPositionTexture v;
 
-                    v.position = Vector3(i, j, k);
+                    v.position = Vector3(i, j, 1.0f) * 0.03;
                     v.textureCoordinate = Vector2((float)i * textureCoordinatesStep, (float)j*textureCoordinatesStep);
-
                     generationVerts.push_back(v);
 
                     m_generateVertexCount++;
@@ -140,7 +149,7 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
 
         m_generateVertsRenderPass.push_back(std::make_unique<MarchingCubesConstantBufferGS>(deviceResources, *this, &m_isoLevel));
         m_generateVertsRenderPass.push_back(std::make_unique<TransformConstantBufferVS>(deviceResources, *this));
-        //m_generateVertsRenderPass.push_back(std::make_unique<MarchingCubesConstantBufferVS>(deviceResources, *this, dims));
+        //m_generateVertsRenderPass.push_back(std::make_unique<MarchingCubesConstantBufferVS>(deviceResources, *this, m_dimention));
 
         m_generateVertsRenderPass.push_back(std::make_unique<CameraConstantBuffer>(deviceResources, activeCamera, 1));
         m_generateVertsRenderPass.push_back(std::make_unique<LightConstantBuffer>(deviceResources, sceneLight));
@@ -165,7 +174,7 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
         // Create the vertex input layout description.
         std::vector<D3D11_INPUT_ELEMENT_DESC> layout{
             { "POSITION",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,                               D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "TEXCOORD",   0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 }
+            { "TEXCOORD",   0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 },
         };
 
         // Create the input layout
@@ -194,28 +203,30 @@ void MarchingCubesGeometryShader::Draw(
         b->Bind(deviceResources);
     }
 
-    deviceResources.GetD3DDeviceContext()->DrawInstanced(6, 10, 0, 0);
+    deviceResources.GetD3DDeviceContext()->DrawInstanced(6, 1, 0, 0);
 
     // reset the render target
     deviceResources.GetD3DDeviceContext()->OMSetRenderTargets(1, deviceResources.GetRenderTargetViewAddress(), deviceResources.GetDepthStencilView());
 
-    // second render pass - generate the vertices
+    m_quad->Draw(deviceResources);
 
-    // set the shader resource view from the first pass as the PS resource
-    //auto srv = m_buildDensitiesRT->GetShaderResourceViewAddress();
-    auto srv = m_texture2dRT->GetShaderResourceViewAddress();
-    deviceResources.GetD3DDeviceContext()->GSSetShaderResources(0, 1, srv);
+    //// second render pass - generate the vertices
 
-    for (auto& b : m_generateVertsRenderPass)
-    {
-        b->Bind(deviceResources);
-    }
+    //// set the shader resource view from the first pass as the PS resource
+    ////auto srv = m_buildDensitiesRT->GetShaderResourceViewAddress();
+    //auto srv = m_texture2dRT->GetShaderResourceViewAddress();
+    //deviceResources.GetD3DDeviceContext()->GSSetShaderResources(0, 1, srv);
 
-    deviceResources.GetD3DDeviceContext()->GSSetSamplers(0, 1, m_gsSampler->GetAddressOf());
+    //for (auto& b : m_generateVertsRenderPass)
+    //{
+    //    b->Bind(deviceResources);
+    //}
+
+    //deviceResources.GetD3DDeviceContext()->GSSetSamplers(0, 1, m_gsSampler->GetAddressOf());
 
 
-    // draw the object
-    deviceResources.GetD3DDeviceContext()->DrawInstanced(m_generateVertexCount, 1, 0, 0);
+    //// draw the object
+    //deviceResources.GetD3DDeviceContext()->DrawInstanced(m_generateVertexCount, m_dimention, 0, 0);
 
 
     // clear the geometry shader

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "MarchingCubes.h"
-
+#include <sstream> 
 #include <iostream>
 #include <map>
 
@@ -32,7 +32,13 @@ MeshObject MarchingCubes::Generate(int xSize, int ySize, int zSize)
                 {
                     gridCell.point[i] = verts[i];
                     gridCell.densityValue[i] = m_function->execute(verts[i].x, verts[i].y, verts[i].z);
+
+                    std::wstringstream ss;
+                    ss << gridCell.densityValue[i] << "\n";
+                    
+                    OutputDebugString(ss.str().c_str());
                 }
+
 
                 std::vector<Triangle> triangles;
 

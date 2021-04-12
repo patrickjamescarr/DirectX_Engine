@@ -16,7 +16,7 @@ float DENSITY(float3 ws)
 
     float density = -ws.y;
 
-    density += snoise(ws) * 10.0f;
+    //density += snoise(ws) * 10.0f;
 
     //float hard_floor_y =1.f;
 

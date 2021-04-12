@@ -10,6 +10,7 @@
 #include "Bindable.h"
 #include "Sampler.h"
 #include "Camera.h"
+#include "OnScreenQuad.h"
 
 class MarchingCubesGeometryShader :
     public Mesh
@@ -31,6 +32,8 @@ private:
     //IndexBuffer* m_d_indexBuffer;
     //IndexBuffer* m_g_indexBuffer;
 
+    std::unique_ptr<OnScreenQuad> m_quad;
+
     std::unique_ptr<PixelShader> m_build_densities_PS;
     std::unique_ptr<VertexShader> m_build_densities_VS;
 
@@ -51,7 +54,9 @@ private:
 
     std::unique_ptr<Sampler> m_gsSampler;
 
-    float m_isoLevel = 5.0f;
+    float m_isoLevel = 0.0f;
     float m_randomHeightValue = 3.0f;
+
+    int m_dimention = 10;
 };
 

@@ -16,17 +16,13 @@ void MarchingCubesConstantBufferVS::Bind(DX::DeviceResources & deviceResources) 
 {
     auto cubePosition = m_parent.GetTransform();
 
-    Vector3 cubeCentre = Vector3::Transform(Vector3(m_cubeDimention / 2.0f, m_cubeDimention / 2.0f, 0), cubePosition);
+    Vector3 cubeCentre = Vector3(m_cubeDimention / 2.0f, m_cubeDimention / 2.0f, 0);
 
-    Vector3 viewPosition = Vector3(cubeCentre.x, cubeCentre.y, cubeCentre.z + 1.0f);
+    Vector3 viewPosition = cubeCentre + Vector3::UnitZ;
 
-    Vector3 unitZ = Vector3::UnitZ;
+    auto viewMatrix = Matrix::CreateLookAt(viewPosition, cubeCentre, Vector3::UnitY);
 
-    Vector3 lookat = viewPosition - unitZ;
-
-    auto viewMatrix = Matrix::CreateLookAt(viewPosition, lookat, Vector3::UnitY);
-
-    auto projMatrix = Matrix::CreateOrthographic(m_cubeDimention, m_cubeDimention, 0.0f, 10.0f);
+    auto projMatrix = Matrix::CreateOrthographic(m_cubeDimention, m_cubeDimention, 1.0f, 10.0f);
 
     const MatrixBufferType matrixBuffer =
     {

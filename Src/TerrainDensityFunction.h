@@ -14,14 +14,6 @@ private:
         return std::max(lower, std::min(n, upper));
     }
 
-    float hash(float n);
-    //{
-    //    return frac(sin(n)*43758.5453);
-    //}
-
-    float noise(DirectX::SimpleMath::Vector3 x);
-
-
 private:
     BrownianFunction* m_fbm;
     SimplexNoise m_simplex;
