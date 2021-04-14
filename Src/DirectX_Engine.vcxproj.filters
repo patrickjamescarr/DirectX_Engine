@@ -596,9 +596,6 @@
     <FxCompile Include="basic_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="basic_ps.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="test_gs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
@@ -628,6 +625,21 @@
     </FxCompile>
     <FxCompile Include="billboard_ps.hlsl">
       <Filter>Shaders\Marching Cubes</Filter>
+    </FxCompile>
+    <FxCompile Include="quad_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="basic_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="quad_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="map_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="map_ps.hlsl">
+      <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

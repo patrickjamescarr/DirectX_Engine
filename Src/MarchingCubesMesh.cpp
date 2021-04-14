@@ -31,6 +31,13 @@ MarchingCubesMesh::MarchingCubesMesh(DX::DeviceResources & deviceResources, Ligh
     AddIndexBuffer(std::move(indexBuffer));
 }
 
+void MarchingCubesMesh::Draw(DX::DeviceResources & deviceResources, DirectX::FXMMATRIX accumulatedTransform) const
+{
+    Mesh::Draw(deviceResources, accumulatedTransform);
+
+    deviceResources.GetD3DDeviceContext()->GSSetShader(0, 0, 0);
+}
+
 void MarchingCubesMesh::Update()
 {
     if (ImGui::Begin("Marching Cubes"))

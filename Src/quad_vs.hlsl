@@ -1,7 +1,6 @@
 // colour vertex shader
 // Simple geometry pass
 
-
 cbuffer MatrixBuffer : register(b0)
 {
     matrix worldMatrix;
@@ -11,13 +10,14 @@ cbuffer MatrixBuffer : register(b0)
 
 struct InputType
 {
-    float4 position : POSITION;
+    float4 position : SV_POSITION;
+    float2 tex      : TEXCOORD0;
 };
 
 struct OutputType
 {
     float4 position : SV_POSITION;
-    float3 worldPosition : TEXCOORD;
+    float2 tex      : TEXCOORD0;
 };
 
 OutputType main(InputType input)
@@ -32,8 +32,8 @@ OutputType main(InputType input)
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
 
-    // world position of vertex (for point light)
-    output.worldPosition = (float3)mul(input.position, worldMatrix);
+
+    output.tex = input.tex;
 
     return output;
 }

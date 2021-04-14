@@ -26,11 +26,13 @@ OnScreenQuad::OnScreenQuad(
 {
     m_states = std::make_unique<CommonStates>(deviceResources.GetD3DDevice());
 
+    float size = 0.5f;
+
     std::vector<VertexPositionTexture> verts;
-    verts.push_back(VertexPositionTexture(Vector3(-0.5f, 0.5f, 0.5f), Vector2(0, 0)));   // top left
-    verts.push_back(VertexPositionTexture(Vector3(0.5f, 0.5f, 0.5f), Vector2(0, 1)));     // top right
-    verts.push_back(VertexPositionTexture(Vector3(0.5f, -0.5f, 0.5f), Vector2(1, 1)));     // bottom right
-    verts.push_back(VertexPositionTexture(Vector3(-0.5f, -0.5f, 0.5f), Vector2(1, 0)));     // bottom left
+    verts.push_back(VertexPositionTexture(Vector3(-size, size, 0.5f), Vector2(0, 0)));   // top left
+    verts.push_back(VertexPositionTexture(Vector3(size, size, 0.5f), Vector2(0, 1)));     // top right
+    verts.push_back(VertexPositionTexture(Vector3(size, -size, 0.5f), Vector2(1, 1)));     // bottom right
+    verts.push_back(VertexPositionTexture(Vector3(-size, -size, 0.5f), Vector2(1, 0)));     // bottom left
 
     std::vector<uint32_t> indices;
     indices.push_back(0);
@@ -46,10 +48,12 @@ OnScreenQuad::OnScreenQuad(
     AddBind(std::make_unique<OnScreenQuadConstantBufferVS>(deviceResources, *this));
     AddBind(std::make_unique<Topology>(deviceResources, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
     AddBind(std::make_unique<DepthStencilState>(deviceResources, DepthStencilState::depthOff));
+    AddBind(std::make_unique<RasterizerState>(deviceResources, D3D11_CULL_BACK));
 
-    AddBind(std::make_unique<PixelShader>(deviceResources, L"basic_ps.cso"));
 
-    auto vs = std::make_unique<VertexShader>(deviceResources, L"basic_vs.cso");
+    AddBind(std::make_unique<PixelShader>(deviceResources, L"quad_ps.cso"));
+
+    auto vs = std::make_unique<VertexShader>(deviceResources, L"quad_vs.cso");
     auto vsBytecode = vs->GetBytecode();
     AddBind(std::move(vs));
 

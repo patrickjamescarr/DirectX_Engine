@@ -14,7 +14,7 @@ float DENSITY(float3 ws)
     int m_octaves = 4;
 
 
-    float density = -ws.y;
+    float density = ws.z;
 
     //density += snoise(ws) * 10.0f;
 
@@ -41,5 +41,5 @@ float DENSITY(float3 ws)
 
 
 
-    return density;
+    return snoise(ws) * 10.0f;
 }

@@ -14,21 +14,25 @@ MarchingCubesConstantBufferVS::MarchingCubesConstantBufferVS(DX::DeviceResources
 
 void MarchingCubesConstantBufferVS::Bind(DX::DeviceResources & deviceResources) noexcept
 {
-    auto cubePosition = m_parent.GetTransform();
+    auto world = Matrix::Identity;
 
-    Vector3 cubeCentre = Vector3(m_cubeDimention / 2.0f, m_cubeDimention / 2.0f, 0);
+    auto width = deviceResources.GetBackBufferWidth();
+    auto height = deviceResources.GetBackBufferHeight();
 
-    Vector3 viewPosition = cubeCentre + Vector3::UnitZ;
+    float offsetX = ((float)width / 2.0f) - 5.0f;
+    float offsetY = ((float)height / 2.0f) - 5.0f;
 
-    auto viewMatrix = Matrix::CreateLookAt(viewPosition, cubeCentre, Vector3::UnitY);
+    //Set the View matrix
+    auto view = Matrix::CreateLookAt(Vector3(-offsetX, 100.0f, -offsetY), Vector3(-offsetX, 0.0f, -offsetY), Vector3::UnitZ);
 
-    auto projMatrix = Matrix::CreateOrthographic(m_cubeDimention, m_cubeDimention, 1.0f, 10.0f);
+    // Build an orthographic projection matrix
+    auto projection = Matrix::CreateOrthographic(width, height, 1.0f, 1000.0f);
 
     const MatrixBufferType matrixBuffer =
     {
-        DirectX::XMMatrixTranspose(m_parent.GetTransform()),
-        DirectX::XMMatrixTranspose(viewMatrix),
-        DirectX::XMMatrixTranspose(projMatrix)
+        DirectX::XMMatrixTranspose(world),
+        DirectX::XMMatrixTranspose(view),
+        DirectX::XMMatrixTranspose(projection)
     };
 
     m_vertexConstantBuffer->Update(deviceResources, matrixBuffer);

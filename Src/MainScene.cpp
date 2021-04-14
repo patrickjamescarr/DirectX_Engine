@@ -23,20 +23,20 @@ MainScene::MainScene()
 {
 }
 
-void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* activeCamera, ViewingFrustum* frustum)
+void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* playerCamera, ViewingFrustum* frustum)
 {
-    m_playerCamera = activeCamera;
+    m_playerCamera = playerCamera;
 
     m_collisionDetector = std::make_unique<Collision>();
 
     // create the scene light
-    auto lightPosition = Vector3(30.0f, 20.0f, -70.0f);
+    auto lightPosition = Vector3(0.0f, 100.0f, 0.0f);
 
     m_light = std::make_unique<Light>();
     m_light->setAmbientColour(0.1f, 0.1f, 0.1f, 1.0f);
     m_light->setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
     m_light->setPosition(lightPosition.x, lightPosition.y, lightPosition.z);
-    m_light->setDirection(0.0f, 0.0f, 0.0f);
+    m_light->setDirection(0.0f, -1.0f, 0.0f);
 
     m_sunLight = std::make_unique<Light>();
     m_sunLight->setAmbientColour(1.0f, 1.0f, 1.0f, 1.0f);
@@ -60,11 +60,6 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     
     m_meshes.push_back(std::move(mcMeshCpu));
     
-    auto mcMesh = std::make_unique<MarchingCubesGeometryShader>(deviceResources, m_light.get(), activeCamera, Matrix::Identity);
-
-    m_meshes.push_back(std::move(mcMesh));
-
-
     // store the model mesh pointers in a vector
     std::vector<Mesh*> meshPointers;
 
@@ -77,15 +72,15 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     m_rootNode = std::make_unique<SceneNode>(std::move(meshPointers), Matrix::Identity);
 
 
-    //m_terrainNode = std::make_unique<TerrainNode>(deviceResources, m_terrainTransform, m_light.get(), m_playerCamera, frustum, m_collisionDetector.get());
+    m_terrainNode = std::make_unique<TerrainNode>(deviceResources, m_terrainTransform, m_light.get(), m_playerCamera, frustum, m_collisionDetector.get());
 
-    //m_rootNode->AddChild(std::move(m_terrainNode));
+    m_rootNode->AddChild(std::move(m_terrainNode));
 
 
     // create the effects
     m_skyBox = std::make_unique<SkyBox>(deviceResources);
     m_bloom = std::make_unique<BloomPostProcessEffect>(deviceResources);
-    m_lensFlare = std::make_unique<LensFlareEffect>(deviceResources, activeCamera, m_light.get());
+    m_lensFlare = std::make_unique<LensFlareEffect>(deviceResources, playerCamera, m_light.get());
 
 }
 

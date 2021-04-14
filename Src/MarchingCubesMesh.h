@@ -27,6 +27,8 @@ public:
         const wchar_t * pixelShaderFileName
     );
 
+    void Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accumulatedTransform) const override;
+
 public:
     void Update();
     void ShowFBMControls();

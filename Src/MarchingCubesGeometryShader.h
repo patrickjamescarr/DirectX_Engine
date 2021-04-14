@@ -25,10 +25,6 @@ public:
     void Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accumulatedTransform) const noexcept override;
     virtual void Update();
 private:
-    const wchar_t * m_textureFileName = L"Textures//sun2.dds";
-    const wchar_t * m_vertexShaderFileName = L"test_vs.cso";
-    const wchar_t * m_pixelShaderFileName = L"test_ps.cso";
-
     //IndexBuffer* m_d_indexBuffer;
     //IndexBuffer* m_g_indexBuffer;
 

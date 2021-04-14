@@ -19,6 +19,7 @@ OnScreenQuadConstantBufferVS::OnScreenQuadConstantBufferVS(DX::DeviceResources &
 
 void OnScreenQuadConstantBufferVS::Bind(DX::DeviceResources & deviceResources) noexcept
 {
+    auto proj = Matrix::CreateOrthographic(5.f, 5.f, 1.f, 10.f);
     const MatrixBufferType matrixBuffer =
     {
         DirectX::XMMatrixTranspose(m_parent.GetTransform()),

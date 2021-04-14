@@ -2,6 +2,7 @@
 #include "TerrainNode.h"
 #include "Terrain.h"
 #include "BoxCollider.h"
+#include "MarchingCubesGeometryShader.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -29,6 +30,10 @@ TerrainNode::TerrainNode(
     collision->terrain_collider = terrainCollider.get();
 
     m_meshes.push_back(std::move(terrainCollider));
+
+    auto mcMesh = std::make_unique<MarchingCubesGeometryShader>(deviceResources, light, playerCamera, Matrix::Identity);
+
+    m_meshes.push_back(std::move(mcMesh));
 
     // Add mesh pointers to the base mesh collection
     for (auto &mesh : m_meshes)
