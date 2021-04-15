@@ -119,7 +119,7 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
                 {
                     VertexPositionTexture v;
 
-                    v.position = Vector3(i, j, 1.0f) * 0.03;
+                    v.position = Vector3(i, j, k) * 0.03;
                     v.textureCoordinate = Vector2((float)i * textureCoordinatesStep, (float)j*textureCoordinatesStep);
                     generationVerts.push_back(v);
 
@@ -194,23 +194,23 @@ void MarchingCubesGeometryShader::Draw(
 
     //m_quad->Draw(deviceResources);
 
-    //// second render pass - generate the vertices
+    // second render pass - generate the vertices
 
-    //// set the shader resource view from the first pass as the PS resource
-    ////auto srv = m_buildDensitiesRT->GetShaderResourceViewAddress();
-    //auto srv = m_texture2dRT->GetShaderResourceViewAddress();
-    //deviceResources.GetD3DDeviceContext()->GSSetShaderResources(0, 1, srv);
+    // set the shader resource view from the first pass as the PS resource
+    //auto srv = m_buildDensitiesRT->GetShaderResourceViewAddress();
+    auto srv = m_texture2dRT->GetShaderResourceViewAddress();
+    deviceResources.GetD3DDeviceContext()->GSSetShaderResources(0, 1, srv);
 
-    //for (auto& b : m_generateVertsRenderPass)
-    //{
-    //    b->Bind(deviceResources);
-    //}
+    for (auto& b : m_generateVertsRenderPass)
+    {
+        b->Bind(deviceResources);
+    }
 
-    //deviceResources.GetD3DDeviceContext()->GSSetSamplers(0, 1, m_gsSampler->GetAddressOf());
+    deviceResources.GetD3DDeviceContext()->GSSetSamplers(0, 1, m_gsSampler->GetAddressOf());
 
 
-    //// draw the object
-    //deviceResources.GetD3DDeviceContext()->DrawInstanced(m_generateVertexCount, m_dimention, 0, 0);
+    // draw the object
+    deviceResources.GetD3DDeviceContext()->DrawInstanced(m_generateVertexCount, m_dimention, 0, 0);
 
 
     // clear the geometry shader
