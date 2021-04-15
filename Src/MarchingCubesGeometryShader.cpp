@@ -31,33 +31,27 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
     {
         auto scaledDim = m_dimention;
 
+        float size = (float)m_dimention / 2.0f;
+
         std::vector<VertexPositionTexture> verts;
-        verts.push_back(VertexPositionTexture(Vector3(-5.0f, 0.5f, 5.0f), Vector2(0, 0)));   // top left
-        verts.push_back(VertexPositionTexture(Vector3(5.0f, 0.5f, 5.0f), Vector2(0, 1)));     // top right
-        verts.push_back(VertexPositionTexture(Vector3(5.0f, 0.5f, -5.0f), Vector2(1, 1)));     // bottom right
+        verts.push_back(VertexPositionTexture(Vector3(-size, size, 0.5f), Vector2(0, 0)));   // top left
+        verts.push_back(VertexPositionTexture(Vector3(size, size, 0.5f), Vector2(0, 1)));     // top right
+        verts.push_back(VertexPositionTexture(Vector3(size, -size, 0.5f), Vector2(1, 1)));     // bottom right
 
-        verts.push_back(VertexPositionTexture(Vector3(5.0f, 0.5f, -5.0f), Vector2(1, 1)));     // bottom right
-        verts.push_back(VertexPositionTexture(Vector3(-5.0f, 0.5f, -5.0f), Vector2(1, 0)));     // bottom left
-        verts.push_back(VertexPositionTexture(Vector3(-5.0f, 0.5f, 5.0f), Vector2(0, 0)));   // top left
-
-        //std::vector<uint32_t> indices;
-        //indices.push_back(0);
-        //indices.push_back(1);
-        //indices.push_back(2);
-        //indices.push_back(2);
-        //indices.push_back(3);
-        //indices.push_back(0);
+        verts.push_back(VertexPositionTexture(Vector3(size, -size, 0.5f), Vector2(1, 1)));     // bottom right
+        verts.push_back(VertexPositionTexture(Vector3(-size, -size, 0.5f), Vector2(1, 0)));     // bottom left
+        verts.push_back(VertexPositionTexture(Vector3(-size, size, 0.5f), Vector2(0, 0)));   // top left
 
         m_texture2dTestPass.push_back(std::make_unique<Topology>(deviceResources, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
         m_texture2dTestPass.push_back(std::make_unique<DepthStencilState>(deviceResources, DepthStencilState::default));
         m_texture2dTestPass.push_back(std::make_unique<MarchingCubesConstantBufferVS>(deviceResources, *this, m_dimention));
-        m_texture2dTestPass.push_back(std::make_unique<RasterizerState>(deviceResources, D3D11_CULL_FRONT));
+        m_texture2dTestPass.push_back(std::make_unique<RasterizerState>(deviceResources, D3D11_CULL_NONE));
         m_texture2dTestPass.push_back(std::make_unique<VertexBuffer<VertexPositionTexture>>(deviceResources, verts));
 
         auto width = deviceResources.GetBackBufferWidth();
         auto height = deviceResources.GetBackBufferHeight();
 
-        CD3D11_TEXTURE2D_DESC textureDesc(DXGI_FORMAT_R16_FLOAT, 10, 10,
+        CD3D11_TEXTURE2D_DESC textureDesc(DXGI_FORMAT_R16_FLOAT, m_dimention, m_dimention,
             1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
 
         // 3D texture description for storing the density values
@@ -113,18 +107,15 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
 
         for (int j = 0; j < (m_dimention - 1); j++)
         {
-            for (int k = 0; k < (m_dimention - 1); k++)
+            for (int i = 0; i < (m_dimention - 1); i++)
             {
-                for (int i = 0; i < (m_dimention - 1); i++)
-                {
-                    VertexPositionTexture v;
+                VertexPositionTexture v;
 
-                    v.position = Vector3(i, j, k) * 0.03;
-                    v.textureCoordinate = Vector2((float)i * textureCoordinatesStep, (float)j*textureCoordinatesStep);
-                    generationVerts.push_back(v);
+                v.position = Vector3(i, j, 1) * 0.03;
+                v.textureCoordinate = Vector2((float)i * textureCoordinatesStep, (float)j * textureCoordinatesStep);
+                generationVerts.push_back(v);
 
-                    m_generateVertexCount++;
-                }
+                m_generateVertexCount++;
             }
         }
 
@@ -176,28 +167,39 @@ void MarchingCubesGeometryShader::Draw(
     ID3D11ShaderResourceView* nullSRV[] = { nullptr };
     ID3D11Buffer* nullBuffer[] = { nullptr };
 
-    m_accumulatedTransform = accumulatedTransform;
-
-    // first render pass - build the density volume
+    // clear buffers and resources
     deviceResources.GetD3DDeviceContext()->PSSetConstantBuffers(0, 1, nullBuffer);
     deviceResources.GetD3DDeviceContext()->GSSetShaderResources(0, 1, nullSRV);
 
+    m_accumulatedTransform = accumulatedTransform;
+
+    // first render pass - build the density volume
+    BuildDensityVolumeRenderPass(deviceResources);
+
+    //m_quad->Draw(deviceResources);
+
+    // second render pass - generate the vertices
+    GenerateVerticesRenderPass(deviceResources);
+
+    // clear the geometry shader
+    deviceResources.GetD3DDeviceContext()->GSSetShader(0, 0, 0);
+}
+
+void MarchingCubesGeometryShader::BuildDensityVolumeRenderPass(DX::DeviceResources & deviceResources) const
+{
     for (auto& b : m_texture2dTestPass)
     {
         b->Bind(deviceResources);
     }
 
-    deviceResources.GetD3DDeviceContext()->DrawInstanced(6, 10, 0, 0);
+    deviceResources.GetD3DDeviceContext()->DrawInstanced(6, m_dimention, 0, 0);
 
     // reset the render target
     deviceResources.GetD3DDeviceContext()->OMSetRenderTargets(1, deviceResources.GetRenderTargetViewAddress(), deviceResources.GetDepthStencilView());
+}
 
-    //m_quad->Draw(deviceResources);
-
-    // second render pass - generate the vertices
-
-    // set the shader resource view from the first pass as the PS resource
-    //auto srv = m_buildDensitiesRT->GetShaderResourceViewAddress();
+void MarchingCubesGeometryShader::GenerateVerticesRenderPass(DX::DeviceResources & deviceResources) const
+{
     auto srv = m_texture2dRT->GetShaderResourceViewAddress();
     deviceResources.GetD3DDeviceContext()->GSSetShaderResources(0, 1, srv);
 
@@ -211,10 +213,6 @@ void MarchingCubesGeometryShader::Draw(
 
     // draw the object
     deviceResources.GetD3DDeviceContext()->DrawInstanced(m_generateVertexCount, m_dimention, 0, 0);
-
-
-    // clear the geometry shader
-    deviceResources.GetD3DDeviceContext()->GSSetShader(0, 0, 0);
 }
 
 void MarchingCubesGeometryShader::Update()

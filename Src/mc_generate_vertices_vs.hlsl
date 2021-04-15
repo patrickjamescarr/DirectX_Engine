@@ -59,9 +59,9 @@ VSOutput main(VSInput input)
     float cubeSize = 1.0f * 0.03f;
 
     float4 cubeCoord = input.position;
-    // cubeCoord.z = (float)input.nInstanceID;
+    cubeCoord.z = (float)input.nInstanceID * 0.03f;
 
-    float textureCoordinatesStep = 1.0f / 10.f;
+    float textureCoordinatesStep = 1.0f / 65.f;
     float densityLayer = (float)input.nInstanceID * textureCoordinatesStep;
     //float densityLayer = (float)cubeCoord.z * textureCoordinatesStep;
 

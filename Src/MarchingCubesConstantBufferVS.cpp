@@ -19,11 +19,11 @@ void MarchingCubesConstantBufferVS::Bind(DX::DeviceResources & deviceResources) 
     auto width = deviceResources.GetBackBufferWidth();
     auto height = deviceResources.GetBackBufferHeight();
 
-    float offsetX = ((float)width / 2.0f) - 5.0f;
-    float offsetY = ((float)height / 2.0f) - 5.0f;
+    float offsetX = ((float)width / 2.0f) - (65.0f / 2.0f);
+    float offsetY = ((float)height / 2.0f) - (65.0f / 2.0f);
 
     //Set the View matrix
-    auto view = Matrix::CreateLookAt(Vector3(-offsetX, 100.0f, -offsetY), Vector3(-offsetX, 0.0f, -offsetY), Vector3::UnitZ);
+    auto view = Matrix::CreateLookAt(Vector3(offsetX, -offsetY, 100.0f), Vector3(offsetX, -offsetY, 0.0f), Vector3::UnitY);
 
     // Build an orthographic projection matrix
     auto projection = Matrix::CreateOrthographic(width, height, 1.0f, 1000.0f);

@@ -23,6 +23,8 @@ public:
         DirectX::SimpleMath::Matrix transform
         );
     void Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accumulatedTransform) const noexcept override;
+    void BuildDensityVolumeRenderPass(DX::DeviceResources & deviceResources) const;
+    void GenerateVerticesRenderPass(DX::DeviceResources & deviceResources) const;
     virtual void Update();
 private:
     //IndexBuffer* m_d_indexBuffer;
@@ -53,6 +55,6 @@ private:
     float m_isoLevel = 0.0f;
     float m_randomHeightValue = 3.0f;
 
-    int m_dimention = 10;
+    int m_dimention = 65;
 };
 

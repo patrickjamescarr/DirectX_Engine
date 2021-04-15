@@ -81,8 +81,8 @@ float3 VertexInterp(float isolevel, float3 p1, float3 p2, float valp1, float val
 
 float3 CalculateNormal(float3 uvw)
 {
-    //float d = 1.0 / 65.0f;
-    float d = 1.0 / 10.0f;
+    float d = 1.0 / 65.0f;
+
     float3 grad;
     grad.x = density_vol.SampleLevel(LinearClamp, uvw + float3(d, 0, 0), 0) - density_vol.SampleLevel(LinearClamp, uvw + float3(-d, 0, 0), 0);
     grad.y = density_vol.SampleLevel(LinearClamp, uvw + float3(0, d, 0), 0) - density_vol.SampleLevel(LinearClamp, uvw + float3(0, -d, 0), 0);
@@ -99,42 +99,14 @@ void main(
 {
     gridCell cell;
 
-    // bottom layer
-    cell.p[0] = (float3)input[0].wsCellCoords[0];        // top left
-    cell.p[1] = (float3)input[0].wsCellCoords[1];  // top right
-    cell.p[2] = (float3)input[0].wsCellCoords[2];        // bottom right
-    cell.p[3] = (float3)input[0].wsCellCoords[3];              // bottom left
+    for (int i = 0; i < 8; i++)
+    {
+        cell.p[i] = (float3)input[0].wsCellCoords[i];
 
-    // top layer
-    cell.p[4] = (float3)input[0].wsCellCoords[4];        // top left
-    cell.p[5] = (float3)input[0].wsCellCoords[5];  // top right
-    cell.p[6] = (float3)input[0].wsCellCoords[6];        // bottom right
-    cell.p[7] = (float3)input[0].wsCellCoords[7];              // bottom left
+        cell.densityValue[i] = density_vol.SampleLevel(LinearClamp, input[0].densityVolCoords[i], 0).x;
 
-    cell.densityValue[0] = density_vol.SampleLevel(LinearClamp, input[0].densityVolCoords[0], 0).x;
-    cell.densityValue[1] = density_vol.SampleLevel(LinearClamp, input[0].densityVolCoords[1], 0).x;
-    cell.densityValue[2] = density_vol.SampleLevel(LinearClamp, input[0].densityVolCoords[2], 0).x;
-    cell.densityValue[3] = density_vol.SampleLevel(LinearClamp, input[0].densityVolCoords[3], 0).x;
-    cell.densityValue[4] = density_vol.SampleLevel(LinearClamp, input[0].densityVolCoords[4], 0).x;
-    cell.densityValue[5] = density_vol.SampleLevel(LinearClamp, input[0].densityVolCoords[5], 0).x;
-    cell.densityValue[6] = density_vol.SampleLevel(LinearClamp, input[0].densityVolCoords[6], 0).x;
-    cell.densityValue[7] = density_vol.SampleLevel(LinearClamp, input[0].densityVolCoords[7], 0).x;
-
-    //GSOutput element;
-
-    //element.wsCoordAmbo = ApplyViewProj(input[0].wsCellCoords[0]);
-    //element.wsNormal = float3(1, 0, 1);
-    //Stream.Append(element);
-
-    //element.wsCoordAmbo = ApplyViewProj(input[0].wsCellCoords[1]);
-    //element.wsNormal = float3(1, 0, 1);
-    //Stream.Append(element);
-
-    //element.wsCoordAmbo = ApplyViewProj(input[0].wsCellCoords[2]);
-    //element.wsNormal = float3(1, 0, 1);
-    //Stream.Append(element);
-
-    //Stream.RestartStrip();
+        cell.normal[i] = CalculateNormal(input[0].densityVolCoords[i]);
+    }
 
     /*
      Determine the index into the edge table which
@@ -161,66 +133,79 @@ void main(
 
 
     float3 vertlist[12];
+    float3 normList[12];
 
     /* Find the vertices where the surface intersects the cube */
     if (edgeVal & 1)
     {
         vertlist[0] = VertexInterp(isoLevel, cell.p[0], cell.p[1], cell.densityValue[0], cell.densityValue[1]);
+        normList[0] = VertexInterp(isoLevel, cell.normal[0], cell.normal[1], cell.densityValue[0], cell.densityValue[1]);
     }
 
     if (edgeVal & 2)
     {
         vertlist[1] = VertexInterp(isoLevel, cell.p[1], cell.p[2], cell.densityValue[1], cell.densityValue[2]);
+        normList[1] = VertexInterp(isoLevel, cell.normal[1], cell.normal[2], cell.densityValue[1], cell.densityValue[2]);
     }
 
     if (edgeVal & 4)
     {
         vertlist[2] = VertexInterp(isoLevel, cell.p[2], cell.p[3], cell.densityValue[2], cell.densityValue[3]);
+        normList[2] = VertexInterp(isoLevel, cell.normal[2], cell.normal[3], cell.densityValue[2], cell.densityValue[3]);
     }
 
     if (edgeVal & 8)
     {
         vertlist[3] = VertexInterp(isoLevel, cell.p[3], cell.p[0], cell.densityValue[3], cell.densityValue[0]);
+        normList[3] = VertexInterp(isoLevel, cell.normal[3], cell.normal[0], cell.densityValue[3], cell.densityValue[0]);
     }
 
     if (edgeVal & 16)
     {
         vertlist[4] = VertexInterp(isoLevel, cell.p[4], cell.p[5], cell.densityValue[4], cell.densityValue[5]);
+        normList[4] = VertexInterp(isoLevel, cell.normal[4], cell.normal[5], cell.densityValue[4], cell.densityValue[5]);
     }
 
     if (edgeVal & 32)
     {
         vertlist[5] = VertexInterp(isoLevel, cell.p[5], cell.p[6], cell.densityValue[5], cell.densityValue[6]);
+        normList[5] = VertexInterp(isoLevel, cell.normal[5], cell.normal[6], cell.densityValue[5], cell.densityValue[6]);
     }
 
     if (edgeVal & 64)
     {
         vertlist[6] = VertexInterp(isoLevel, cell.p[6], cell.p[7], cell.densityValue[6], cell.densityValue[7]);
+        normList[6] = VertexInterp(isoLevel, cell.normal[6], cell.normal[7], cell.densityValue[6], cell.densityValue[7]);
     }
 
     if (edgeVal & 128)
     {
         vertlist[7] = VertexInterp(isoLevel, cell.p[7], cell.p[4], cell.densityValue[7], cell.densityValue[4]);
+        normList[7] = VertexInterp(isoLevel, cell.normal[7], cell.normal[4], cell.densityValue[7], cell.densityValue[4]);
     }
 
     if (edgeVal & 256)
     {
         vertlist[8] = VertexInterp(isoLevel, cell.p[0], cell.p[4], cell.densityValue[0], cell.densityValue[4]);
+        normList[8] = VertexInterp(isoLevel, cell.normal[0], cell.normal[4], cell.densityValue[0], cell.densityValue[4]);
     }
 
     if (edgeVal & 512)
     {
         vertlist[9] = VertexInterp(isoLevel, cell.p[1], cell.p[5], cell.densityValue[1], cell.densityValue[5]);
+        normList[9] = VertexInterp(isoLevel, cell.normal[1], cell.normal[5], cell.densityValue[1], cell.densityValue[5]);
     }
 
     if (edgeVal & 1024)
     {
-        vertlist[10] = VertexInterp(isoLevel, cell.p[2], cell.p[6], cell.densityValue[2], cell.densityValue[6]);;
+        vertlist[10] = VertexInterp(isoLevel, cell.p[2], cell.p[6], cell.densityValue[2], cell.densityValue[6]);
+        normList[10] = VertexInterp(isoLevel, cell.normal[2], cell.normal[6], cell.densityValue[2], cell.densityValue[6]);
     }
 
     if (edgeVal & 2048)
     {
         vertlist[11] = VertexInterp(isoLevel, cell.p[3], cell.p[7], cell.densityValue[3], cell.densityValue[7]);
+        normList[11] = VertexInterp(isoLevel, cell.normal[3], cell.normal[7], cell.densityValue[3], cell.densityValue[7]);
     }
 
     for (int i = 0; (int)triTable_c_buff[(cubeindex * 16) + i] != -1; i += 3)
@@ -240,15 +225,15 @@ void main(
         GSOutput element;
 
         element.wsCoordAmbo = ApplyViewProj(p0);
-        element.wsNormal = CalculateNormal(p0.xyz);
+        element.wsNormal = normList[v0_index];
         Stream.Append(element);
 
         element.wsCoordAmbo = ApplyViewProj(p1);
-        element.wsNormal = CalculateNormal(p1.xyz);
+        element.wsNormal = normList[v1_index];
         Stream.Append(element);
 
         element.wsCoordAmbo = ApplyViewProj(p2);
-        element.wsNormal = CalculateNormal(p2.xyz);
+        element.wsNormal = normList[v2_index];
         Stream.Append(element);
 
 
