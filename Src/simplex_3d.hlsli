@@ -9,6 +9,7 @@
 //               https://github.com/ashima/webgl-noise
 //               https://github.com/stegu/webgl-noise
 // 
+// Converted to HLSL
 
 float3 mod289(float3 x) {
     return x - floor(x * (1.0 / 289.0)) * 289.0;

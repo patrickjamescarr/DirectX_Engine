@@ -56,9 +56,9 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     auto sunModel = m_modelLoader.CreateSphere(5);
     m_meshes.push_back(ParseMesh(deviceResources, sunModel, m_sunLight.get(), Matrix::CreateTranslation(Vector3(lightPosition)), L"Textures//sun2.dds", L"light_vs.cso", L"light_ps.cso"));
 
-    auto mcMeshCpu = std::make_unique<MarchingCubesMesh>(deviceResources, m_light.get(), Matrix::Identity, L"Textures//sun2.dds", L"test_vs.cso", L"test_ps.cso");
-    
-    m_meshes.push_back(std::move(mcMeshCpu));
+    //auto mcMeshCpu = std::make_unique<MarchingCubesMesh>(deviceResources, m_light.get(), Matrix::Identity, L"Textures//sun2.dds", L"test_vs.cso", L"test_ps.cso");
+    //
+    //m_meshes.push_back(std::move(mcMeshCpu));
     
     // store the model mesh pointers in a vector
     std::vector<Mesh*> meshPointers;

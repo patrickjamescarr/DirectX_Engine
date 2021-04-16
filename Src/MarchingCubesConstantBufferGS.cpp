@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "MarchingCubesConstantBufferGS.h"
 
-MarchingCubesConstantBufferGS::MarchingCubesConstantBufferGS(DX::DeviceResources & deviceResources, const GameObject & parent, float* isolevel)
-    : m_parent(parent), m_isoLevel(isolevel)
+MarchingCubesConstantBufferGS::MarchingCubesConstantBufferGS(DX::DeviceResources & deviceResources, const GameObject & parent, float* isolevel, int* dimention)
+    : m_parent(parent), m_isoLevel(isolevel), m_dimention(dimention)
 {   
     // matrix buffer in slot 0
     if (!m_matrixConstantBuffer)
@@ -10,10 +10,10 @@ MarchingCubesConstantBufferGS::MarchingCubesConstantBufferGS(DX::DeviceResources
         m_matrixConstantBuffer = std::make_unique<GeometryConstantBuffer<MatrixBufferType>>(deviceResources);
     }
 
-    // edge table buffer in slot 1
-    if (!m_edgeTableBuffer)
+    // cube buffer in slot 1
+    if (!m_cubeBuffer)
     {
-        m_edgeTableBuffer = std::make_unique<GeometryConstantBuffer<EdgeTableBuffer>>(deviceResources, 1);
+        m_cubeBuffer = std::make_unique<GeometryConstantBuffer<CubeBuffer>>(deviceResources, 1);
     }
 
     // tri table buffer in slot 2
@@ -24,7 +24,7 @@ MarchingCubesConstantBufferGS::MarchingCubesConstantBufferGS(DX::DeviceResources
 
     for (int i = 0; i < 256; i++)
     {
-        m_edgeTableData.edgeTable[i].x = m_edgeTable[i];
+        m_cubeBufferData.edgeTable[i].x = m_edgeTable[i];
     }
 
     for (int i = 0; i < 4096; i++)
@@ -45,9 +45,10 @@ void MarchingCubesConstantBufferGS::Bind(DX::DeviceResources & deviceResources) 
     m_matrixConstantBuffer->Update(deviceResources, matrixBuffer);
     m_matrixConstantBuffer->Bind(deviceResources);
 
-    m_edgeTableData.isoLevel = DirectX::SimpleMath::Vector4(*m_isoLevel, 0, 0, 0); //DirectX::SimpleMath::Vector4(*m_isoLevel, 0, 0, 0);
-    m_edgeTableBuffer->Update(deviceResources, m_edgeTableData);
-    m_edgeTableBuffer->Bind(deviceResources);
+    m_cubeBufferData.isoLevel = DirectX::SimpleMath::Vector4(*m_isoLevel, 0, 0, 0); //DirectX::SimpleMath::Vector4(*m_isoLevel, 0, 0, 0);
+    m_cubeBufferData.dimention = DirectX::SimpleMath::Vector4(*m_dimention, 0, 0, 0);
+    m_cubeBuffer->Update(deviceResources, m_cubeBufferData);
+    m_cubeBuffer->Bind(deviceResources);
 
     m_triTableBuffer->Update(deviceResources, m_triTableData);
     m_triTableBuffer->Bind(deviceResources);

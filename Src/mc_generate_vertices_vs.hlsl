@@ -4,19 +4,20 @@ struct gridCell {
     float3 p[8];
     float densityValue[8];
 };
-//
-//cbuffer DensityMatrixBuffer : register(b0)
-//{
-//    matrix worldMatrixDen;
-//    matrix viewMatrixDen;
-//    matrix projectionMatrixDen;
-//};
 
 cbuffer MatrixBuffer : register(b0)
 {
     matrix worldMatrix;
     matrix viewMatrix;
     matrix projectionMatrix;
+};
+
+// Buffer to store the cube variables
+// x val contains cube scale
+// y val contains cube dimentions
+cbuffer CubeBuffer : register(b1)
+{
+    float4 cubeVariables;
 };
 
 struct VSInput
@@ -41,39 +42,25 @@ float4 ApplyMatrices(float4 coord)
     return outCoord;
 }
 
-//float4 ApplyDensityMatrices(float4 coord)
-//{
-//    float4 outCoord;
-//
-//    outCoord = mul(coord, worldMatrixDen);
-//
-//    return outCoord;
-//}
-
 VSOutput main(VSInput input)
 {
     VSOutput output;
 
     input.position.w = 1.0f;
 
-    float cubeSize = 1.0f * 0.03f;
+    float scale = cubeVariables.x;
+    float cubeDims = cubeVariables.y;
+
+    float cubeSize = 1.0f * scale;
 
     float4 cubeCoord = input.position;
-    cubeCoord.z = (float)input.nInstanceID * 0.03f;
+    cubeCoord.z = (float)input.nInstanceID * scale;
 
-    float textureCoordinatesStep = 1.0f / 65.f;
+    float textureCoordinatesStep = 1.0f / cubeDims;
     float densityLayer = (float)input.nInstanceID * textureCoordinatesStep;
-    //float densityLayer = (float)cubeCoord.z * textureCoordinatesStep;
-
-    // world position of vertex
-    //output.wsPosition = mul(input.position, worldMatrix);
-
-    //output.position = mul(input.position, worldMatrix);
-    //output.position = mul(output.position, viewMatrix);
-    //output.position = mul(output.position, projectionMatrix);
 
 
-    // calculate these here then pass to geometry shader
+    // calculate the surrounding vertex coordinates
     // front face
     output.wsCellCoords[0] = ApplyMatrices(float4(cubeCoord.x, (cubeCoord.y + cubeSize), cubeCoord.z, cubeCoord.w));                // top left
     output.wsCellCoords[1] = ApplyMatrices(float4((cubeCoord.x + cubeSize), (cubeCoord.y + cubeSize), cubeCoord.z, cubeCoord.w));   // top right
@@ -86,20 +73,18 @@ VSOutput main(VSInput input)
     output.wsCellCoords[6] = ApplyMatrices(float4((cubeCoord.x + cubeSize), cubeCoord.y, (cubeCoord.z + cubeSize), cubeCoord.w));               // bottom right
     output.wsCellCoords[7] = ApplyMatrices(float4(cubeCoord.x, cubeCoord.y, (cubeCoord.z + cubeSize), cubeCoord.w));                            // bottom left
 
+    // calculate the surrounding density values
     // front face
-    output.densityVolCoords[0] = float3(input.tex.x, (input.tex.y + textureCoordinatesStep), densityLayer);                // top left
-    output.densityVolCoords[1] = float3((input.tex.x + textureCoordinatesStep), (input.tex.y + textureCoordinatesStep), densityLayer);   // top right
-    output.densityVolCoords[2] = float3((input.tex.x + textureCoordinatesStep), input.tex.y, densityLayer);                // bottom right
-    output.densityVolCoords[3] = float3(input.tex.x, input.tex.y, densityLayer);                             // bottom left
+    output.densityVolCoords[0] = float3(input.tex.x, (input.tex.y + textureCoordinatesStep), densityLayer);                             // top left
+    output.densityVolCoords[1] = float3((input.tex.x + textureCoordinatesStep), (input.tex.y + textureCoordinatesStep), densityLayer);  // top right
+    output.densityVolCoords[2] = float3((input.tex.x + textureCoordinatesStep), input.tex.y, densityLayer);                             // bottom right
+    output.densityVolCoords[3] = float3(input.tex.x, input.tex.y, densityLayer);                                                        // bottom left
 
     // back face
-    output.densityVolCoords[4] = float3(input.tex.x, (input.tex.y + textureCoordinatesStep), (densityLayer + textureCoordinatesStep));               // top left
-    output.densityVolCoords[5] = float3((input.tex.x + textureCoordinatesStep), (input.tex.y + textureCoordinatesStep), (densityLayer + textureCoordinatesStep));  // top right
-    output.densityVolCoords[6] = float3((input.tex.x + textureCoordinatesStep), input.tex.y, (densityLayer + textureCoordinatesStep));               // bottom right
-    output.densityVolCoords[7] = float3(input.tex.x, input.tex.y, (densityLayer + textureCoordinatesStep));                            // bottom left
-
-
-   // output.nInstanceID = input.nInstanceID;
+    output.densityVolCoords[4] = float3(input.tex.x, (input.tex.y + textureCoordinatesStep), (densityLayer + textureCoordinatesStep));                              // top left
+    output.densityVolCoords[5] = float3((input.tex.x + textureCoordinatesStep), (input.tex.y + textureCoordinatesStep), (densityLayer + textureCoordinatesStep));   // top right
+    output.densityVolCoords[6] = float3((input.tex.x + textureCoordinatesStep), input.tex.y, (densityLayer + textureCoordinatesStep));                              // bottom right
+    output.densityVolCoords[7] = float3(input.tex.x, input.tex.y, (densityLayer + textureCoordinatesStep));                                                         // bottom left
 
 
     return output;

@@ -256,7 +256,6 @@
     <ClInclude Include="TerrainDensityFunction.h">
       <Filter>Header Files\Proc Gen\Functions</Filter>
     </ClInclude>
-    <ClInclude Include="MarchingCubesGeometryShader.h" />
     <ClInclude Include="density.hlsli">
       <Filter>Shaders\Marching Cubes</Filter>
     </ClInclude>
@@ -302,17 +301,34 @@
     <ClInclude Include="RasterizerState.h">
       <Filter>Header Files\Bindable\States</Filter>
     </ClInclude>
-    <ClInclude Include="CameraConstantBuffer.h" />
-    <ClInclude Include="GeometryConstantBuffer.h" />
     <ClInclude Include="TransformConstantBufferVS.h">
       <Filter>Header Files\Bindable\Constant Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="TransformConstantBufferGS.h" />
-    <ClInclude Include="MarchingCubesConstantBufferVS.h" />
-    <ClInclude Include="MarchingCubesConstantBufferGS.h" />
-    <ClInclude Include="Simplex2.h" />
-    <ClInclude Include="OnScreenQuad.h" />
-    <ClInclude Include="OnScreenQuadConstantBufferVS.h" />
+    <ClInclude Include="OnScreenQuadConstantBufferVS.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformConstantBufferGS.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="MarchingCubesConstantBufferGS.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="MarchingCubesConstantBufferVS.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="MarchingCubesGeometryShader.h">
+      <Filter>Header Files\Proc Gen</Filter>
+    </ClInclude>
+    <ClInclude Include="OnScreenQuad.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryConstantBuffer.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraConstantBuffer.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="MarchingCubesGenerateConstantBufferVS.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -483,8 +499,6 @@
     <ClCompile Include="TerrainDensityFunction.cpp">
       <Filter>Source Files\Proc Gen\Functions</Filter>
     </ClCompile>
-    <ClCompile Include="MarchingCubesGeometryShader.cpp" />
-    <ClCompile Include="CameraConstantBuffer.cpp" />
     <ClCompile Include="BloomConstantBuffer.cpp">
       <Filter>Source Files\Bindable\Constant Buffers</Filter>
     </ClCompile>
@@ -503,12 +517,28 @@
     <ClCompile Include="TransformConstantBufferVS.cpp">
       <Filter>Source Files\Bindable\Constant Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="TransformConstantBufferGS.cpp" />
-    <ClCompile Include="MarchingCubesConstantBufferVS.cpp" />
-    <ClCompile Include="MarchingCubesConstantBufferGS.cpp" />
-    <ClCompile Include="Simplex2.cpp" />
-    <ClCompile Include="OnScreenQuad.cpp" />
-    <ClCompile Include="OnScreenQuadConstantBufferVS.cpp" />
+    <ClCompile Include="MarchingCubesConstantBufferGS.cpp">
+      <Filter>Source Files\Bindable\Constant Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="MarchingCubesConstantBufferVS.cpp">
+      <Filter>Source Files\Bindable\Constant Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformConstantBufferGS.cpp">
+      <Filter>Source Files\Bindable\Constant Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="MarchingCubesGeometryShader.cpp">
+      <Filter>Source Files\Proc Gen</Filter>
+    </ClCompile>
+    <ClCompile Include="OnScreenQuad.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraConstantBuffer.cpp">
+      <Filter>Source Files\Bindable\Constant Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="OnScreenQuadConstantBufferVS.cpp">
+      <Filter>Source Files\Bindable\Constant Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="MarchingCubesGenerateConstantBufferVS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

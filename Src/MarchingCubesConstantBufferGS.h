@@ -313,23 +313,25 @@ private:
         DirectX::XMFLOAT4 triTable[4096];
     };
 
-    struct EdgeTableBuffer
+    struct CubeBuffer
     {
         DirectX::XMFLOAT4 edgeTable[256];
         DirectX::XMFLOAT4 isoLevel;
+        DirectX::XMFLOAT4 dimention;
     };
 
 
 public:
-    MarchingCubesConstantBufferGS(DX::DeviceResources& deviceResources, const GameObject& parent, float* isolevel);
+    MarchingCubesConstantBufferGS(DX::DeviceResources& deviceResources, const GameObject& parent, float* isolevel, int* dimention);
     void Bind(DX::DeviceResources& deviceResources) noexcept override;
 private:
     std::unique_ptr<GeometryConstantBuffer<MatrixBufferType>> m_matrixConstantBuffer;
-    std::unique_ptr<GeometryConstantBuffer<EdgeTableBuffer>> m_edgeTableBuffer;
+    std::unique_ptr<GeometryConstantBuffer<CubeBuffer>> m_cubeBuffer;
     std::unique_ptr<GeometryConstantBuffer<TriTableBuffer>> m_triTableBuffer;
     const GameObject& m_parent;
-    EdgeTableBuffer m_edgeTableData;
+    CubeBuffer m_cubeBufferData;
     TriTableBuffer m_triTableData;
     float* m_isoLevel;
+    int* m_dimention;
 };
 

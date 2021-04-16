@@ -26,6 +26,13 @@ VSOutput main(VSInput input)
 {
     VSOutput output;
 
+
+    float4 worldPos = float4(input.position.xy, (float)input.nInstanceID + input.position.z, 1);
+
+    // world position of vertex 
+    output.position3D = worldPos;//mul(worldPos, worldMatrix);
+
+    input.position.z = 0.5f;
     input.position.w = 1.0f;
 
     // Calculate the position of the vertex against the world, view, and projection matrices.
@@ -36,10 +43,7 @@ VSOutput main(VSInput input)
     // Store the texture coordinates for the pixel shader.
     output.tex = input.tex;
 
-    float4 worldPos = float4(input.position.xy, input.nInstanceID, 1);
 
-    // world position of vertex (for point light)
-    output.position3D = mul(worldPos, worldMatrix);
 
     //output.position3D = float4(input.tex.xy, input.nInstanceID * (1.0f / 10.0f), 1.0f);
 

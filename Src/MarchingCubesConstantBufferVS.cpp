@@ -3,8 +3,14 @@
 
 using namespace DirectX::SimpleMath;
 
-MarchingCubesConstantBufferVS::MarchingCubesConstantBufferVS(DX::DeviceResources & deviceResources, const GameObject & parent, const float &cubeDimention)
-    : m_parent(parent), m_cubeDimention(cubeDimention)
+MarchingCubesDensityConstantBufferVS::MarchingCubesDensityConstantBufferVS(
+    DX::DeviceResources & deviceResources, 
+    const DirectX::SimpleMath::Matrix& transform,
+    const float& dimention, 
+    const int& xPos, 
+    const int& yPos
+)
+    : m_cubeDimention(dimention), m_xPos(xPos), m_yPos(yPos), m_transform(transform)
 {
     if (!m_vertexConstantBuffer)
     {
@@ -12,15 +18,15 @@ MarchingCubesConstantBufferVS::MarchingCubesConstantBufferVS(DX::DeviceResources
     }
 }
 
-void MarchingCubesConstantBufferVS::Bind(DX::DeviceResources & deviceResources) noexcept
+void MarchingCubesDensityConstantBufferVS::Bind(DX::DeviceResources & deviceResources) noexcept
 {
     auto world = Matrix::Identity;
 
     auto width = deviceResources.GetBackBufferWidth();
     auto height = deviceResources.GetBackBufferHeight();
 
-    float offsetX = ((float)width / 2.0f) - (65.0f / 2.0f);
-    float offsetY = ((float)height / 2.0f) - (65.0f / 2.0f);
+    float offsetX = ((float)width / 2.0f) - (m_cubeDimention / 2.0f) - (m_xPos * (m_cubeDimention - 1));
+    float offsetY = ((float)height / 2.0f) - (m_cubeDimention / 2.0f);
 
     //Set the View matrix
     auto view = Matrix::CreateLookAt(Vector3(offsetX, -offsetY, 100.0f), Vector3(offsetX, -offsetY, 0.0f), Vector3::UnitY);

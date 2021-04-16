@@ -19,9 +19,9 @@ TerrainNode::TerrainNode(
 
     m_transform = Matrix::CreateTranslation(10.0f, 0.0f, 0.0f);
 
-    auto terrain = std::make_unique<Terrain>(deviceResources, light, L"Textures//seafloor.dds", terrainPosition, m_terrainWidth, m_terrainHeight, m_scale, playerCamera, frustum);
+    //auto terrain = std::make_unique<Terrain>(deviceResources, light, L"Textures//seafloor.dds", terrainPosition, m_terrainWidth, m_terrainHeight, m_scale, playerCamera, frustum);
 
-    m_meshes.push_back(std::move(terrain));
+    //m_meshes.push_back(std::move(terrain));
 
     auto terrainColliderOffset = Matrix::CreateTranslation((m_terrainWidth * m_scale) / 2, 0.0f, (m_terrainHeight* m_scale) / 2);
 
@@ -31,9 +31,16 @@ TerrainNode::TerrainNode(
 
     m_meshes.push_back(std::move(terrainCollider));
 
-    auto mcMesh = std::make_unique<MarchingCubesGeometryShader>(deviceResources, light, playerCamera, Matrix::Identity);
+    auto mcBlockOffset = (65.0f * 0.03f);
+    auto mcBlockOffsetX = (65.0f * 0.03f);
 
-    m_meshes.push_back(std::move(mcMesh));
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            m_meshes.push_back(std::make_unique<MarchingCubesGeometryShader>(deviceResources, light, playerCamera, Matrix::CreateTranslation(Vector3(-mcBlockOffsetX * (float)i, 0, mcBlockOffset * j)), i, j));
+        }
+    }
 
     // Add mesh pointers to the base mesh collection
     for (auto &mesh : m_meshes)

@@ -12,10 +12,11 @@ cbuffer MatrixBuffer : register(b0)
     matrix projectionMatrix;
 };
 
-cbuffer EdgeTableBuffer : register(b1)
+cbuffer CubeBuffer : register(b1)
 {
-    float edgeTable_c_buff[256];
+    float  edgeTable_c_buff[256];
     float4 isoLevel_c_buff;
+    float4 dim_c_buff;              // the dimention of the cube 
 };
 
 cbuffer TriTableBuffer : register(b2)
@@ -27,6 +28,7 @@ struct GSOutput
 {
     float4 wsCoordAmbo : SV_POSITION;
     float3 wsNormal : NORMAL;
+    float3 position3D : TEXCOORD2;
 };
 
 struct VSOutput
@@ -34,17 +36,6 @@ struct VSOutput
     float4 wsCellCoords[8]      : CELL;
     float3 densityVolCoords[8]  : DENSITY;
 };
-
-float4 ApplyMatrices(float4 coord)
-{
-    float4 outCoord;
-
-    outCoord = mul(coord, worldMatrix);
-    outCoord = mul(coord, viewMatrix);
-    outCoord = mul(outCoord, projectionMatrix);
-
-    return outCoord;
-}
 
 float4 ApplyViewProj(float4 coord)
 {
@@ -55,6 +46,7 @@ float4 ApplyViewProj(float4 coord)
 
     return outCoord;
 }
+
 /*
     Linearly interpolate the position where an isosurface cuts
     an edge between two vertices, each with their own scalar value
@@ -79,9 +71,10 @@ float3 VertexInterp(float isolevel, float3 p1, float3 p2, float valp1, float val
     return(p);
 }
 
+// Calculates the normal for a given point by taking the gradient of the density function
 float3 CalculateNormal(float3 uvw)
 {
-    float d = 1.0 / 65.0f;
+    float d = 1.0 / dim_c_buff.x;
 
     float3 grad;
     grad.x = density_vol.SampleLevel(LinearClamp, uvw + float3(d, 0, 0), 0) - density_vol.SampleLevel(LinearClamp, uvw + float3(-d, 0, 0), 0);
@@ -131,11 +124,10 @@ void main(
     if (edgeVal == 0)
         return;
 
-
     float3 vertlist[12];
     float3 normList[12];
 
-    /* Find the vertices where the surface intersects the cube */
+    /* Find the vertices and their normals where the surface intersects the cube */
     if (edgeVal & 1)
     {
         vertlist[0] = VertexInterp(isoLevel, cell.p[0], cell.p[1], cell.densityValue[0], cell.densityValue[1]);
@@ -225,18 +217,19 @@ void main(
         GSOutput element;
 
         element.wsCoordAmbo = ApplyViewProj(p0);
+        element.position3D = p0;
         element.wsNormal = normList[v0_index];
         Stream.Append(element);
 
         element.wsCoordAmbo = ApplyViewProj(p1);
+        element.position3D = p1;
         element.wsNormal = normList[v1_index];
         Stream.Append(element);
 
         element.wsCoordAmbo = ApplyViewProj(p2);
+        element.position3D = p2;
         element.wsNormal = normList[v2_index];
         Stream.Append(element);
-
-
     }
     Stream.RestartStrip();
 }

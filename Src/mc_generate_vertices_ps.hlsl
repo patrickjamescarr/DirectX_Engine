@@ -13,6 +13,7 @@ struct InputType
 {
     float4 wsCoordAmbo : SV_POSITION;
     float3 wsNormal : NORMAL;
+    float3 position3D : TEXCOORD2;
 };
 
 float4 main(InputType input) : SV_TARGET
@@ -23,7 +24,7 @@ float4 main(InputType input) : SV_TARGET
     float4	color;
 
     // Invert the light direction for calculations.
-    lightDir = normalize(float3(input.wsCoordAmbo.xyz) - lightPosition);
+    lightDir = normalize(float3(input.position3D.xyz) - lightPosition);
 
     // Calculate the amount of light on this pixel.
     lightIntensity = saturate(dot(input.wsNormal, -lightDir));

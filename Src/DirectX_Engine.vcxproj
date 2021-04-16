@@ -212,6 +212,7 @@
     <ClInclude Include="MarchingCubes.h" />
     <ClInclude Include="MarchingCubesConstantBufferGS.h" />
     <ClInclude Include="MarchingCubesConstantBufferVS.h" />
+    <ClInclude Include="MarchingCubesGenerateConstantBufferVS.h" />
     <ClInclude Include="MarchingCubesGeometryShader.h" />
     <ClInclude Include="MarchingCubesHeader.h" />
     <ClInclude Include="MarchingCubesMesh.h" />
@@ -234,7 +235,6 @@
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="Simplex2.h" />
     <ClInclude Include="SimplexFunction.h" />
     <ClInclude Include="SimplexNoise.h" />
     <ClInclude Include="SkyBox.h" />
@@ -291,6 +291,7 @@
     <ClCompile Include="MarchingCubes.cpp" />
     <ClCompile Include="MarchingCubesConstantBufferGS.cpp" />
     <ClCompile Include="MarchingCubesConstantBufferVS.cpp" />
+    <ClCompile Include="MarchingCubesGenerateConstantBufferVS.cpp" />
     <ClCompile Include="MarchingCubesGeometryShader.cpp" />
     <ClCompile Include="MarchingCubesMesh.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -314,7 +315,6 @@
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Simplex2.cpp" />
     <ClCompile Include="SimplexFunction.cpp" />
     <ClCompile Include="SimplexNoise.cpp" />
     <ClCompile Include="SkyBox.cpp" />

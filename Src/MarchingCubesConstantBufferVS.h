@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "VertexConstantBuffer.h"
 
-class MarchingCubesConstantBufferVS :
+class MarchingCubesDensityConstantBufferVS :
     public Bindable
 {
 private:
@@ -15,11 +15,18 @@ private:
         DirectX::XMMATRIX projection;
     };
 public:
-    MarchingCubesConstantBufferVS(DX::DeviceResources& deviceResources, const GameObject& parent, const float &cubeDimention);
+    MarchingCubesDensityConstantBufferVS(
+        DX::DeviceResources& deviceResources, 
+        const DirectX::SimpleMath::Matrix& transform,
+        const float &cubeDimention, 
+        const int& xPos, 
+        const int& yPos);
     void Bind(DX::DeviceResources& deviceResources) noexcept override;
 private:
     std::unique_ptr<VertexConstantBuffer<MatrixBufferType>> m_vertexConstantBuffer;
-    const GameObject& m_parent;
     float m_cubeDimention;
+    int m_xPos;
+    int m_yPos;
+    DirectX::SimpleMath::Matrix m_transform;
 };
 

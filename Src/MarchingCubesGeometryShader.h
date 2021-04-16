@@ -20,16 +20,15 @@ public:
         DX::DeviceResources& deviceResources,
         Light * sceneLight,
         Camera* activeCamera,
-        DirectX::SimpleMath::Matrix transform
+        DirectX::SimpleMath::Matrix transform,
+        int xPos,
+        int zPos
         );
     void Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accumulatedTransform) const noexcept override;
     void BuildDensityVolumeRenderPass(DX::DeviceResources & deviceResources) const;
     void GenerateVerticesRenderPass(DX::DeviceResources & deviceResources) const;
     virtual void Update();
 private:
-    //IndexBuffer* m_d_indexBuffer;
-    //IndexBuffer* m_g_indexBuffer;
-
     std::unique_ptr<OnScreenQuad> m_quad;
 
     std::unique_ptr<PixelShader> m_build_densities_PS;
@@ -38,12 +37,7 @@ private:
     RenderTarget* m_buildDensitiesRT;
     std::vector < std::unique_ptr<Bindable>> m_densityVolumeRenderPass;
 
-    RenderTarget* m_texture2dRT;
-    std::vector < std::unique_ptr<Bindable>> m_texture2dTestPass;
-
-
     VertexBuffer<DirectX::VertexPosition>* m_densityVertexBuffer;
-    UINT m_densityeVertexCount;
 
     RenderTarget* m_generateVertsRT;
     std::vector < std::unique_ptr<Bindable>> m_generateVertsRenderPass;
@@ -53,8 +47,7 @@ private:
     std::unique_ptr<Sampler> m_gsSampler;
 
     float m_isoLevel = 0.0f;
-    float m_randomHeightValue = 3.0f;
-
+    float m_scale = 0.03f;
     int m_dimention = 65;
 };
 
