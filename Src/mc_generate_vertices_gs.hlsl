@@ -234,7 +234,9 @@ void main(
         element.position3D = p2;
         element.wsNormal = normList[v2_index];
         Stream.Append(element);
+
+        Stream.RestartStrip();
     }
-    Stream.RestartStrip();
+    
 }
 

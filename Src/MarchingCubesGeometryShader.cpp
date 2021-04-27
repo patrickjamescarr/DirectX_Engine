@@ -76,14 +76,6 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
         m_densityVolumeRenderPass.push_back(std::make_unique<RasterizerState>(deviceResources, D3D11_CULL_BACK));
         m_densityVolumeRenderPass.push_back(std::make_unique<VertexBuffer<VertexPositionTexture>>(deviceResources, verts));
 
-        //m_densityVolumeRenderPass.push_back(std::make_unique<Texture3D>(deviceResources, L"Textures//noise_half_16cubed_mips_00.vol", 0));
-        //m_densityVolumeRenderPass.push_back(std::make_unique<Texture3D>(deviceResources, L"Textures//noise_half_16cubed_mips_01.vol", 1));
-        //m_densityVolumeRenderPass.push_back(std::make_unique<Texture3D>(deviceResources, L"Textures//noise_half_16cubed_mips_02.vol", 2));
-        //m_densityVolumeRenderPass.push_back(std::make_unique<Texture3D>(deviceResources, L"Textures//noise_half_16cubed_mips_03.vol", 3));
-
-       
-
-
         // 3D texture description for storing the density values
         CD3D11_TEXTURE3D_DESC densityVolTexDesc;
         densityVolTexDesc.Height = m_dimention;
@@ -114,10 +106,7 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
         m_densityVolumeRenderPass.push_back(std::make_unique<PixelShader>(deviceResources, L"mc_build_densities_ps.cso"));
 
         // Create the vertex input layout description.
-        std::vector<D3D11_INPUT_ELEMENT_DESC> layout{
-            { "POSITION",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,                               D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "TEXCOORD",   0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        };
+        std::vector<D3D11_INPUT_ELEMENT_DESC> layout(std::begin(VertexPositionTexture::InputElements), std::end(VertexPositionTexture::InputElements));
 
         // Create the input layout
         m_densityVolumeRenderPass.push_back(std::make_unique<InputLayout>(deviceResources, layout, vsBytecode));
@@ -164,7 +153,7 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
 
         m_generateVertsRenderPass.push_back(std::make_unique<Topology>(deviceResources, D3D11_PRIMITIVE_TOPOLOGY_POINTLIST));
         m_generateVertsRenderPass.push_back(std::make_unique<DepthStencilState>(deviceResources, DepthStencilState::default));
-        m_generateVertsRenderPass.push_back(std::make_unique<RasterizerState>(deviceResources, D3D11_CULL_NONE)); //D3D11_FILL_WIREFRAME
+        m_generateVertsRenderPass.push_back(std::make_unique<RasterizerState>(deviceResources, D3D11_CULL_BACK)); //D3D11_FILL_WIREFRAME
         
         // buffers
         //vertex buffers
@@ -190,10 +179,7 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
         m_generateVertsRenderPass.push_back(std::move(vs));
 
         // Create the vertex input layout description.
-        std::vector<D3D11_INPUT_ELEMENT_DESC> layout{
-            { "POSITION",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,                               D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "TEXCOORD",   0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        };
+        std::vector<D3D11_INPUT_ELEMENT_DESC> layout(std::begin(VertexPositionTexture::InputElements), std::end(VertexPositionTexture::InputElements));
 
         // Create the input layout
         m_generateVertsRenderPass.push_back(std::make_unique<InputLayout>(deviceResources, layout, vsBytecode));
@@ -236,7 +222,7 @@ void MarchingCubesGeometryShader::Draw(
 
     m_floorTerrain->Draw(deviceResources, m_accumulatedTransform);
 
-    //RenderCubeTerrain(deviceResources, accumulatedTransform);
+    RenderCubeTerrain(deviceResources, accumulatedTransform);
 }
 
 void MarchingCubesGeometryShader::RenderCubeTerrain(DX::DeviceResources & deviceResources, const DirectX::XMMATRIX &accumulatedTransform) const
