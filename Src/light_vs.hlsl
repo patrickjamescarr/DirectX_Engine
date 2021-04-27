@@ -10,9 +10,9 @@ cbuffer MatrixBuffer : register(b0)
 
 struct InputType
 {
-    float4 position : POSITION;
-    float2 tex : TEXCOORD0;
+    float4 position : SV_POSITION;
     float3 normal : NORMAL;
+    float2 tex : TEXCOORD0;
 };
 
 struct OutputType

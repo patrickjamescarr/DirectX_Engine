@@ -328,7 +328,16 @@
     <ClInclude Include="CameraConstantBuffer.h">
       <Filter>Header Files\Bindable\Constant Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="MarchingCubesGenerateConstantBufferVS.h" />
+    <ClInclude Include="sampleNoise.hlsli">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture3D.h">
+      <Filter>Header Files\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="MarchingCubesGenerateConstantBufferVS.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapTerrain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -538,7 +547,13 @@
     <ClCompile Include="OnScreenQuadConstantBufferVS.cpp">
       <Filter>Source Files\Bindable\Constant Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="MarchingCubesGenerateConstantBufferVS.cpp" />
+    <ClCompile Include="Texture3D.cpp">
+      <Filter>Source Files\Bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="MarchingCubesGenerateConstantBufferVS.cpp">
+      <Filter>Source Files\Bindable\Constant Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMapTerrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

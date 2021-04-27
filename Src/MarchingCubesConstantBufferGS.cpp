@@ -1,7 +1,12 @@
 #include "pch.h"
 #include "MarchingCubesConstantBufferGS.h"
 
-MarchingCubesConstantBufferGS::MarchingCubesConstantBufferGS(DX::DeviceResources & deviceResources, const GameObject & parent, float* isolevel, int* dimention)
+MarchingCubesConstantBufferGS::MarchingCubesConstantBufferGS(
+    DX::DeviceResources & deviceResources, 
+    const GameObject & parent, 
+    const float* isolevel, 
+    const int* dimention
+)
     : m_parent(parent), m_isoLevel(isolevel), m_dimention(dimention)
 {   
     // matrix buffer in slot 0

@@ -11,6 +11,8 @@
 #include "Sampler.h"
 #include "Camera.h"
 #include "OnScreenQuad.h"
+#include "ViewingFrustum.h"
+#include "HeightMapTerrain.h"
 
 class MarchingCubesGeometryShader :
     public Mesh
@@ -20,11 +22,16 @@ public:
         DX::DeviceResources& deviceResources,
         Light * sceneLight,
         Camera* activeCamera,
+        ViewingFrustum* viewingFrustum,
         DirectX::SimpleMath::Matrix transform,
         int xPos,
-        int zPos
+        int zPos,
+        const float * isoLevel,
+        const int &dimention,
+        float scale
         );
     void Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accumulatedTransform) const noexcept override;
+    void RenderCubeTerrain(DX::DeviceResources & deviceResources, const DirectX::XMMATRIX &accumulatedTransform) const;
     void BuildDensityVolumeRenderPass(DX::DeviceResources & deviceResources) const;
     void GenerateVerticesRenderPass(DX::DeviceResources & deviceResources) const;
     virtual void Update();
@@ -46,8 +53,18 @@ private:
 
     std::unique_ptr<Sampler> m_gsSampler;
 
-    float m_isoLevel = 0.0f;
-    float m_scale = 0.03f;
-    int m_dimention = 65;
+    ViewingFrustum* m_frustum;
+
+    DirectX::SimpleMath::Matrix m_viewingFrustumTransform;
+
+    DirectX::SimpleMath::Vector2 m_position;
+
+    Camera* m_playerCamera;
+
+    std::unique_ptr<HeightMapTerrain> m_floorTerrain;
+
+    const float * m_isoLevel;
+    float m_scale;
+    const int &m_dimention;
 };
 

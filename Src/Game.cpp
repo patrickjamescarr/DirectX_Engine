@@ -81,7 +81,7 @@ void Game::Initialize(HWND window, int width, int height)
     m_CameraViewRect.bottom = 240;
 
     //setup camera
-    m_playerCamera->initPosition(Vector3(6.f, 0.f, 6.f));
+    m_playerCamera->initPosition(Vector3(9.f, 0.f, 6.f));
     m_playerCamera->setHeight(1.0f);
     m_playerCamera->setRotation(Vector3(-90.0f, 0.0f, 0.0f));	//orientation is -90 becuase zero will be looking up at the sky straight up. 
 
@@ -292,7 +292,9 @@ void Game::Clear()
     auto renderTarget = m_deviceResources->GetRenderTargetView();
     auto depthStencil = m_deviceResources->GetDepthStencilView();
 
-    context->ClearRenderTargetView(renderTarget, Colors::CornflowerBlue);
+    XMVECTORF32 darkBlue = { { { 0.0f, 0.412f, 0.58f, 1.000000000f } } };
+
+    context->ClearRenderTargetView(renderTarget, darkBlue);
     context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
     context->OMSetRenderTargets(1, &renderTarget, depthStencil);
 
@@ -402,7 +404,7 @@ void Game::CreateWindowSizeDependentResources()
         fovAngleY,
         aspectRatio,
         0.01f,
-        100.0f
+        m_screeDepth
     );
 
     m_deviceResources->SetProjection(m_projection);

@@ -30,13 +30,13 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     m_collisionDetector = std::make_unique<Collision>();
 
     // create the scene light
-    auto lightPosition = Vector3(0.0f, 100.0f, 0.0f);
+    auto lightPosition = Vector3(30.0f, 50.0f, -70.0f);
 
     m_light = std::make_unique<Light>();
     m_light->setAmbientColour(0.1f, 0.1f, 0.1f, 1.0f);
     m_light->setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
     m_light->setPosition(lightPosition.x, lightPosition.y, lightPosition.z);
-    m_light->setDirection(0.0f, -1.0f, 0.0f);
+    m_light->setDirection(0.0f, 0.0f, 0.0f);
 
     m_sunLight = std::make_unique<Light>();
     m_sunLight->setAmbientColour(1.0f, 1.0f, 1.0f, 1.0f);
@@ -134,11 +134,13 @@ std::unique_ptr<Mesh> MainScene::ParseMesh(
     bindables.push_back(std::make_unique<Sampler>(deviceResources, D3D11_TEXTURE_ADDRESS_WRAP));
 
     // Create the vertex input layout description.
-    std::vector<D3D11_INPUT_ELEMENT_DESC> layout{
-        { "POSITION",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,                               D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD",   0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "NORMAL",     0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 }
-    };
+    //std::vector<D3D11_INPUT_ELEMENT_DESC> layout{
+    //    { "POSITION",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,                               D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    //    { "TEXCOORD",   0, DXGI_FORMAT_R32G32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    //    { "NORMAL",     0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,    D3D11_INPUT_PER_VERTEX_DATA, 0 }
+    //};
+
+    std::vector<D3D11_INPUT_ELEMENT_DESC> layout(std::begin(VertexPositionNormalTexture::InputElements), std::end(VertexPositionNormalTexture::InputElements));
 
     // Create the input layout
     bindables.push_back(std::make_unique<InputLayout>(deviceResources, layout, vertexShaderByteCode));

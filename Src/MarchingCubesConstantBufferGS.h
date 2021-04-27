@@ -322,7 +322,12 @@ private:
 
 
 public:
-    MarchingCubesConstantBufferGS(DX::DeviceResources& deviceResources, const GameObject& parent, float* isolevel, int* dimention);
+    MarchingCubesConstantBufferGS(
+        DX::DeviceResources& deviceResources, 
+        const GameObject& parent, 
+        const float* isolevel,
+        const int* dimention
+    );
     void Bind(DX::DeviceResources& deviceResources) noexcept override;
 private:
     std::unique_ptr<GeometryConstantBuffer<MatrixBufferType>> m_matrixConstantBuffer;
@@ -331,7 +336,7 @@ private:
     const GameObject& m_parent;
     CubeBuffer m_cubeBufferData;
     TriTableBuffer m_triTableData;
-    float* m_isoLevel;
-    int* m_dimention;
+    const float* m_isoLevel;
+    const int* m_dimention;
 };
 

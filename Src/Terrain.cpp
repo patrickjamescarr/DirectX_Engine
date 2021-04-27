@@ -68,7 +68,7 @@ Terrain::Terrain(
     bindables.push_back(std::move(vertexShader));
 
     // Create the pixel shader
-    bindables.push_back(std::make_unique<PixelShader>(deviceResources, L"terrain_ps.cso"));
+    bindables.push_back(std::make_unique<PixelShader>(deviceResources, L"light_ps.cso"));
 
     bindables.push_back(std::make_unique<Sampler>(deviceResources, D3D11_TEXTURE_ADDRESS_WRAP));
 
@@ -596,7 +596,7 @@ void Terrain::GenerateNoise(NoiseType noiseType)
             if (noiseType == Perlin)
             {
                 auto point = Vector3(m_heightMap[index].x, m_heightMap[index].y, m_heightMap[index].z) * scale;
-                m_heightMap[index].y = m_noise.Generate(point) * 10.0f;
+                m_heightMap[index].y = m_noise.Generate(point) * 2.0f;
             }
             else
             {

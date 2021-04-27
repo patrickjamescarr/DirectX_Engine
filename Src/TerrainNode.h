@@ -28,5 +28,17 @@ private:
     std::vector<std::unique_ptr<Mesh>> m_meshes;
 
     std::unique_ptr<PlayerNode> m_playerNode;
+
+    float m_isoLevel = 0.0f;
+    int m_dimention = 65;
+
+    Light* m_light;
+
+    float m_lightPosX = 0.0f;
+    float m_lightPosY = 10.0f;
+    float m_lightPosZ = 0.0f;
+    float m_lightDirX = 0.0f;
+    float m_lightDirY = -1.0f;
+    float m_lightDirZ = 0.0f;
 };
 

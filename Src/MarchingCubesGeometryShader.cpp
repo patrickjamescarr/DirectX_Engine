@@ -14,6 +14,7 @@
 #include "SimplexNoise.h"
 #include "TerrainDensityFunction.h"
 #include "MarchingCubesGenerateConstantBufferVS.h"
+#include "Texture3D.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -21,36 +22,67 @@ using namespace DirectX::SimpleMath;
 MarchingCubesGeometryShader::MarchingCubesGeometryShader(
     DX::DeviceResources & deviceResources,
     Light * sceneLight,
-    Camera* activeCamera,
+    Camera* playerCamera,
+    ViewingFrustum* viewingFrustum,
     SimpleMath::Matrix transform,
     int xPos,
-    int zPos
+    int zPos,
+    const float * isoLevel,
+    const int &dimention,
+    float scale
 )
-    : Mesh(transform)
+    : Mesh(transform), m_isoLevel(isoLevel), m_dimention(dimention), m_frustum(viewingFrustum), m_playerCamera(playerCamera), m_scale(scale)
 {
+    // create floor terrain
+    m_floorTerrain = std::make_unique<HeightMapTerrain>(
+        deviceResources, 
+        sceneLight, L"Textures\\sand.dds", 
+        Matrix::CreateScale(m_scale) * transform, 
+        dimention, dimention, scale, 
+        Vector3(xPos, 0, zPos),
+        playerCamera, viewingFrustum);
+
     // configure density volume render pass
     {
-        float size = (float)m_dimention / 2.0f;
+        float size = (float)(m_dimention) / 2.0f;
+        float dimMinusOne = (float)m_dimention - 1.0f;
+        float xIncrement = (float)xPos * dimMinusOne;
+        float zIncrement = (float)zPos * dimMinusOne;
 
+        auto scaledOffset = dimMinusOne * m_scale;
+        auto halfBlock = scaledOffset / 2;
 
-        float xIncrement = ((float)xPos * ((float)m_dimention - 1));
+        m_viewingFrustumTransform =
+            Matrix::CreateScale(m_scale) * Matrix::CreateTranslation(
+                halfBlock + (xIncrement * m_scale),
+                halfBlock,
+                halfBlock + (zIncrement * m_scale)
+            );
 
-        float zIncrement = ((float)zPos * ((float)m_dimention - 1));
+        m_position = Vector2(xPos, zPos);
 
         std::vector<VertexPositionTexture> verts;
-        verts.push_back(VertexPositionTexture(Vector3(-size - xIncrement, size, zIncrement), Vector2(0, 0)));  // top left
-        verts.push_back(VertexPositionTexture(Vector3(size - xIncrement, size, zIncrement), Vector2(0, 1)));   // top right
-        verts.push_back(VertexPositionTexture(Vector3(size - xIncrement, -size, zIncrement), Vector2(1, 1)));  // bottom right
+        verts.push_back(VertexPositionTexture(Vector3(-size + xIncrement, size, zIncrement), Vector2(0, 0)));  // top left
+        verts.push_back(VertexPositionTexture(Vector3(size + xIncrement, size, zIncrement), Vector2(0, 1)));   // top right
+        verts.push_back(VertexPositionTexture(Vector3(size + xIncrement, -size, zIncrement), Vector2(1, 1)));  // bottom right
 
-        verts.push_back(VertexPositionTexture(Vector3(size - xIncrement, -size, zIncrement), Vector2(1, 1)));  // bottom right
-        verts.push_back(VertexPositionTexture(Vector3(-size - xIncrement, -size, zIncrement), Vector2(1, 0))); // bottom left
-        verts.push_back(VertexPositionTexture(Vector3(-size - xIncrement, size, zIncrement), Vector2(0, 0)));  // top left
+        verts.push_back(VertexPositionTexture(Vector3(size + xIncrement, -size, zIncrement), Vector2(1, 1)));  // bottom right
+        verts.push_back(VertexPositionTexture(Vector3(-size + xIncrement, -size, zIncrement), Vector2(1, 0))); // bottom left
+        verts.push_back(VertexPositionTexture(Vector3(-size + xIncrement, size, zIncrement), Vector2(0, 0)));  // top left
 
         m_densityVolumeRenderPass.push_back(std::make_unique<Topology>(deviceResources, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
         m_densityVolumeRenderPass.push_back(std::make_unique<DepthStencilState>(deviceResources, DepthStencilState::default));
         m_densityVolumeRenderPass.push_back(std::make_unique<MarchingCubesDensityConstantBufferVS>(deviceResources, transform, m_dimention, xPos, zPos));
         m_densityVolumeRenderPass.push_back(std::make_unique<RasterizerState>(deviceResources, D3D11_CULL_BACK));
         m_densityVolumeRenderPass.push_back(std::make_unique<VertexBuffer<VertexPositionTexture>>(deviceResources, verts));
+
+        //m_densityVolumeRenderPass.push_back(std::make_unique<Texture3D>(deviceResources, L"Textures//noise_half_16cubed_mips_00.vol", 0));
+        //m_densityVolumeRenderPass.push_back(std::make_unique<Texture3D>(deviceResources, L"Textures//noise_half_16cubed_mips_01.vol", 1));
+        //m_densityVolumeRenderPass.push_back(std::make_unique<Texture3D>(deviceResources, L"Textures//noise_half_16cubed_mips_02.vol", 2));
+        //m_densityVolumeRenderPass.push_back(std::make_unique<Texture3D>(deviceResources, L"Textures//noise_half_16cubed_mips_03.vol", 3));
+
+       
+
 
         // 3D texture description for storing the density values
         CD3D11_TEXTURE3D_DESC densityVolTexDesc;
@@ -98,23 +130,37 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
         std::vector<VertexPositionTexture> generationVerts;
         m_generateVertexCount = 0;
 
-        float textureCoordinatesStep = 1.0f / m_dimention;
+        float textureCoordinatesStep = 1.0f / ((float)m_dimention - 1.0f);
 
-        TerrainDensityFunction density(nullptr);
 
-        for (int j = 0; j < (m_dimention); j++)
-        {
-            for (int i = 0; i < (m_dimention); i++)
+        std::vector<uint32_t> indices;
+        int index = 0;
+        //TerrainDensityFunction density(nullptr);
+        //for (int k = 0; k < m_dimention; k++)
+        //{
+            for (int j = 0; j < (m_dimention - 1); j++)
             {
-                VertexPositionTexture v;
+                for (int i = 0; i < (m_dimention - 1); i++)
+                {
+                    VertexPositionTexture v;
 
-                v.position = Vector3(i, j, 1) * m_scale;
-                v.textureCoordinate = Vector2((float)i * textureCoordinatesStep, (float)j * textureCoordinatesStep);
-                generationVerts.push_back(v);
+                    auto texX =  ((float)i * textureCoordinatesStep);
 
-                m_generateVertexCount++;
+                    v.position = Vector3((float)i * m_scale, (float)j * m_scale, 1) ;
+                    v.textureCoordinate = Vector2(texX, (float)j * textureCoordinatesStep);
+                    generationVerts.push_back(v);
+
+                    m_generateVertexCount++;
+
+                    indices.push_back(index);
+                    index++;
+                }
+
             }
-        }
+        //}
+
+        m_generateVertsRenderPass.push_back(std::make_unique<IndexBuffer>(deviceResources, indices));
+
 
         m_generateVertsRenderPass.push_back(std::make_unique<Topology>(deviceResources, D3D11_PRIMITIVE_TOPOLOGY_POINTLIST));
         m_generateVertsRenderPass.push_back(std::make_unique<DepthStencilState>(deviceResources, DepthStencilState::default));
@@ -125,7 +171,7 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
         m_generateVertsRenderPass.push_back(std::make_unique<MarchingCubesGenerateConstantBufferVS>(deviceResources, &m_dimention, &m_scale, 1));
         m_generateVertsRenderPass.push_back(std::make_unique<TransformConstantBufferVS>(deviceResources, *this));
         // geometry buffer
-        m_generateVertsRenderPass.push_back(std::make_unique<MarchingCubesConstantBufferGS>(deviceResources, *this, &m_isoLevel, &m_dimention));
+        m_generateVertsRenderPass.push_back(std::make_unique<MarchingCubesConstantBufferGS>(deviceResources, *this, m_isoLevel, &m_dimention));
         //pixel buffer
         m_generateVertsRenderPass.push_back(std::make_unique<LightConstantBuffer>(deviceResources, sceneLight));
 
@@ -158,6 +204,42 @@ void MarchingCubesGeometryShader::Draw(
     DX::DeviceResources & deviceResources,
     FXMMATRIX accumulatedTransform
 ) const noexcept
+{
+    m_accumulatedTransform = accumulatedTransform;
+
+    Vector3 pos = Vector3::Transform(Vector3(m_position.x, 0.0, m_position.y), m_accumulatedTransform * m_viewingFrustumTransform);
+
+    auto cubeRadius = ((float)(m_dimention - 1.0f) / 2.0f) * m_scale;
+
+    bool draw = m_frustum->CheckCube(pos.x, 0.0f, pos.z, cubeRadius);
+
+    if (!draw)
+    {
+        if (ImGui::Begin("Marching Cubes"))
+        {
+            ImGui::Text("Culling cube at: %f, %f", pos.x, pos.z);
+        }
+
+        ImGui::End();
+
+        return;
+    }
+
+    auto playerPos = m_playerCamera->getPosition(); /// check distance from player!
+
+    auto distance = Vector3::Distance(pos, playerPos);
+
+    if (distance > 20) 
+    {
+        return;
+    }
+
+    m_floorTerrain->Draw(deviceResources, m_accumulatedTransform);
+
+    //RenderCubeTerrain(deviceResources, accumulatedTransform);
+}
+
+void MarchingCubesGeometryShader::RenderCubeTerrain(DX::DeviceResources & deviceResources, const DirectX::XMMATRIX &accumulatedTransform) const
 {
     ID3D11ShaderResourceView* nullSRV[] = { nullptr };
     ID3D11Buffer* nullBuffer[] = { nullptr };
@@ -206,15 +288,15 @@ void MarchingCubesGeometryShader::GenerateVerticesRenderPass(DX::DeviceResources
     deviceResources.GetD3DDeviceContext()->GSSetSamplers(0, 1, m_gsSampler->GetAddressOf());
 
     // draw the object
-    deviceResources.GetD3DDeviceContext()->DrawInstanced(m_generateVertexCount, m_dimention, 0, 0);
+    deviceResources.GetD3DDeviceContext()->DrawInstanced(m_generateVertexCount, m_dimention - 1, 0, 0);
 }
 
 void MarchingCubesGeometryShader::Update()
 {
-    if (ImGui::Begin("Marching Cubes"))
-    {
-        ImGui::SliderFloat("Iso Level", &m_isoLevel, 0.0f, 10.0f);
-    }
+    //if (ImGui::Begin("Marching Cubes"))
+    //{
+    //    ImGui::SliderFloat("Iso Level", &m_isoLevel, 0.0f, 10.0f);
+    //}
 
-    ImGui::End();
+    //ImGui::End();
 }

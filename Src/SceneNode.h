@@ -3,6 +3,7 @@
 #include "ModelClass.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include "Light.h"
 
 class SceneNode
 {

@@ -51,41 +51,72 @@ VSOutput main(VSInput input)
     float scale = cubeVariables.x;
     float cubeDims = cubeVariables.y;
 
-    float cubeSize = 1.0f * scale;
+    float cubeSize = 1.0f * scale;  
 
     float4 cubeCoord = input.position;
     cubeCoord.z = (float)input.nInstanceID * scale;
+    // cubeCoord.z = input.position.z * scale;
 
-    float textureCoordinatesStep = 1.0f / cubeDims;
-    float densityLayer = (float)input.nInstanceID * textureCoordinatesStep;
+    float textureCoordinatesStep = 1.0f / (cubeDims - 1.0f);
+    float densityLayer = ((float)input.nInstanceID * textureCoordinatesStep);
+    //float densityLayer = input.position.z * textureCoordinatesStep;
+
+    //// calculate the surrounding vertex coordinates
+    //// bottom
+
+    //output.wsCellCoords[0] = ApplyMatrices(float4(cubeCoord.x, cubeCoord.y, (cubeCoord.z + cubeSize), cubeCoord.w));                    // back left
+    //output.wsCellCoords[1] = ApplyMatrices(float4((cubeCoord.x + cubeSize), cubeCoord.y, (cubeCoord.z + cubeSize), cubeCoord.w));       // back right
+    //output.wsCellCoords[2] = ApplyMatrices(float4((cubeCoord.x + cubeSize), cubeCoord.y, cubeCoord.z, cubeCoord.w));                    // front right
+    //output.wsCellCoords[3] = ApplyMatrices(float4(cubeCoord.x, cubeCoord.y, cubeCoord.z, cubeCoord.w));                                 // front left
+
+    ////top
+
+    //output.wsCellCoords[4] = ApplyMatrices(float4(cubeCoord.x, (cubeCoord.y + cubeSize), (cubeCoord.z + cubeSize), cubeCoord.w));               // back left
+    //output.wsCellCoords[5] = ApplyMatrices(float4((cubeCoord.x + cubeSize), (cubeCoord.y + cubeSize), (cubeCoord.z + cubeSize), cubeCoord.w));  // back right
+    //output.wsCellCoords[6] = ApplyMatrices(float4((cubeCoord.x + cubeSize), (cubeCoord.y + cubeSize), cubeCoord.z, cubeCoord.w));               // front right
+    //output.wsCellCoords[7] = ApplyMatrices(float4(cubeCoord.x, (cubeCoord.y + cubeSize), cubeCoord.z, cubeCoord.w));                            // front left
+
+    //// calculate the surrounding density texture coordinates
+    //// bottom
+
+    //output.densityVolCoords[0] = float3(input.tex.x, input.tex.y, (densityLayer + textureCoordinatesStep));                                                         // back left
+    //output.densityVolCoords[1] = float3((input.tex.x + textureCoordinatesStep), input.tex.y, (densityLayer + textureCoordinatesStep));                              // back right
+    //output.densityVolCoords[2] = float3((input.tex.x + textureCoordinatesStep), input.tex.y, densityLayer);                                                         // front right
+    //output.densityVolCoords[3] = float3(input.tex.x, input.tex.y, densityLayer);                                                                                    // front left
+    //
+    ////top
+
+    //output.densityVolCoords[4] = float3(input.tex.x, (input.tex.y + textureCoordinatesStep), (densityLayer + textureCoordinatesStep));                              // back left
+    //output.densityVolCoords[5] = float3((input.tex.x + textureCoordinatesStep), (input.tex.y + textureCoordinatesStep), (densityLayer + textureCoordinatesStep));   // back right
+    //output.densityVolCoords[6] = float3((input.tex.x + textureCoordinatesStep), (input.tex.y + textureCoordinatesStep), densityLayer);                              // front right
+    //output.densityVolCoords[7] = float3(input.tex.x, (input.tex.y + textureCoordinatesStep), densityLayer);                                                         // front left
 
 
     // calculate the surrounding vertex coordinates
     // front face
-    output.wsCellCoords[0] = ApplyMatrices(float4(cubeCoord.x, (cubeCoord.y + cubeSize), cubeCoord.z, cubeCoord.w));                // top left
-    output.wsCellCoords[1] = ApplyMatrices(float4((cubeCoord.x + cubeSize), (cubeCoord.y + cubeSize), cubeCoord.z, cubeCoord.w));   // top right
-    output.wsCellCoords[2] = ApplyMatrices(float4((cubeCoord.x + cubeSize), cubeCoord.y, cubeCoord.z, cubeCoord.w));                // bottom right
-    output.wsCellCoords[3] = ApplyMatrices(float4(cubeCoord.x, cubeCoord.y, cubeCoord.z, cubeCoord.w));                             // bottom left
+    output.wsCellCoords[4] = ApplyMatrices(float4(cubeCoord.x, cubeCoord.y, cubeCoord.z, cubeCoord.w));                             // bottom left
+    output.wsCellCoords[5] = ApplyMatrices(float4(cubeCoord.x, (cubeCoord.y + cubeSize), cubeCoord.z, cubeCoord.w));                // top left
+    output.wsCellCoords[6] = ApplyMatrices(float4((cubeCoord.x + cubeSize), (cubeCoord.y + cubeSize), cubeCoord.z, cubeCoord.w));   // top right
+    output.wsCellCoords[7] = ApplyMatrices(float4((cubeCoord.x + cubeSize), cubeCoord.y, cubeCoord.z, cubeCoord.w));                // bottom right
 
     // back face
-    output.wsCellCoords[4] = ApplyMatrices(float4(cubeCoord.x, (cubeCoord.y + cubeSize), (cubeCoord.z + cubeSize), cubeCoord.w));               // top left
-    output.wsCellCoords[5] = ApplyMatrices(float4((cubeCoord.x + cubeSize), (cubeCoord.y + cubeSize), (cubeCoord.z + cubeSize), cubeCoord.w));  // top right
-    output.wsCellCoords[6] = ApplyMatrices(float4((cubeCoord.x + cubeSize), cubeCoord.y, (cubeCoord.z + cubeSize), cubeCoord.w));               // bottom right
-    output.wsCellCoords[7] = ApplyMatrices(float4(cubeCoord.x, cubeCoord.y, (cubeCoord.z + cubeSize), cubeCoord.w));                            // bottom left
+    output.wsCellCoords[0] = ApplyMatrices(float4(cubeCoord.x, cubeCoord.y, (cubeCoord.z + cubeSize), cubeCoord.w));                            // bottom left
+    output.wsCellCoords[1] = ApplyMatrices(float4(cubeCoord.x, (cubeCoord.y + cubeSize), (cubeCoord.z + cubeSize), cubeCoord.w));               // top left
+    output.wsCellCoords[2] = ApplyMatrices(float4((cubeCoord.x + cubeSize), (cubeCoord.y + cubeSize), (cubeCoord.z + cubeSize), cubeCoord.w));  // top right
+    output.wsCellCoords[3] = ApplyMatrices(float4((cubeCoord.x + cubeSize), cubeCoord.y, (cubeCoord.z + cubeSize), cubeCoord.w));               // bottom right
 
-    // calculate the surrounding density values
+    // calculate the surrounding density texture coordinates
     // front face
-    output.densityVolCoords[0] = float3(input.tex.x, (input.tex.y + textureCoordinatesStep), densityLayer);                             // top left
-    output.densityVolCoords[1] = float3((input.tex.x + textureCoordinatesStep), (input.tex.y + textureCoordinatesStep), densityLayer);  // top right
-    output.densityVolCoords[2] = float3((input.tex.x + textureCoordinatesStep), input.tex.y, densityLayer);                             // bottom right
-    output.densityVolCoords[3] = float3(input.tex.x, input.tex.y, densityLayer);                                                        // bottom left
+    output.densityVolCoords[4] = float3(input.tex.x, input.tex.y, densityLayer);                                                        // bottom left
+    output.densityVolCoords[5] = float3(input.tex.x, (input.tex.y + textureCoordinatesStep), densityLayer);                             // top left
+    output.densityVolCoords[6] = float3((input.tex.x + textureCoordinatesStep), (input.tex.y + textureCoordinatesStep), densityLayer);  // top right
+    output.densityVolCoords[7] = float3((input.tex.x + textureCoordinatesStep), input.tex.y, densityLayer);                             // bottom right
 
     // back face
-    output.densityVolCoords[4] = float3(input.tex.x, (input.tex.y + textureCoordinatesStep), (densityLayer + textureCoordinatesStep));                              // top left
-    output.densityVolCoords[5] = float3((input.tex.x + textureCoordinatesStep), (input.tex.y + textureCoordinatesStep), (densityLayer + textureCoordinatesStep));   // top right
-    output.densityVolCoords[6] = float3((input.tex.x + textureCoordinatesStep), input.tex.y, (densityLayer + textureCoordinatesStep));                              // bottom right
-    output.densityVolCoords[7] = float3(input.tex.x, input.tex.y, (densityLayer + textureCoordinatesStep));                                                         // bottom left
-
+    output.densityVolCoords[0] = float3(input.tex.x, input.tex.y, (densityLayer + textureCoordinatesStep));                                                         // bottom left
+    output.densityVolCoords[1] = float3(input.tex.x, (input.tex.y + textureCoordinatesStep), (densityLayer + textureCoordinatesStep));                              // top left
+    output.densityVolCoords[2] = float3((input.tex.x + textureCoordinatesStep), (input.tex.y + textureCoordinatesStep), (densityLayer + textureCoordinatesStep));   // top right
+    output.densityVolCoords[3] = float3((input.tex.x + textureCoordinatesStep), input.tex.y, (densityLayer + textureCoordinatesStep));                              // bottom right
 
     return output;
 }

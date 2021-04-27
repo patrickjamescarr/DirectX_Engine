@@ -90,14 +90,18 @@ void main(
     inout TriangleStream< GSOutput > Stream
 )
 {
+    // a grid cell with 8 vertices.  one for each corner of the cube
     gridCell cell;
 
     for (int i = 0; i < 8; i++)
     {
+        // the vertex world space position
         cell.p[i] = (float3)input[0].wsCellCoords[i];
 
+        // sample the density value for this vertex from the density volume texture
         cell.densityValue[i] = density_vol.SampleLevel(LinearClamp, input[0].densityVolCoords[i], 0).x;
 
+        // calculate the vertex normal using the gradient of the density function
         cell.normal[i] = CalculateNormal(input[0].densityVolCoords[i]);
     }
 

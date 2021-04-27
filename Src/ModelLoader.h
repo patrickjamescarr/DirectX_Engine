@@ -9,6 +9,7 @@ public:
 	MeshObject LoadModel(const char * fileName);
     MeshObject LoadModelFromTextFile(const char * fileName);
     MeshObject CreateSphere(float size);
+    MeshObject CreateCube(DirectX::SimpleMath::Vector3 dims);
     MeshObject CreateTerrain(int width, int height, HeightMapType* m_heightMap, float scale = 1, MeshPattern meshPattern = Uniform);
 
 private:

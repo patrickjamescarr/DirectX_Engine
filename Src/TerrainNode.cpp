@@ -13,11 +13,11 @@ TerrainNode::TerrainNode(
     ViewingFrustum* frustum,
     Collision* collision
 )
-    : SceneNode(transform)
+    : SceneNode(transform), m_light(light)
 {
-    auto terrainPosition = Matrix::CreateScale(m_scale) * Matrix::CreateTranslation(-10.0f, 0.0f, 0.0f);
+    auto terrainPosition = Matrix::CreateScale(m_scale) * Matrix::CreateTranslation(0.0f, 0.0f, 0.0f);
 
-    m_transform = Matrix::CreateTranslation(10.0f, 0.0f, 0.0f);
+    m_transform = Matrix::CreateTranslation(0.0f, 0.0f, 0.0f);
 
     //auto terrain = std::make_unique<Terrain>(deviceResources, light, L"Textures//seafloor.dds", terrainPosition, m_terrainWidth, m_terrainHeight, m_scale, playerCamera, frustum);
 
@@ -31,14 +31,32 @@ TerrainNode::TerrainNode(
 
     m_meshes.push_back(std::move(terrainCollider));
 
-    auto mcBlockOffset = (65.0f * 0.03f);
-    auto mcBlockOffsetX = (65.0f * 0.03f);
+    float mcScale = 0.06f;
 
-    for (int i = 0; i < 4; i++)
+    auto mcBlockOffset = (float)(m_dimention -1) * mcScale;
+
+    auto halfBlock = mcBlockOffset / 2;
+
+    for (int i = 0; i < 2; i++)
     {
-        for (int j = 0; j < 4; j++)
+        for (int j = 0; j < 2; j++)
         {
-            m_meshes.push_back(std::make_unique<MarchingCubesGeometryShader>(deviceResources, light, playerCamera, Matrix::CreateTranslation(Vector3(-mcBlockOffsetX * (float)i, 0, mcBlockOffset * j)), i, j));
+            auto cubeTransform = 
+                Matrix::CreateScale(mcScale) * 
+                Matrix::CreateTranslation(
+                    halfBlock + (i * mcBlockOffset),
+                    halfBlock,
+                    halfBlock + (j * mcBlockOffset)
+                );
+
+            //m_meshes.push_back(std::make_unique<BoxCollider>(deviceResources, cubeTransform, Vector3(m_dimention - 1, m_dimention - 1, m_dimention - 1)));
+
+            m_meshes.push_back(std::make_unique<MarchingCubesGeometryShader>(
+                deviceResources, light, playerCamera, frustum,
+                Matrix::CreateTranslation(Vector3(mcBlockOffset * (float)i, 0, mcBlockOffset * j)),
+                i, j,
+                &m_isoLevel, m_dimention, mcScale
+            ));
         }
     }
 
@@ -57,5 +75,30 @@ TerrainNode::TerrainNode(
 
 void TerrainNode::Draw(DX::DeviceResources & deviceResources, DirectX::SimpleMath::Matrix accumulatedTransform)
 {
+
+
+    if (ImGui::Begin("Light"))
+    {
+        ImGui::SliderFloat("Position x", &m_lightPosX, -50.0f, 50.0f);
+        ImGui::SliderFloat("Position y", &m_lightPosY, -50.0f, 50.0f);
+        ImGui::SliderFloat("Position z", &m_lightPosZ, -50.0f, 50.0f);
+        ImGui::SliderFloat("Direction x", &m_lightDirX, -50.0f, 50.0f);
+        ImGui::SliderFloat("Direction y", &m_lightDirY, -50.0f, 50.0f);
+        ImGui::SliderFloat("Direction z", &m_lightDirZ, -50.0f, 50.0f);
+    }
+
+
+    m_light->setPosition(m_lightPosX, m_lightPosY, m_lightPosZ);
+    m_light->setDirection(m_lightDirX, m_lightDirY, m_lightDirZ);
+
+    ImGui::End();
+
+    if (ImGui::Begin("Marching Cubes"))
+    {
+        ImGui::SliderFloat("Iso Level", &m_isoLevel, 0, 10.0f);
+    }
+
+    ImGui::End();
+
     SceneNode::Draw(deviceResources, accumulatedTransform);
 }

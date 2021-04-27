@@ -40,7 +40,7 @@ float4 main(InputType input) : SV_TARGET
     }
     else if (input.wsCoordAmbo.y < 0.0f)
     {
-        textureColor = float4(0.133f, 0.545f, 0.133f, 1);
+
     }
     else if (input.wsCoordAmbo.y < 0.6f)
     {
@@ -50,6 +50,8 @@ float4 main(InputType input) : SV_TARGET
     {
         textureColor = float4(1.0f, 0.98f, 0.98f, 1);
     }
+
+    textureColor = float4(1.0f, 0.98f, 0.98f, 1);
 
     color = color * textureColor;
 

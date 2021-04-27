@@ -123,5 +123,5 @@ private:
     DirectX::SimpleMath::Matrix                                             m_view;
     DirectX::SimpleMath::Matrix                                             m_projection;
 
-    const float                                                             m_screeDepth = 1000.0f;
+    const float                                                             m_screeDepth = 100.0f;
 };

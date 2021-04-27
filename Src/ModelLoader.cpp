@@ -168,11 +168,24 @@ MeshObject ModelLoader::CreateSphere(float diameter)
 
     std::vector<uint16_t> indicies;
 
-    GeometricPrimitive::CreateSphere(sphere.verticies, indicies, diameter, 8, false);
+    GeometricPrimitive::CreateSphere(sphere.verticies, indicies, diameter, 8);
 
     sphere.indices.assign(indicies.begin(), indicies.end());
 
     return sphere;
+}
+
+MeshObject ModelLoader::CreateCube(DirectX::SimpleMath::Vector3 dims)
+{
+    auto cube = MeshObject();
+
+    std::vector<uint16_t> indicies;
+
+    GeometricPrimitive::CreateBox(cube.verticies, indicies, dims);
+
+    cube.indices.assign(indicies.begin(), indicies.end());
+
+    return cube;
 }
 
 MeshObject ModelLoader::CreateTerrain(int width, int height, HeightMapType* m_heightMap, float scale, MeshPattern meshPattern)
