@@ -25,6 +25,7 @@ public:
         ViewingFrustum* viewingFrustum,
         DirectX::SimpleMath::Matrix transform,
         int xPos,
+        int yPos,
         int zPos,
         const float * isoLevel,
         const int &dimention,
@@ -66,5 +67,6 @@ private:
     const float * m_isoLevel;
     float m_scale;
     const int &m_dimention;
+    int m_yPos;
 };
 

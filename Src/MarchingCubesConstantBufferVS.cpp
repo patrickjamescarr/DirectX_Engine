@@ -26,7 +26,7 @@ void MarchingCubesDensityConstantBufferVS::Bind(DX::DeviceResources & deviceReso
     auto height = deviceResources.GetBackBufferHeight();
 
     float offsetX = ((float)width / 2.0f) - (m_cubeDimention / 2.0f) + (m_xPos * (m_cubeDimention - 1));
-    float offsetY = ((float)height / 2.0f) - (m_cubeDimention / 2.0f);
+    float offsetY = ((float)height / 2.0f) - (m_cubeDimention / 2.0f) + (m_yPos * (m_cubeDimention - 1));
 
     //Set the View matrix
     auto view = Matrix::CreateLookAt(Vector3(offsetX, -offsetY, 100.0f), Vector3(offsetX, -offsetY, 0.0f), Vector3::UnitY);

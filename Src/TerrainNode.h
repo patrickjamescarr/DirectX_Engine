@@ -30,7 +30,7 @@ private:
     std::unique_ptr<PlayerNode> m_playerNode;
 
     float m_isoLevel = 0.0f;
-    int m_dimention = 65;
+    int m_dimention = 33;
 
     Light* m_light;
 

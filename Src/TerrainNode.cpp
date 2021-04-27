@@ -23,40 +23,44 @@ TerrainNode::TerrainNode(
 
     //m_meshes.push_back(std::move(terrain));
 
-    auto terrainColliderOffset = Matrix::CreateTranslation((m_terrainWidth * m_scale) / 2, 0.0f, (m_terrainHeight* m_scale) / 2);
+    //auto terrainColliderOffset = Matrix::CreateTranslation((m_terrainWidth * m_scale) / 2, 0.0f, (m_terrainHeight* m_scale) / 2);
 
-    auto terrainCollider = std::make_unique<BoxCollider>(deviceResources, terrainPosition * terrainColliderOffset, Vector3(m_terrainWidth, 1.f, m_terrainHeight), m_scale);
+    //auto terrainCollider = std::make_unique<BoxCollider>(deviceResources, terrainPosition * terrainColliderOffset, Vector3(m_terrainWidth, 1.f, m_terrainHeight), m_scale);
 
-    collision->terrain_collider = terrainCollider.get();
+    //collision->terrain_collider = terrainCollider.get();
 
-    m_meshes.push_back(std::move(terrainCollider));
+    //m_meshes.push_back(std::move(terrainCollider));
 
-    float mcScale = 0.06f;
+    float mcScale = 0.12f;
 
     auto mcBlockOffset = (float)(m_dimention -1) * mcScale;
 
     auto halfBlock = mcBlockOffset / 2;
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 5; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < 5; j++)
         {
-            auto cubeTransform = 
-                Matrix::CreateScale(mcScale) * 
-                Matrix::CreateTranslation(
-                    halfBlock + (i * mcBlockOffset),
-                    halfBlock,
-                    halfBlock + (j * mcBlockOffset)
-                );
+            for (int k = 0; k < 2; k++)
+            {
+                auto cubeTransform =
+                    Matrix::CreateScale(mcScale) *
+                    Matrix::CreateTranslation(
+                        halfBlock + (i * mcBlockOffset),
+                        halfBlock + (k * mcBlockOffset),
+                        halfBlock + (j * mcBlockOffset)
+                    );
 
-            //m_meshes.push_back(std::make_unique<BoxCollider>(deviceResources, cubeTransform, Vector3(m_dimention - 1, m_dimention - 1, m_dimention - 1)));
+                m_meshes.push_back(std::make_unique<BoxCollider>(deviceResources, cubeTransform, Vector3(m_dimention - 1, m_dimention - 1, m_dimention - 1)));
 
-            m_meshes.push_back(std::make_unique<MarchingCubesGeometryShader>(
-                deviceResources, light, playerCamera, frustum,
-                Matrix::CreateTranslation(Vector3(mcBlockOffset * (float)i, 0, mcBlockOffset * j)),
-                i, j,
-                &m_isoLevel, m_dimention, mcScale
-            ));
+                m_meshes.push_back(std::make_unique<MarchingCubesGeometryShader>(
+                    deviceResources, light, playerCamera, frustum,
+                    Matrix::CreateTranslation(Vector3(mcBlockOffset * (float)i, mcBlockOffset * (float)k, mcBlockOffset * (float)j)),
+                    i, k, j,
+                    &m_isoLevel, m_dimention, mcScale
+                    ));
+            }
+
         }
     }
 
@@ -68,9 +72,9 @@ TerrainNode::TerrainNode(
 
     // add children 
 
-    m_playerNode = std::make_unique<PlayerNode>(deviceResources, playerCamera, collision);
+    //m_playerNode = std::make_unique<PlayerNode>(deviceResources, playerCamera, collision);
 
-    AddChild(std::move(m_playerNode));
+    //AddChild(std::move(m_playerNode));
 }
 
 void TerrainNode::Draw(DX::DeviceResources & deviceResources, DirectX::SimpleMath::Matrix accumulatedTransform)
@@ -95,7 +99,7 @@ void TerrainNode::Draw(DX::DeviceResources & deviceResources, DirectX::SimpleMat
 
     if (ImGui::Begin("Marching Cubes"))
     {
-        ImGui::SliderFloat("Iso Level", &m_isoLevel, 0, 10.0f);
+        ImGui::SliderFloat("Iso Level", &m_isoLevel, 0, 30.0f);
     }
 
     ImGui::End();

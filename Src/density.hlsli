@@ -59,6 +59,11 @@ float DENSITY(float3 ws)
     float4 uulf_rand3 = NMQu(ws*0.000695);
 
 
+    if (ws.y < -30)
+    {
+        return -1;
+    }
+
     //-----------------------------------------------
     // PRE-WARP the world-space coordinate.
     const float prewarp_str = 15;   // recommended range: 5..25
@@ -72,7 +77,7 @@ float DENSITY(float3 ws)
 
     // very general ground plane:
     density = ws.y;
-    float hard_floor_y = 15; 
+    float hard_floor_y = 0; 
     density += saturate((hard_floor_y - ws_orig.y) * 3) * 40;
 
     // repeating ridges on [warped] Y coord:
