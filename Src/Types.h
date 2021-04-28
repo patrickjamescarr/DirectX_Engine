@@ -28,3 +28,10 @@ struct CollisionIntersection
 {
     float t, u, v;
 };
+
+enum ShaderType
+{
+    Vertex = 0,
+    Geometry = 1,
+    Pixel = 2
+};

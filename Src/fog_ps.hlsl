@@ -1,5 +1,9 @@
-// marching cubes pixel shader
-// Calculate diffuse lighting for a single directional light(also texturing)
+// fog pixel shader
+// Calculate diffuse lighting for a single directional light(also texturing) with fog calculations
+
+Texture2D shaderTexture : register(t0);
+SamplerState SampleType : register(s0);
+
 
 cbuffer LightBuffer : register(b0)
 {
@@ -11,8 +15,9 @@ cbuffer LightBuffer : register(b0)
 
 struct InputType
 {
-    float4 wsCoordAmbo  : SV_POSITION;
-    float3 wsNormal     : NORMAL;
+    float4 position     : SV_POSITION;
+    float2 tex          : TEXCOORD0;
+    float3 normal       : NORMAL;
     float3 position3D   : TEXCOORD2;
     float  fogFactor    : FOG;
 };
@@ -25,35 +30,20 @@ float4 main(InputType input) : SV_TARGET
     float4	color;
 
     // Invert the light direction for calculations.
-    lightDir = normalize(float3(input.position3D.xyz) - lightPosition);
+    lightDir = normalize(input.position3D - lightPosition);
 
     // Calculate the amount of light on this pixel.
-    lightIntensity = saturate(dot(input.wsNormal, -lightDir));
+    lightIntensity = saturate(dot(input.normal, -lightDir));
 
     // Determine the final amount of diffuse color based on the diffuse color combined with the light intensity.
     color = ambientColor + (diffuseColor * lightIntensity); //adding ambient
     color = saturate(color);
 
+    // invert the texture v coordinates
+    input.tex.y *= -1;
 
-    //if (input.wsCoordAmbo.y < -0.6f)
-    //{
-    //    textureColor = float4(0.93f, 0.79f, 0.7f, 1);
-    //}
-    //else if (input.wsCoordAmbo.y < 0.0f)
-    //{
-
-    //}
-    //else if (input.wsCoordAmbo.y < 0.6f)
-    //{
-    //    textureColor = float4(0.439f, 0.502f, 0.565f, 1);
-    //}
-    //else
-    //{
-    //    textureColor = float4(1.0f, 0.98f, 0.98f, 1);
-    //}
-
-    textureColor = float4(0.608f, 0.651f, 0.694f, 1.0f);
-
+    // Sample the pixel color from the texture using the sampler at this texture coordinate location.
+    textureColor = shaderTexture.Sample(SampleType, input.tex);
     color = color * textureColor;
 
     // Set the color of the fog to dark blue.

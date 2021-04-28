@@ -76,7 +76,7 @@ void Camera::setPosition(Vector3 newPosition)
     m_position = newPosition;
 }
 
-Vector3 Camera::getPosition()
+Vector3 Camera::getPosition() const
 {
 	return m_position;
 }

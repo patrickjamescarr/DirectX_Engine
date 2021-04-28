@@ -28,6 +28,7 @@ public:
         int yPos,
         int zPos,
         const float * isoLevel,
+        const float * fogEnd,
         const int &dimention,
         float scale
         );
@@ -58,15 +59,17 @@ private:
 
     DirectX::SimpleMath::Matrix m_viewingFrustumTransform;
 
-    DirectX::SimpleMath::Vector2 m_position;
+    DirectX::SimpleMath::Vector3 m_position;
 
     Camera* m_playerCamera;
 
     std::unique_ptr<HeightMapTerrain> m_floorTerrain;
 
     const float * m_isoLevel;
+    const float * m_fogEnd;
     float m_scale;
     const int &m_dimention;
     int m_yPos;
+    float m_fogStart = 0.0f;
 };
 

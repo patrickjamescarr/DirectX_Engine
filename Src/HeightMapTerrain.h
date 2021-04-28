@@ -39,7 +39,8 @@ public:
         float scale,
         DirectX::SimpleMath::Vector3 position,
         Camera* playerCamera,
-        ViewingFrustum* frustum
+        ViewingFrustum* frustum,
+        const float* fogDistance
     );
 
     void CalculateHeightMapTextureCoordinates();
@@ -85,6 +86,8 @@ private:
     Camera* m_camera;
 
     ViewingFrustum* m_frustum;
+
+    const float* m_fogDistance;
 
     float m_scale;
 

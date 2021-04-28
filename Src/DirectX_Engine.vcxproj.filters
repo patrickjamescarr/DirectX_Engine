@@ -338,6 +338,7 @@
       <Filter>Header Files\Bindable\Constant Buffers</Filter>
     </ClInclude>
     <ClInclude Include="HeightMapTerrain.h" />
+    <ClInclude Include="FogConstantBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -554,6 +555,7 @@
       <Filter>Source Files\Bindable\Constant Buffers</Filter>
     </ClCompile>
     <ClCompile Include="HeightMapTerrain.cpp" />
+    <ClCompile Include="FogConstantBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -684,6 +686,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="map_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="fog_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="fog_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

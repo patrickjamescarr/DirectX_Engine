@@ -23,7 +23,7 @@ MainScene::MainScene()
 {
 }
 
-void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* playerCamera, ViewingFrustum* frustum)
+void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* playerCamera, Camera* activeCamera, ViewingFrustum* frustum)
 {
     m_playerCamera = playerCamera;
 
@@ -53,8 +53,8 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
 
     // create the models
 
-    auto sunModel = m_modelLoader.CreateSphere(5);
-    m_meshes.push_back(ParseMesh(deviceResources, sunModel, m_sunLight.get(), Matrix::CreateTranslation(Vector3(lightPosition)), L"Textures//sun2.dds", L"light_vs.cso", L"light_ps.cso"));
+    //auto sunModel = m_modelLoader.CreateSphere(5);
+    //m_meshes.push_back(ParseMesh(deviceResources, sunModel, m_sunLight.get(), Matrix::CreateTranslation(Vector3(lightPosition)), L"Textures//sun2.dds", L"light_vs.cso", L"light_ps.cso"));
 
     //auto mcMeshCpu = std::make_unique<MarchingCubesMesh>(deviceResources, m_light.get(), Matrix::Identity, L"Textures//sun2.dds", L"test_vs.cso", L"test_ps.cso");
     //
@@ -72,7 +72,7 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     m_rootNode = std::make_unique<SceneNode>(std::move(meshPointers), Matrix::Identity);
 
 
-    m_terrainNode = std::make_unique<TerrainNode>(deviceResources, m_terrainTransform, m_light.get(), m_playerCamera, frustum, m_collisionDetector.get());
+    m_terrainNode = std::make_unique<TerrainNode>(deviceResources, m_terrainTransform, m_light.get(), m_playerCamera, activeCamera, frustum, m_collisionDetector.get());
 
     m_rootNode->AddChild(std::move(m_terrainNode));
 
@@ -95,7 +95,7 @@ void MainScene::Draw(DX::DeviceResources & deviceResources, const DX::StepTimer&
 
     ImGui::End();
 
-   m_skyBox->Draw(deviceResources);
+   //m_skyBox->Draw(deviceResources);
    m_rootNode->Draw(deviceResources, m_transform);
 
 

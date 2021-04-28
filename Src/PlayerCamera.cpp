@@ -17,6 +17,7 @@ void PlayerCamera::setPosition(DirectX::SimpleMath::Vector3 newPosition)
     if (m_collision == nullptr)
     {
         m_position.x = newPosition.x;
+        m_position.y = newPosition.y;
         m_position.z = newPosition.z;
 
         return;

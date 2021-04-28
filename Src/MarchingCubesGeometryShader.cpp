@@ -15,6 +15,7 @@
 #include "TerrainDensityFunction.h"
 #include "MarchingCubesGenerateConstantBufferVS.h"
 #include "Texture3D.h"
+#include "FogConstantBuffer.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -29,10 +30,12 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
     int yPos,
     int zPos,
     const float * isoLevel,
+    const float * fogEnd,
     const int &dimention,
     float scale
 )
-    : Mesh(transform), m_isoLevel(isoLevel), m_dimention(dimention), m_frustum(viewingFrustum), m_playerCamera(playerCamera), m_scale(scale), m_yPos(yPos)
+    : Mesh(transform), m_isoLevel(isoLevel), m_dimention(dimention), m_frustum(viewingFrustum), 
+    m_playerCamera(playerCamera), m_scale(scale), m_yPos(yPos), m_fogEnd(fogEnd)
 {
     if (yPos == 0)
     {
@@ -43,7 +46,7 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
             Matrix::CreateScale(m_scale) * transform,
             dimention, dimention, scale,
             Vector3(xPos, 0, zPos),
-            playerCamera, viewingFrustum
+            playerCamera, viewingFrustum, fogEnd
             );
     }
 
@@ -65,7 +68,7 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
                 halfBlock + (zIncrement * m_scale)
             );
 
-        m_position = Vector2(xPos, zPos);
+        m_position = Vector3(xPos, yPos, zPos);
 
         std::vector<VertexPositionTexture> verts;
         verts.push_back(VertexPositionTexture(Vector3(-size + xIncrement, size - yIncrement, zIncrement), Vector2(0, 0)));  // top left
@@ -130,29 +133,23 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
 
         std::vector<uint32_t> indices;
         int index = 0;
-        //TerrainDensityFunction density(nullptr);
-        //for (int k = 0; k < m_dimention; k++)
-        //{
-            for (int j = 0; j < (m_dimention - 1); j++)
+
+        for (int j = 0; j < (m_dimention - 1); j++)
+        {
+            for (int i = 0; i < (m_dimention - 1); i++)
             {
-                for (int i = 0; i < (m_dimention - 1); i++)
-                {
-                    VertexPositionTexture v;
+                VertexPositionTexture v;
 
-                    //auto yPosition = (((float)m_yPos * ((float)m_dimention - 1)) + (float)j)  * m_scale;
+                v.position = Vector3((float)i * m_scale, (float)j * m_scale, 1) ;
+                v.textureCoordinate = Vector2((float)i * textureCoordinatesStep, (float)j * textureCoordinatesStep);
+                generationVerts.push_back(v);
 
-                    v.position = Vector3((float)i * m_scale, (float)j * m_scale, 1) ;
-                    v.textureCoordinate = Vector2((float)i * textureCoordinatesStep, (float)j * textureCoordinatesStep);
-                    generationVerts.push_back(v);
+                m_generateVertexCount++;
 
-                    m_generateVertexCount++;
-
-                    indices.push_back(index);
-                    index++;
-                }
-
+                indices.push_back(index);
+                index++;
             }
-        //}
+        }
 
         m_generateVertsRenderPass.push_back(std::make_unique<IndexBuffer>(deviceResources, indices));
 
@@ -169,6 +166,8 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
         m_generateVertsRenderPass.push_back(std::make_unique<MarchingCubesConstantBufferGS>(deviceResources, *this, m_isoLevel, &m_dimention));
         //pixel buffer
         m_generateVertsRenderPass.push_back(std::make_unique<LightConstantBuffer>(deviceResources, sceneLight));
+
+        m_generateVertsRenderPass.push_back(std::make_unique<FogConstantBuffer>(deviceResources, m_fogEnd, playerCamera, ShaderType::Geometry, 3));
 
         // create the vertex buffer and store a pointer to it
         auto vertexBuffer = std::make_unique<VertexBuffer<VertexPositionTexture>>(deviceResources, generationVerts);
@@ -199,11 +198,11 @@ void MarchingCubesGeometryShader::Draw(
 {
     m_accumulatedTransform = accumulatedTransform;
 
-    Vector3 pos = Vector3::Transform(Vector3(m_position.x, 0.0, m_position.y), m_accumulatedTransform * m_viewingFrustumTransform);
+    Vector3 pos = Vector3::Transform(m_position, m_accumulatedTransform * m_viewingFrustumTransform);
 
     auto cubeRadius = ((float)(m_dimention - 1.0f) / 2.0f) * m_scale;
 
-    bool draw = m_frustum->CheckCube(pos.x, 0.0f, pos.z, cubeRadius);
+    bool draw = m_frustum->CheckCube(pos.x, pos.y, pos.z, cubeRadius);
 
     if (!draw)
     {

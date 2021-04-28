@@ -18,7 +18,7 @@ class MainScene
 {
 public:
 	MainScene();
-	void Initialise(DX::DeviceResources& deviceResources, PlayerCamera* playerCamera, ViewingFrustum* frustum);
+	void Initialise(DX::DeviceResources& deviceResources, PlayerCamera* playerCamera, Camera* activeCamera, ViewingFrustum* frustum);
 	void Draw(DX::DeviceResources& deviceResources, const DX::StepTimer& timer) const;
 private:
 

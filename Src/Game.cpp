@@ -85,8 +85,8 @@ void Game::Initialize(HWND window, int width, int height)
     m_playerCamera->setHeight(1.0f);
     m_playerCamera->setRotation(Vector3(-90.0f, 0.0f, 0.0f));	//orientation is -90 becuase zero will be looking up at the sky straight up. 
 
-    m_renderToTextureCamera->setPosition(Vector3(0.f, 10.f, 0.f));
-    m_renderToTextureCamera->setRotation(Vector3(-180.0f, 0.0f, 0.0f));//orientation is -90 becuase zero will be looking up at the sky straight up. 
+    m_renderToTextureCamera->setPosition(Vector3(9.f, 1.0f, 6.f));
+    m_renderToTextureCamera->setRotation(Vector3(-90.0f, 0.0f, 0.0f));//orientation is -90 becuase zero will be looking up at the sky straight up. 
 
     // Set main camera as the active camera
     m_activeCamera = m_playerCamera;
@@ -382,7 +382,7 @@ void Game::CreateDeviceDependentResources()
 
     m_frustum = std::make_unique<ViewingFrustum>();
 
-    m_mainScene.Initialise(*m_deviceResources, m_playerCamera.get(), m_frustum.get());
+    m_mainScene.Initialise(*m_deviceResources, m_playerCamera.get(), m_activeCamera.get(), m_frustum.get());
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.

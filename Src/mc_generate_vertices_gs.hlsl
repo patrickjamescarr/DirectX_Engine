@@ -24,11 +24,19 @@ cbuffer TriTableBuffer : register(b2)
     float triTable_c_buff[4096];
 };
 
+// Fog buffer
+cbuffer FogBuffer: register(b3)
+{
+    float4 fogEnd;
+    float4 cameraPosition;
+};
+
 struct GSOutput
 {
-    float4 wsCoordAmbo : SV_POSITION;
-    float3 wsNormal : NORMAL;
-    float3 position3D : TEXCOORD2;
+    float4 wsCoordAmbo  : SV_POSITION;
+    float3 wsNormal     : NORMAL;
+    float3 position3D   : TEXCOORD2;
+    float  fogFactor    : FOG;
 };
 
 struct VSOutput
@@ -82,6 +90,24 @@ float3 CalculateNormal(float3 uvw)
     grad.z = density_vol.SampleLevel(LinearClamp, uvw + float3(0, 0, d), 0) - density_vol.SampleLevel(LinearClamp, uvw + float3(0, 0, -d), 0);
 
     return -normalize(grad);
+}
+
+
+// calculate linear fog
+float CalculateLinearFogFactor(float3 vertexPosition, float3 camPosition)
+{
+    float fogFactor;
+
+    float camDistanceToVertex = length(vertexPosition - camPosition);
+
+    if (camDistanceToVertex >= fogEnd.x)
+    {
+        return 0;
+    }
+
+    fogFactor = saturate((fogEnd.x - camDistanceToVertex) / fogEnd.x);
+
+    return fogFactor;
 }
 
 [maxvertexcount(15)]
@@ -204,6 +230,11 @@ void main(
         normList[11] = VertexInterp(isoLevel, cell.normal[3], cell.normal[7], cell.densityValue[3], cell.densityValue[7]);
     }
 
+    float4 camWS;
+
+    camWS = mul(cameraPosition, worldMatrix);
+
+
     for (int i = 0; (int)triTable_c_buff[(cubeindex * 16) + i] != -1; i += 3)
     {
         int t0_index = (cubeindex * 16) + i;
@@ -223,16 +254,19 @@ void main(
         element.wsCoordAmbo = ApplyViewProj(p0);
         element.position3D = p0;
         element.wsNormal = normList[v0_index];
+        element.fogFactor = CalculateLinearFogFactor(p0, camWS.xyz); // Calculate linear fog.
         Stream.Append(element);
 
         element.wsCoordAmbo = ApplyViewProj(p1);
         element.position3D = p1;
         element.wsNormal = normList[v1_index];
+        element.fogFactor = CalculateLinearFogFactor(p1, camWS.xyz); // Calculate linear fog.
         Stream.Append(element);
 
         element.wsCoordAmbo = ApplyViewProj(p2);
         element.position3D = p2;
         element.wsNormal = normList[v2_index];
+        element.fogFactor = CalculateLinearFogFactor(p2, camWS.xyz); // Calculate linear fog.
         Stream.Append(element);
 
         Stream.RestartStrip();

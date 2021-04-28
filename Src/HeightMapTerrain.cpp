@@ -13,6 +13,7 @@
 #include "DepthStencilState.h"
 #include "TransformConstantBufferVS.h"
 #include "LightConstantBuffer.h"
+#include "FogConstantBuffer.h"
 #include "Texture.h"
 #include "MarchingCubes.h"
 
@@ -28,7 +29,8 @@ HeightMapTerrain::HeightMapTerrain(
     float scale,
     DirectX::SimpleMath::Vector3 position,
     Camera* playerCamera,
-    ViewingFrustum* frustum
+    ViewingFrustum* frustum,
+    const float* fogDistance
 )
     : Mesh{ transform },
     m_terrainWidth(terrainWidth),
@@ -36,7 +38,8 @@ HeightMapTerrain::HeightMapTerrain(
     m_scale(scale),
     m_deviceResources(deviceResources),
     m_camera(playerCamera),
-    m_frustum(frustum)
+    m_frustum(frustum),
+    m_fogDistance(fogDistance)
 {
 
     //MarchingCubes mc;
@@ -155,12 +158,12 @@ HeightMapTerrain::HeightMapTerrain(
     std::vector<std::unique_ptr<Bindable>> bindables;
 
     // Create the vertex shader
-    auto vertexShader = std::make_unique<VertexShader>(deviceResources, L"light_vs.cso");
+    auto vertexShader = std::make_unique<VertexShader>(deviceResources, L"fog_vs.cso");
     auto vertexShaderByteCode = vertexShader->GetBytecode();
     AddBind(std::move(vertexShader));
 
     // Create the pixel shader
-    AddBind(std::make_unique<PixelShader>(deviceResources, L"light_ps.cso"));
+    AddBind(std::make_unique<PixelShader>(deviceResources, L"fog_ps.cso"));
 
     AddBind(std::make_unique<Sampler>(deviceResources, D3D11_TEXTURE_ADDRESS_WRAP));
 
@@ -180,6 +183,8 @@ HeightMapTerrain::HeightMapTerrain(
     AddBind(std::make_unique<TransformConstantBufferVS>(deviceResources, *this));
 
     AddBind(std::make_unique<LightConstantBuffer>(deviceResources, light));
+
+    AddBind(std::make_unique<FogConstantBuffer>(deviceResources, m_fogDistance, playerCamera, ShaderType::Vertex, 1));
 
     AddBind(std::make_unique<Texture>(deviceResources, textureFileName));
 

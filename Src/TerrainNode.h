@@ -16,6 +16,7 @@ public:
         const DirectX::SimpleMath::Matrix & transform, 
         Light* light, 
         PlayerCamera* playerCamera, 
+        Camera* activeCamera,
         ViewingFrustum* frustum, 
         Collision* collision
     );
@@ -30,6 +31,7 @@ private:
     std::unique_ptr<PlayerNode> m_playerNode;
 
     float m_isoLevel = 0.0f;
+    float m_fogDistance = 10.0f;
     int m_dimention = 33;
 
     Light* m_light;

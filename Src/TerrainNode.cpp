@@ -10,6 +10,7 @@ TerrainNode::TerrainNode(
     DX::DeviceResources& deviceResources, 
     const Matrix & transform, Light* light, 
     PlayerCamera* playerCamera, 
+    Camera* activeCamera,
     ViewingFrustum* frustum,
     Collision* collision
 )
@@ -37,9 +38,9 @@ TerrainNode::TerrainNode(
 
     auto halfBlock = mcBlockOffset / 2;
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 10; i++)
     {
-        for (int j = 0; j < 5; j++)
+        for (int j = 0; j < 10; j++)
         {
             for (int k = 0; k < 2; k++)
             {
@@ -51,16 +52,15 @@ TerrainNode::TerrainNode(
                         halfBlock + (j * mcBlockOffset)
                     );
 
-                m_meshes.push_back(std::make_unique<BoxCollider>(deviceResources, cubeTransform, Vector3(m_dimention - 1, m_dimention - 1, m_dimention - 1)));
+                //m_meshes.push_back(std::make_unique<BoxCollider>(deviceResources, cubeTransform, Vector3(m_dimention - 1, m_dimention - 1, m_dimention - 1)));
 
                 m_meshes.push_back(std::make_unique<MarchingCubesGeometryShader>(
                     deviceResources, light, playerCamera, frustum,
                     Matrix::CreateTranslation(Vector3(mcBlockOffset * (float)i, mcBlockOffset * (float)k, mcBlockOffset * (float)j)),
                     i, k, j,
-                    &m_isoLevel, m_dimention, mcScale
+                    &m_isoLevel, &m_fogDistance, m_dimention, mcScale
                     ));
             }
-
         }
     }
 
@@ -100,6 +100,7 @@ void TerrainNode::Draw(DX::DeviceResources & deviceResources, DirectX::SimpleMat
     if (ImGui::Begin("Marching Cubes"))
     {
         ImGui::SliderFloat("Iso Level", &m_isoLevel, 0, 30.0f);
+        ImGui::SliderFloat("Fog Distance", &m_fogDistance, 0, 100.0f);
     }
 
     ImGui::End();
