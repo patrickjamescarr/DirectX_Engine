@@ -337,8 +337,12 @@
     <ClInclude Include="MarchingCubesGenerateConstantBufferVS.h">
       <Filter>Header Files\Bindable\Constant Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="HeightMapTerrain.h" />
-    <ClInclude Include="FogConstantBuffer.h" />
+    <ClInclude Include="HeightMapTerrain.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="FogConstantBuffer.h">
+      <Filter>Header Files\Bindable\Constant Buffers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -554,8 +558,12 @@
     <ClCompile Include="MarchingCubesGenerateConstantBufferVS.cpp">
       <Filter>Source Files\Bindable\Constant Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="HeightMapTerrain.cpp" />
-    <ClCompile Include="FogConstantBuffer.cpp" />
+    <ClCompile Include="HeightMapTerrain.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="FogConstantBuffer.cpp">
+      <Filter>Source Files\Bindable\Constant Buffers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
