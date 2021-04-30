@@ -343,6 +343,9 @@
     <ClInclude Include="FogConstantBuffer.h">
       <Filter>Header Files\Bindable\Constant Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="StreamOutput.h" />
+    <ClInclude Include="Simplex3D.h" />
+    <ClInclude Include="TerrainCollider.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -564,6 +567,10 @@
     <ClCompile Include="FogConstantBuffer.cpp">
       <Filter>Source Files\Bindable\Constant Buffers</Filter>
     </ClCompile>
+    <ClCompile Include="StreamOutput.cpp" />
+    <ClCompile Include="DensityFunction.cpp" />
+    <ClCompile Include="Simplex3D.cpp" />
+    <ClCompile Include="TerrainCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -700,6 +707,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="fog_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="terrain_collision_gs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="terrain_collision_vs.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -14,7 +14,7 @@ TerrainNode::TerrainNode(
     ViewingFrustum* frustum,
     Collision* collision
 )
-    : SceneNode(transform), m_light(light)
+    : SceneNode(transform), m_light(light), m_playerCamera(playerCamera)
 {
     auto terrainPosition = Matrix::CreateScale(m_scale) * Matrix::CreateTranslation(0.0f, 0.0f, 0.0f);
 
@@ -32,7 +32,7 @@ TerrainNode::TerrainNode(
 
     //m_meshes.push_back(std::move(terrainCollider));
 
-    float mcScale = 0.12f;
+    float mcScale = 0.1f;
 
     auto mcBlockOffset = (float)(m_dimention -1) * mcScale;
 
@@ -52,7 +52,7 @@ TerrainNode::TerrainNode(
                         halfBlock + (j * mcBlockOffset)
                     );
 
-                //m_meshes.push_back(std::make_unique<BoxCollider>(deviceResources, cubeTransform, Vector3(m_dimention - 1, m_dimention - 1, m_dimention - 1)));
+                m_meshes.push_back(std::make_unique<BoxCollider>(deviceResources, cubeTransform, Vector3(m_dimention - 1, m_dimention - 1, m_dimention - 1)));
 
                 m_meshes.push_back(std::make_unique<MarchingCubesGeometryShader>(
                     deviceResources, light, playerCamera, frustum,
@@ -72,15 +72,13 @@ TerrainNode::TerrainNode(
 
     // add children 
 
-    //m_playerNode = std::make_unique<PlayerNode>(deviceResources, playerCamera, collision);
+    m_playerNode = std::make_unique<PlayerNode>(deviceResources, playerCamera, collision);
 
-    //AddChild(std::move(m_playerNode));
+    AddChild(std::move(m_playerNode));
 }
 
 void TerrainNode::Draw(DX::DeviceResources & deviceResources, DirectX::SimpleMath::Matrix accumulatedTransform)
 {
-
-
     if (ImGui::Begin("Light"))
     {
         ImGui::SliderFloat("Position x", &m_lightPosX, -50.0f, 50.0f);
@@ -90,7 +88,6 @@ void TerrainNode::Draw(DX::DeviceResources & deviceResources, DirectX::SimpleMat
         ImGui::SliderFloat("Direction y", &m_lightDirY, -50.0f, 50.0f);
         ImGui::SliderFloat("Direction z", &m_lightDirZ, -50.0f, 50.0f);
     }
-
 
     m_light->setPosition(m_lightPosX, m_lightPosY, m_lightPosZ);
     m_light->setDirection(m_lightDirX, m_lightDirY, m_lightDirZ);

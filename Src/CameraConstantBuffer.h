@@ -7,10 +7,11 @@ class CameraConstantBuffer :
     public Bindable
 {
 private:
-    __declspec(align(16)) // buffer byteWidth needs to be a multiple of 16
     struct CamBuffer
     {
-        DirectX::SimpleMath::Vector3 camPosition;
+        DirectX::SimpleMath::Vector4 forward;
+        DirectX::SimpleMath::Vector4 right;
+        DirectX::SimpleMath::Vector4 up;
     };
 public:
     CameraConstantBuffer(DX::DeviceResources& deviceResources, Camera* activeCamera, UINT slot = 0);

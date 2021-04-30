@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerNode.h"
 #include "BoxCollider.h"
+#include "TerrainCollider.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -13,9 +14,11 @@ PlayerNode::PlayerNode(DX::DeviceResources & deviceResources, PlayerCamera * pla
 
     m_collision->player_collider = playerCollider.get();
 
-    playerCamera->setCollision(m_collision);
+    //playerCamera->setCollision(m_collision);
 
     m_meshes.push_back(std::move(playerCollider));
+
+    m_meshes.push_back(std::make_unique<TerrainCollider>(deviceResources, Matrix::Identity, playerCamera));
 
     // Add mesh pointers to the base mesh collection
     for (auto &mesh : m_meshes)

@@ -35,6 +35,7 @@ private:
     int m_dimention = 33;
 
     Light* m_light;
+    PlayerCamera* m_playerCamera;
 
     float m_lightPosX = 0.0f;
     float m_lightPosY = 10.0f;

@@ -13,10 +13,21 @@
 #include "OnScreenQuad.h"
 #include "ViewingFrustum.h"
 #include "HeightMapTerrain.h"
+#include "StreamOutput.h"
+#include "TerrainDensityFunction.h"
+#include <thread>
 
 class MarchingCubesGeometryShader :
     public Mesh
 {
+private:
+    struct GSOutput
+    {
+        DirectX::SimpleMath::Vector4 position;
+        DirectX::SimpleMath::Vector3 normal;
+        DirectX::SimpleMath::Vector3 texture;
+        float fog;
+    };
 public:
     MarchingCubesGeometryShader(
         DX::DeviceResources& deviceResources,
@@ -37,7 +48,10 @@ public:
     void BuildDensityVolumeRenderPass(DX::DeviceResources & deviceResources) const;
     void GenerateVerticesRenderPass(DX::DeviceResources & deviceResources) const;
     virtual void Update();
+    void GetVertexDataFromGeometryShader() const;
 private:
+    DX::DeviceResources & m_deviceResources;
+
     std::unique_ptr<OnScreenQuad> m_quad;
 
     std::unique_ptr<PixelShader> m_build_densities_PS;
@@ -53,6 +67,8 @@ private:
     VertexBuffer<DirectX::VertexPositionTexture>* m_generateVertsVertexBuffer;
     UINT m_generateVertexCount;
 
+    StreamOutput* m_streamOutput;
+
     std::unique_ptr<Sampler> m_gsSampler;
 
     ViewingFrustum* m_frustum;
@@ -60,10 +76,12 @@ private:
     DirectX::SimpleMath::Matrix m_viewingFrustumTransform;
 
     DirectX::SimpleMath::Vector3 m_position;
+    DirectX::SimpleMath::Vector3 m_worldPosition;
 
     Camera* m_playerCamera;
 
     std::unique_ptr<HeightMapTerrain> m_floorTerrain;
+    mutable std::vector<GSOutput> m_vertexData;
 
     const float * m_isoLevel;
     const float * m_fogEnd;
@@ -71,5 +89,10 @@ private:
     const int &m_dimention;
     int m_yPos;
     float m_fogStart = 0.0f;
+    bool m_drawn = false;
+
+    TerrainDensityFunction m_density;
+
+    //mutable std::thread m_streamOutThread;
 };
 

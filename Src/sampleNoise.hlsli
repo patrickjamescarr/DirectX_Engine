@@ -11,7 +11,7 @@ float fbm(float3 x) {
     float a = 0.5;
     float3 shift = float3(1, 0, 0);
     for (int i = 0; i < NUM_OCTAVES; ++i) {
-        v += a * snoise(x).x;
+        v += a * snoise(x);
         x = x * 2.0 + shift;
         a *= 0.5;
     }

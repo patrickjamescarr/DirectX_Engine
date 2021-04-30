@@ -11,7 +11,9 @@ void CameraConstantBuffer::Bind(DX::DeviceResources & deviceResources) noexcept
 {
     const CamBuffer camBuffer =
     {
-       m_activeCamera->getPosition()
+        m_activeCamera->forwardHeading,
+        m_activeCamera->rightHeading,
+        m_activeCamera->upHeading,
     };
 
     m_cameraBuffer->Update(deviceResources, camBuffer);

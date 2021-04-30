@@ -14,6 +14,10 @@ public:
 	float							getMoveSpeed();
 	float							getRotationSpeed();
 
+    DirectX::SimpleMath::Vector3    forwardHeading;
+    DirectX::SimpleMath::Vector3    rightHeading;
+    DirectX::SimpleMath::Vector3    upHeading;
+
     virtual void    setPosition(DirectX::SimpleMath::Vector3 newPosition);
     virtual void    setRotation(DirectX::SimpleMath::Vector3 newRotation);
 protected:

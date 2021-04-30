@@ -12,7 +12,7 @@ MarchingCubesMesh::MarchingCubesMesh(DX::DeviceResources & deviceResources, Ligh
     auto gs = std::make_unique<GeometryShader>(deviceResources, L"test_gs.cso");
     AddBind(std::move(gs));
 
-    m_terrainFunction = std::make_unique<TerrainDensityFunction>(&m_brownianFunction);
+    m_terrainFunction = std::make_unique<TerrainDensityFunction>();
     m_function = m_terrainFunction.get();
     m_functionType = Terrain;
 

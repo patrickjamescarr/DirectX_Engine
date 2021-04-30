@@ -35,6 +35,7 @@ float smooth_snap(float t, float m)
 
 float DENSITY(float3 ws)
 {
+   //return ws.z - 5;
     //-----------------------------------------------
     // This function determines the shape of the entire terrain.
     //-----------------------------------------------
