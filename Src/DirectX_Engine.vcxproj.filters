@@ -343,9 +343,16 @@
     <ClInclude Include="FogConstantBuffer.h">
       <Filter>Header Files\Bindable\Constant Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="StreamOutput.h" />
-    <ClInclude Include="Simplex3D.h" />
-    <ClInclude Include="TerrainCollider.h" />
+    <ClInclude Include="TerrainCollider.h">
+      <Filter>Header Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="StreamOutput.h">
+      <Filter>Header Files\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Simplex3D.h">
+      <Filter>Header Files\Proc Gen</Filter>
+    </ClInclude>
+    <ClInclude Include="Chest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -567,10 +574,19 @@
     <ClCompile Include="FogConstantBuffer.cpp">
       <Filter>Source Files\Bindable\Constant Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="StreamOutput.cpp" />
-    <ClCompile Include="DensityFunction.cpp" />
-    <ClCompile Include="Simplex3D.cpp" />
-    <ClCompile Include="TerrainCollider.cpp" />
+    <ClCompile Include="TerrainCollider.cpp">
+      <Filter>Source Files\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="StreamOutput.cpp">
+      <Filter>Source Files\Bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="DensityFunction.cpp">
+      <Filter>Header Files\Proc Gen</Filter>
+    </ClCompile>
+    <ClCompile Include="Simplex3D.cpp">
+      <Filter>Header Files\Proc Gen</Filter>
+    </ClCompile>
+    <ClCompile Include="Chest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

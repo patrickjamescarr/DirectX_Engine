@@ -14,7 +14,12 @@ GeometryShader::GeometryShader(DX::DeviceResources& deviceResources, const WCHAR
             { 0, "SV_POSITION", 0, 0, 4, 0 },
             { 0, "CAMPOSITION", 0, 0, 4, 0 },
             { 0, "DENSITY", 0, 0, 4, 0 },
-            { 0, "DENSITY", 1, 0, 4, 0 }
+            { 0, "DENSITY", 1, 0, 4, 0 },
+            { 0, "DENSITY", 2, 0, 4, 0 },
+            { 0, "DENSITY", 3, 0, 4, 0 },
+            { 0, "DENSITY", 4, 0, 4, 0 },
+            { 0, "DENSITY", 5, 0, 4, 0 },
+            { 0, "DENSITY", 6, 0, 4, 0 },
         };
 
         DX::ThrowIfFailed(

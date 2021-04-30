@@ -13,6 +13,7 @@
 #include "Collision.h"
 #include "ViewingFrustum.h"
 #include "OnScreenQuad.h"
+#include "Chest.h"
 
 class MainScene
 {
@@ -65,7 +66,7 @@ private:
     // Skybox
     std::unique_ptr<SkyBox> m_skyBox;
 
- 
+    float fogEnd = 10.0f;
 
     // Post processing
     std::unique_ptr<BloomPostProcessEffect> m_bloom;

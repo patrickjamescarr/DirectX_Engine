@@ -20,7 +20,7 @@ public:
         const wchar_t * textureFileName,
         const wchar_t * vertexShaderFileName,
         const wchar_t * pixelShaderFileName,
-        D3D_PRIMITIVE_TOPOLOGY topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
+        D3D11_CULL_MODE cullMode = D3D11_CULL_BACK
     );
 
     void AddDefaultBindables(DX::DeviceResources & deviceResources, Light * &light, const wchar_t * &textureFileName, D3D_PRIMITIVE_TOPOLOGY topology);

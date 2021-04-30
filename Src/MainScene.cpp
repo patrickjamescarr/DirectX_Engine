@@ -16,6 +16,8 @@
 #include "SimplexFunction.h"
 #include "MarchingCubesMesh.h"
 #include "MarchingCubesGeometryShader.h"
+#include "Chest.h"
+#include "FogConstantBuffer.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -53,6 +55,16 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
 
     // create the models
 
+    //m_meshes.push_back(std::make_unique<Chest>(deviceResources, Matrix::CreateTranslation(5.0f, 0.1f, 10.0f), m_light.get(), activeCamera));
+
+    auto chest = m_modelLoader.LoadModel("Models//chest.obj");
+
+    auto chestMesh = ParseMesh(deviceResources, chest, m_light.get(), SimpleMath::Matrix::CreateScale(0.02)* Matrix::CreateTranslation(5.0f, 0.1f, 10.0f), L"Textures//chest_simple.dds", L"fog_vs.cso", L"fog_ps.cso");
+
+    chestMesh->AddBind(std::make_unique<FogConstantBuffer>(deviceResources, &fogEnd, m_playerCamera, ShaderType::Vertex, 1));
+
+    m_meshes.push_back(std::move(chestMesh));
+
     //auto sunModel = m_modelLoader.CreateSphere(5);
     //m_meshes.push_back(ParseMesh(deviceResources, sunModel, m_sunLight.get(), Matrix::CreateTranslation(Vector3(lightPosition)), L"Textures//sun2.dds", L"light_vs.cso", L"light_ps.cso"));
 
@@ -78,9 +90,9 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
 
 
     // create the effects
-    m_skyBox = std::make_unique<SkyBox>(deviceResources);
-    m_bloom = std::make_unique<BloomPostProcessEffect>(deviceResources);
-    m_lensFlare = std::make_unique<LensFlareEffect>(deviceResources, playerCamera, m_light.get());
+    //m_skyBox = std::make_unique<SkyBox>(deviceResources);
+    //m_bloom = std::make_unique<BloomPostProcessEffect>(deviceResources);
+    //m_lensFlare = std::make_unique<LensFlareEffect>(deviceResources, playerCamera, m_light.get());
 
 }
 
@@ -88,12 +100,12 @@ void MainScene::Draw(DX::DeviceResources & deviceResources, const DX::StepTimer&
 {
    //m_bloom->SetSceneRenderTarget(deviceResources);
 
-    if (ImGui::Begin("Collision output"))
-    {
-        ImGui::Text("Camera Position = %f, %f, %f", m_playerCamera->getPosition().x, m_playerCamera->getPosition().y, m_playerCamera->getPosition().z);
-    }
+    //if (ImGui::Begin("Collision output"))
+    //{
+    //    ImGui::Text("Camera Position = %f, %f, %f", m_playerCamera->getPosition().x, m_playerCamera->getPosition().y, m_playerCamera->getPosition().z);
+    //}
 
-    ImGui::End();
+    //ImGui::End();
 
    //m_skyBox->Draw(deviceResources);
    m_rootNode->Draw(deviceResources, m_transform);

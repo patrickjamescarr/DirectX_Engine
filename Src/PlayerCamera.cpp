@@ -26,25 +26,121 @@ void PlayerCamera::setPosition(DirectX::SimpleMath::Vector3 newPosition)
     //    return;
     //}
 
-    //if (m_collision == nullptr)
-    //{
-    //    m_position.x = newPosition.x;
-    //    m_position.y = newPosition.y;
-    //    m_position.z = newPosition.z;
+    if (m_collision == nullptr)
+    {
+        m_position.x = newPosition.x;
+        m_position.y = newPosition.y;
+        m_position.z = newPosition.z;
 
-    //    return;
-    //}
+        return;
+    }
 
     bool movingRight = (newPosition.x - m_position.x) > 0;
     bool movingLeft = (newPosition.x - m_position.x) < 0;
     bool movingForward = (newPosition.z - m_position.z) > 0;
     bool movingBack = (newPosition.z - m_position.z) < 0;
+    bool movingUp = (newPosition.y - m_position.y) > 0;
+    bool movingDown = (newPosition.y - m_position.y) < 0;
 
 
     bool canMoveX = false;
+    bool canMoveY = false;
     bool canMoveZ = false;
 
-    if (movingForward && movingLeft)
+    if (movingForward && movingUp && movingRight)
+    {
+        canMoveX = m_densities_3.z < 0;
+        canMoveZ = m_densities_3.z < 0;
+        canMoveY = m_densities_3.z < 0;
+    }
+    else if (movingBack && movingUp && movingRight)
+    {
+        canMoveX = m_densities_4.x < 0;
+        canMoveZ = m_densities_4.x < 0;
+        canMoveY = m_densities_4.x < 0;
+    }
+    else if (movingBack && movingUp && movingLeft)
+    {
+        canMoveX = m_densities_4.z < 0;
+        canMoveY = m_densities_4.z < 0;
+        canMoveZ = m_densities_4.z < 0;
+    }
+    else if (movingUp && movingLeft && movingForward)
+    {
+        canMoveX = m_densities_5.x < 0;
+        canMoveY = m_densities_5.x < 0;
+        canMoveZ = m_densities_5.x < 0;
+    }
+
+    else if (movingForward && movingDown && movingRight)
+    {
+        canMoveX = m_densities_5.z < 0;
+        canMoveZ = m_densities_5.z < 0;
+        canMoveY = m_densities_5.z < 0;
+    }
+    else if (movingBack && movingDown && movingRight)
+    {
+        canMoveX = m_densities_6.x < 0;
+        canMoveZ = m_densities_6.x < 0;
+        canMoveY = m_densities_6.x < 0;
+    }
+    else if (movingBack && movingDown && movingLeft)
+    {
+        canMoveX = m_densities_6.z < 0;
+        canMoveY = m_densities_6.z < 0;
+        canMoveZ = m_densities_6.z < 0;
+    }
+    else if (movingDown && movingLeft && movingForward)
+    {
+        canMoveX = m_densities_7.x < 0;
+        canMoveY = m_densities_7.x < 0;
+        canMoveZ = m_densities_7.x < 0;
+    }
+
+
+    else if (movingForward && movingUp)
+    {
+        canMoveZ = m_densities_3.y < 0;
+        canMoveY = m_densities_3.y < 0;
+    }
+    else if (movingBack && movingUp)
+    {
+        canMoveZ = m_densities_4.y < 0;
+        canMoveY = m_densities_4.y < 0;
+    }
+    else if (movingUp && movingRight)
+    {
+        canMoveX = m_densities_3.w < 0;
+        canMoveY = m_densities_3.w < 0;
+    }
+    else if (movingUp && movingLeft)
+    {
+        canMoveX = m_densities_4.w < 0;
+        canMoveY = m_densities_4.w < 0;
+    }
+
+    else if (movingForward && movingDown)
+    {
+        canMoveZ = m_densities_5.y < 0;
+        canMoveY = m_densities_5.y < 0;
+    }
+    else if (movingBack && movingDown)
+    {
+        canMoveZ = m_densities_6.y < 0;
+        canMoveY = m_densities_6.y < 0;
+    }
+    else if (movingDown && movingRight)
+    {
+        canMoveX = m_densities_5.w < 0;
+        canMoveY = m_densities_5.w < 0;
+    }
+    else if (movingDown && movingLeft)
+    {
+        canMoveX = m_densities_6.w < 0;
+        canMoveY = m_densities_6.w < 0;
+    }
+
+    else if (movingForward && movingLeft)
     {
         canMoveZ = m_densities_1.y < 0;
         canMoveX = m_densities_1.y < 0;
@@ -81,73 +177,20 @@ void PlayerCamera::setPosition(DirectX::SimpleMath::Vector3 newPosition)
     {
         canMoveX = m_densities_2.z < 0;
     }
-
-
-    //if (movingBack)
-    //{
-    //    canMoveZ = m_densities_2.x < 1;
-    //        //&&  // back
-    //        //m_densities_2.y < 0 &&  // back right 
-    //        //m_densities_1.w < 0;    // back left
-
-    //    if (movingRight)
-    //    {
-    //        canMoveZ = canMoveZ && m_densities_2.y < 1;
-    //    }
-
-    //    if (movingLeft)
-    //    {
-    //        canMoveZ = canMoveZ && m_densities_1.w < 1;
-    //    }
-    //}
-
-    //if (movingForward)
-    //{
-    //    canMoveZ = m_densities_1.x < 1; // && m_densities_1.y < 0 && m_densities_2.w < 0;
-
-    //    if (movingRight)
-    //    {
-    //        canMoveZ = canMoveZ && m_densities_2.w < 1;
-    //    }
-
-    //    if (movingLeft)
-    //    {
-    //        canMoveZ = canMoveZ && m_densities_1.y < 1;
-    //    }
-    //}
-
-    //if (movingLeft)
-    //{
-    //    canMoveX = m_densities_1.z < 1;
-
-    //    if (movingBack)
-    //    {
-    //        canMoveX = canMoveX && m_densities_1.w < 1;
-    //    }
-
-    //    if (movingForward)
-    //    {
-    //        canMoveX = canMoveX && m_densities_1.y < 1;
-    //    }
-    //}
-
-    //if (movingRight)
-    //{
-    //    canMoveX = m_densities_2.z < 1;
-
-    //    if (movingBack)
-    //    {
-    //        canMoveX = canMoveX && m_densities_2.y < 1;
-    //    }
-
-    //    if (movingForward)
-    //    {
-    //        canMoveX = canMoveX && m_densities_2.w < 1;
-    //    }
-    //}
+    else if (movingUp)
+    {
+        canMoveY = m_densities_3.x < 0;
+    }
+    else if (movingDown)
+    {
+        canMoveY = m_densities_7.y < 0;
+    }
 
     if(canMoveX)
         m_position.x = newPosition.x;
+
+    if (canMoveY && newPosition.y > 0.2f)
+        m_position.y = newPosition.y;
 
     if (canMoveZ)
         m_position.z = newPosition.z;

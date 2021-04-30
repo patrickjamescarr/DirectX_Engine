@@ -179,6 +179,7 @@
     <ClInclude Include="BufferTypes.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraConstantBuffer.h" />
+    <ClInclude Include="Chest.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionDetection.h" />
     <ClInclude Include="CubeTexture.h" />
@@ -269,6 +270,7 @@
     <ClCompile Include="BrownianFunction.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraConstantBuffer.cpp" />
+    <ClCompile Include="Chest.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CollisionDetection.cpp" />
     <ClCompile Include="CubeTexture.cpp" />

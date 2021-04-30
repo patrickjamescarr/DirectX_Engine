@@ -208,30 +208,32 @@ void MarchingCubesGeometryShader::Draw(
 
     Vector3 pos = Vector3::Transform(m_position, m_accumulatedTransform * m_viewingFrustumTransform);
 
-    auto cubeRadius = ((float)(m_dimention - 1.0f) / 2.0f) * m_scale;
+    auto cubeRadius = ((float)m_dimention / 2.0f) * m_scale;
 
     bool draw = m_frustum->CheckCube(pos.x, pos.y, pos.z, cubeRadius);
 
-    if (!draw)
-    {
-        if (ImGui::Begin("Marching Cubes"))
-        {
-            ImGui::Text("Culling cube at: %f, %f", pos.x, pos.z);
-        }
+    //if (!draw)
+    //{
+    //    if (ImGui::Begin("Marching Cubes"))
+    //    {
+    //        ImGui::Text("Culling cube at: %f, %f", pos.x, pos.z);
+    //    }
 
-        ImGui::End();
+    //    ImGui::End();
 
-        return;
-    }
+    //    return;
+    //}
 
     auto playerPos = m_playerCamera->getPosition(); /// check distance from player!
 
     auto distance = Vector3::Distance(pos, playerPos);
 
-    if (distance > 15) 
+
+    if (distance > 27) 
     {
         return;
     }
+
 
     if (m_yPos == 0)
     {
@@ -317,28 +319,20 @@ void MarchingCubesGeometryShader::Update()
 
     // player is inside the cube
 
-    float dimMinusOne = (float)m_dimention - 1.0f;
-    auto scaledOffset = dimMinusOne * m_scale; //(playerPos.x / scaledOffset)
-
     auto playerX = (playerPos.x / m_scale) - (float)(m_dimention - 1) / 2.0f;
     auto playerY = -((playerPos.y / m_scale) - (float)(m_dimention - 1) / 2.0f);
-    auto playerZ = (playerPos.z / m_scale) + 1; // +(playerPos.z / scaledOffset);
+    auto playerZ = (playerPos.z / m_scale) + 1; 
 
-    auto forward = m_playerCamera->getForward();
-    forward.Normalize();
+    m_playerCamera->playerDensityPosition = Vector3(playerX, playerY, playerZ);
 
-    auto forwardPosition = Vector3(playerX, playerY, playerZ);
+    //if (ImGui::Begin("Cube Collision"))
+    //{
+    //    ImGui::Text("Player in cube x:%f, y:%f, z:%f", m_worldPosition.x, m_worldPosition.y, m_worldPosition.z);
 
-    m_playerCamera->forwardHeading = forwardPosition;
+    //    ImGui::Text("Player world pos x:%f, y:%f, z:%f", playerX, playerY, playerZ);
+    //}
 
-    if (ImGui::Begin("Cube Collision"))
-    {
-        ImGui::Text("Player in cube x:%f, y:%f, z:%f", m_worldPosition.x, m_worldPosition.y, m_worldPosition.z);
-
-        ImGui::Text("Player world pos x:%f, y:%f, z:%f", playerX, playerY, playerZ);
-    }
-
-    ImGui::End();
+    //ImGui::End();
 }
 
 void MarchingCubesGeometryShader::GetVertexDataFromGeometryShader() const

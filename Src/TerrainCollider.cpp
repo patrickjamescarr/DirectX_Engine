@@ -93,59 +93,64 @@ void TerrainCollider::Draw(DX::DeviceResources & deviceResources, DirectX::FXMMA
     m_camera->setDensity(vertexData.position.x);
     m_camera->setDensities1(vertexData.densities1);
     m_camera->setDensities2(vertexData.densities2);
+    m_camera->setDensities3(vertexData.densities3);
+    m_camera->setDensities4(vertexData.densities4);
+    m_camera->setDensities5(vertexData.densities5);
+    m_camera->setDensities6(vertexData.densities6);
+    m_camera->setDensities7(vertexData.densities7);
 
-    if (ImGui::Begin("Cube Collision"))
-    {
-        ImGui::Text("Density: %f", vertexData.position.w);
+    //if (ImGui::Begin("Cube Collision"))
+    //{
+    //    ImGui::Text("Density: %f", vertexData.position.w);
 
-        //ImGui::Text("Outside terrain :%f", vertexData.position.y);
+    //    //ImGui::Text("Outside terrain :%f", vertexData.position.y);
 
-        ImGui::Text("Cam pos x:%f, y:%f, z:%f", vertexData.camPosition.x, vertexData.camPosition.y, vertexData.camPosition.z);
+    //    ImGui::Text("Cam pos x:%f, y:%f, z:%f", vertexData.camPosition.x, vertexData.camPosition.y, vertexData.camPosition.z);
 
-        ImGui::Text("Can move:");
+    //    ImGui::Text("Can move:");
 
-        if (vertexData.densities1.x >= 0)
-        {
-            ImGui::Text("forward blocked");
-        }
-        if (vertexData.densities1.y >= 0)
-        {
-            ImGui::Text("forward left blocked");
-        }
-        if (vertexData.densities1.z >= 0)
-        {
-            ImGui::Text("left blocked");
-        }
-        if (vertexData.densities1.w >= 0)
-        {
-            ImGui::Text("back left blocked");
-        }
-        if (vertexData.densities2.x >= 0)
-        {
-            ImGui::Text("back blocked");
-        }
-        if (vertexData.densities2.y >= 0)
-        {
-            ImGui::Text("back right blocked");
-        }
-        if (vertexData.densities2.z >= 0)
-        {
-            ImGui::Text("right blocked");
-        }
-        if (vertexData.densities2.w >= 0)
-        {
-            ImGui::Text("forward right blocked");
-        }
+    //    if (vertexData.densities1.x >= 0)
+    //    {
+    //        ImGui::Text("forward blocked");
+    //    }
+    //    if (vertexData.densities1.y >= 0)
+    //    {
+    //        ImGui::Text("forward left blocked");
+    //    }
+    //    if (vertexData.densities1.z >= 0)
+    //    {
+    //        ImGui::Text("left blocked");
+    //    }
+    //    if (vertexData.densities1.w >= 0)
+    //    {
+    //        ImGui::Text("back left blocked");
+    //    }
+    //    if (vertexData.densities2.x >= 0)
+    //    {
+    //        ImGui::Text("back blocked");
+    //    }
+    //    if (vertexData.densities2.y >= 0)
+    //    {
+    //        ImGui::Text("back right blocked");
+    //    }
+    //    if (vertexData.densities2.z >= 0)
+    //    {
+    //        ImGui::Text("right blocked");
+    //    }
+    //    if (vertexData.densities2.w >= 0)
+    //    {
+    //        ImGui::Text("forward right blocked");
+    //    }
 
-        
-        //ImGui::Text("forward left: %f", vertexData.densities1.y);
-        //ImGui::Text("left: %f", vertexData.densities1.z);
-        //ImGui::Text("back left: %f", vertexData.densities1.w);
-        //ImGui::Text("back: %f", vertexData.densities2.x);
-        //ImGui::Text("back right: %f", vertexData.densities2.y);
-        //ImGui::Text("right: %f", vertexData.densities2.z);
-        //ImGui::Text("forward right: %f", vertexData.densities2.w);
-    }
+    //    
+    //    //ImGui::Text("forward left: %f", vertexData.densities1.y);
+    //    //ImGui::Text("left: %f", vertexData.densities1.z);
+    //    //ImGui::Text("back left: %f", vertexData.densities1.w);
+    //    //ImGui::Text("back: %f", vertexData.densities2.x);
+    //    //ImGui::Text("back right: %f", vertexData.densities2.y);
+    //    //ImGui::Text("right: %f", vertexData.densities2.z);
+    //    //ImGui::Text("forward right: %f", vertexData.densities2.w);
+    //}
 
-    ImGui::End();
+    //ImGui::End();
 }

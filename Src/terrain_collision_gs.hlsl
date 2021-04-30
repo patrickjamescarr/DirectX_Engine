@@ -6,6 +6,11 @@ struct GSOutput
     float4 camPos : CAMPOSITION;
     float4 densities : DENSITY;
     float4 densities2 : DENSITY1;
+    float4 densities3 : DENSITY2;
+    float4 densities4 : DENSITY3;
+    float4 densities5 : DENSITY4;
+    float4 densities6 : DENSITY5;
+    float4 densities7 : DENSITY6;
 };
 
 float SampleVector(float3 v)
@@ -28,7 +33,7 @@ float SampleVector(float3 v)
 
 float3 direction(float3 a, float3 b)
 {
-    return a + ((b * 0.5) / 0.1f);
+    return a + ((b * 0.5) / 0.3f);
 }
 
 
@@ -41,7 +46,7 @@ void main(
 
     float d = DENSITY(input[0].xyz);
 
-    // xz axis
+    // horizontal movement
     float forward = DENSITY(direction(input[0].xyz, float3(0, 0, 1)));
     float forwardRight = DENSITY(direction(input[0].xyz, normalize(float3(1, 0, 1))));
     float right = DENSITY(direction(input[0].xyz, float3(1, 0, 0)));
@@ -51,14 +56,37 @@ void main(
     float left = DENSITY(direction(input[0].xyz, float3(-1, 0, 0)));
     float forwardLeft = DENSITY(direction(input[0].xyz, normalize(float3(-1, 0, 1))));
 
-    //xy axis
-    // 1. up, 2. up & forward, 3. up & back, 4. down, 5. down & forward, 6. down & back
+    // moving up
+    float up = DENSITY(direction(input[0].xyz, float3(0, -1, 0)));
+    float forwardUp = DENSITY(direction(input[0].xyz, normalize(float3(0, -1, 1))));
+    float forwardRightUp = DENSITY(direction(input[0].xyz, normalize(float3(1, -1, 1))));
+    float rightUp = DENSITY(direction(input[0].xyz, float3(1, -1, 0)));
+    float backRightUp = DENSITY(direction(input[0].xyz, normalize(float3(1, -1, -1))));
+    float backUp = DENSITY(direction(input[0].xyz, float3(0, -1, -1)));
+    float backLeftUp = DENSITY(direction(input[0].xyz, normalize(float3(-1, -1, -1))));
+    float leftUp = DENSITY(direction(input[0].xyz, float3(-1, -1, 0)));
+    float forwardLeftUp = DENSITY(direction(input[0].xyz, normalize(float3(-1, -1, 1))));
 
+    // moving down
+    float down = DENSITY(direction(input[0].xyz, float3(0, 1, 0)));
+    float forwardDown = DENSITY(direction(input[0].xyz, normalize(float3(0, 1, 1))));
+    float forwardRightDown = DENSITY(direction(input[0].xyz, normalize(float3(1, 1, 1))));
+    float rightDown = DENSITY(direction(input[0].xyz, float3(1, 1, 0)));
+    float backRightDown = DENSITY(direction(input[0].xyz, normalize(float3(1, 1, -1))));
+    float backDown = DENSITY(direction(input[0].xyz, float3(0, 1, -1)));
+    float backLeftDown = DENSITY(direction(input[0].xyz, normalize(float3(-1, 1, -1))));
+    float leftDown = DENSITY(direction(input[0].xyz, float3(-1, 1, 0)));
+    float forwardLeftDown = DENSITY(direction(input[0].xyz, normalize(float3(-1, 1, 1))));
 
     GSOutput element;
     element.pos = float4(d, d < 0, DENSITY(input[0].xyz), 0);
     element.camPos = input[0];
     element.densities = float4(forward, forwardLeft, left, backLeft);
     element.densities2 = float4(back, backRight, right, forwardRight);
+    element.densities3 = float4(up, forwardUp, forwardRightUp, rightUp);
+    element.densities4 = float4(backRightUp, backUp, backLeftUp, leftUp);
+    element.densities5 = float4(forwardLeftUp, forwardDown, forwardRightDown, rightDown);
+    element.densities6 = float4(backRightDown, backDown, backLeftDown, leftDown);
+    element.densities7 = float4(forwardLeftDown, down, 0, 0);
     output.Append(element);
 }

@@ -32,15 +32,15 @@ TerrainNode::TerrainNode(
 
     //m_meshes.push_back(std::move(terrainCollider));
 
-    float mcScale = 0.1f;
+    float mcScale = 0.3f;
 
     auto mcBlockOffset = (float)(m_dimention -1) * mcScale;
 
     auto halfBlock = mcBlockOffset / 2;
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 20; i++)
     {
-        for (int j = 0; j < 10; j++)
+        for (int j = 0; j < 20; j++)
         {
             for (int k = 0; k < 2; k++)
             {
@@ -52,7 +52,7 @@ TerrainNode::TerrainNode(
                         halfBlock + (j * mcBlockOffset)
                     );
 
-                m_meshes.push_back(std::make_unique<BoxCollider>(deviceResources, cubeTransform, Vector3(m_dimention - 1, m_dimention - 1, m_dimention - 1)));
+                //m_meshes.push_back(std::make_unique<BoxCollider>(deviceResources, cubeTransform, Vector3(m_dimention - 1, m_dimention - 1, m_dimention - 1)));
 
                 m_meshes.push_back(std::make_unique<MarchingCubesGeometryShader>(
                     deviceResources, light, playerCamera, frustum,
@@ -79,20 +79,20 @@ TerrainNode::TerrainNode(
 
 void TerrainNode::Draw(DX::DeviceResources & deviceResources, DirectX::SimpleMath::Matrix accumulatedTransform)
 {
-    if (ImGui::Begin("Light"))
-    {
-        ImGui::SliderFloat("Position x", &m_lightPosX, -50.0f, 50.0f);
-        ImGui::SliderFloat("Position y", &m_lightPosY, -50.0f, 50.0f);
-        ImGui::SliderFloat("Position z", &m_lightPosZ, -50.0f, 50.0f);
-        ImGui::SliderFloat("Direction x", &m_lightDirX, -50.0f, 50.0f);
-        ImGui::SliderFloat("Direction y", &m_lightDirY, -50.0f, 50.0f);
-        ImGui::SliderFloat("Direction z", &m_lightDirZ, -50.0f, 50.0f);
-    }
+    //if (ImGui::Begin("Light"))
+    //{
+    //    ImGui::SliderFloat("Position x", &m_lightPosX, -50.0f, 50.0f);
+    //    ImGui::SliderFloat("Position y", &m_lightPosY, -50.0f, 50.0f);
+    //    ImGui::SliderFloat("Position z", &m_lightPosZ, -50.0f, 50.0f);
+    //    ImGui::SliderFloat("Direction x", &m_lightDirX, -50.0f, 50.0f);
+    //    ImGui::SliderFloat("Direction y", &m_lightDirY, -50.0f, 50.0f);
+    //    ImGui::SliderFloat("Direction z", &m_lightDirZ, -50.0f, 50.0f);
+    //}
 
     m_light->setPosition(m_lightPosX, m_lightPosY, m_lightPosZ);
     m_light->setDirection(m_lightDirX, m_lightDirY, m_lightDirZ);
 
-    ImGui::End();
+    //ImGui::End();
 
     if (ImGui::Begin("Marching Cubes"))
     {

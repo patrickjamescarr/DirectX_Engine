@@ -18,7 +18,7 @@ PlayerNode::PlayerNode(DX::DeviceResources & deviceResources, PlayerCamera * pla
 
     m_meshes.push_back(std::move(playerCollider));
 
-    m_meshes.push_back(std::make_unique<TerrainCollider>(deviceResources, Matrix::Identity, playerCamera));
+    //_meshes.push_back(std::make_unique<TerrainCollider>(deviceResources, Matrix::Identity, playerCamera));
 
     // Add mesh pointers to the base mesh collection
     for (auto &mesh : m_meshes)
