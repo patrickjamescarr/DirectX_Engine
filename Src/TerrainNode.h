@@ -31,8 +31,8 @@ private:
     std::unique_ptr<PlayerNode> m_playerNode;
 
     float m_isoLevel = 0.0f;
-    float m_fogDistance = 10.0f;
-    int m_dimention = 33;
+    float m_fogDistance = 20.0f;
+    int m_dimention = 65;
 
     Light* m_light;
     PlayerCamera* m_playerCamera;

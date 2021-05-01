@@ -81,7 +81,7 @@ void Game::Initialize(HWND window, int width, int height)
     m_CameraViewRect.bottom = 240;
 
     //setup camera
-    m_playerCamera->initPosition(Vector3(5.0, 0.f, 5.0f));
+    m_playerCamera->initPosition(Vector3(5.0f, 0.1f, 5.0f));
     m_playerCamera->setHeight(1.0f);
     m_playerCamera->setRotation(Vector3(-90.0f, 0.0f, 180.0f));	//orientation is -90 becuase zero will be looking up at the sky straight up. 
 

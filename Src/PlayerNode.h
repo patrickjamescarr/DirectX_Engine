@@ -14,5 +14,7 @@ private :
     std::vector<std::unique_ptr<Mesh>> m_meshes;
     PlayerCamera* m_playerCamera;
     Collision* m_collision;
+
+    int m_chestsFound = 0;
 };
 

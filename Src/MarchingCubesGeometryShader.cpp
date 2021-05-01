@@ -229,7 +229,7 @@ void MarchingCubesGeometryShader::Draw(
     auto distance = Vector3::Distance(pos, playerPos);
 
 
-    if (distance > 27) 
+    if (distance > 30) 
     {
         return;
     }
@@ -325,14 +325,14 @@ void MarchingCubesGeometryShader::Update()
 
     m_playerCamera->playerDensityPosition = Vector3(playerX, playerY, playerZ);
 
-    //if (ImGui::Begin("Cube Collision"))
-    //{
-    //    ImGui::Text("Player in cube x:%f, y:%f, z:%f", m_worldPosition.x, m_worldPosition.y, m_worldPosition.z);
+    if (ImGui::Begin("Cube Collision"))
+    {
+        ImGui::Text("Player in cube x:%f, y:%f, z:%f", m_worldPosition.x, m_worldPosition.y, m_worldPosition.z);
 
-    //    ImGui::Text("Player world pos x:%f, y:%f, z:%f", playerX, playerY, playerZ);
-    //}
+        ImGui::Text("Player world pos x:%f, y:%f, z:%f", playerX, playerY, playerZ);
+    }
 
-    //ImGui::End();
+    ImGui::End();
 }
 
 void MarchingCubesGeometryShader::GetVertexDataFromGeometryShader() const

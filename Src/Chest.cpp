@@ -1,53 +1,75 @@
 #include "pch.h"
 #include "Chest.h"
 #include "VertexBuffer.h"
-#include "ModelLoader.h"
 #include "FogConstantBuffer.h"
 #include "Types.h"
+#include "VertexShader.h"
+#include "PixelShader.h"
+#include "Sampler.h"
+#include "InputLayout.h"
+#include "RasterizerState.h"
 
-Chest::Chest(DX::DeviceResources & deviceResources, DirectX::SimpleMath::Matrix transform, Light * sceneLight, const Camera* camera)
-    : Mesh(transform)
+using namespace DirectX::SimpleMath;
+
+Chest::Chest(DX::DeviceResources & deviceResources, DirectX::SimpleMath::Matrix scale, DirectX::SimpleMath::Matrix rotation, DirectX::SimpleMath::Vector3 position, Light * sceneLight, PlayerCamera* playerCamera)
+    : Mesh(scale * rotation * Matrix::CreateTranslation(position)), m_playerCamera(playerCamera), m_position(position)
 {
     ModelLoader modelLoader;
-
-    auto scale = DirectX::SimpleMath::Matrix::CreateScale(0.2);
-
-    // create chest mesh
-    m_chestMesh = std::make_unique<Mesh>(deviceResources, sceneLight, scale * transform, L"Textures//chest_simple.dds", L"fog_vs.cso", L"fog_ps.cso", D3D11_CULL_FRONT);
-
-    // load the chest model
     auto chestModel = modelLoader.LoadModel("Models//chest.obj");
 
-    // create the vertex buffer for the chest
-    m_chestMesh->AddBind(std::make_unique<VertexBuffer<DirectX::VertexPositionNormalTexture>>(deviceResources, chestModel.verticies));
-    m_chestMesh->AddBind(std::make_unique<FogConstantBuffer>(deviceResources, &fogEnd, camera, ShaderType::Vertex, 1));
+    auto transform = scale * rotation * Matrix::CreateTranslation(position);
 
-    // Create the index buffer for the chest
+    // create and return the mesh
+    m_chestMesh = std::make_unique<Mesh>(deviceResources,  sceneLight, transform, L"Textures//chest_simple.dds", L"fog_vs.cso", L"fog_ps.cso", D3D11_CULL_FRONT);
+
+    m_chestMesh->AddBind(std::make_unique<VertexBuffer<DirectX::VertexPositionNormalTexture>>(deviceResources, chestModel.verticies));
+    m_chestMesh->AddBind((std::make_unique<FogConstantBuffer>(deviceResources, &m_fogEnd, playerCamera, ShaderType::Vertex, 1)));
+    // Create the index buffer
     m_chestMesh->AddIndexBuffer(std::make_unique<IndexBuffer>(deviceResources, chestModel.indices));
 
 
-    // create coins mesh
-    m_coinsMesh = std::make_unique<Mesh>(deviceResources, sceneLight, scale * transform, L"Textures//coins.dds", L"fog_vs.cso", L"fog_ps.cso", D3D11_CULL_FRONT);
-
-    // load the coins model
     auto coinsModel = modelLoader.LoadModel("Models//coins.obj");
 
-    // create the vertex buffer and store a pointer to it
-    m_coinsMesh->AddBind(std::move(std::make_unique<VertexBuffer<DirectX::VertexPositionNormalTexture>>(deviceResources, coinsModel.verticies)));
-    m_coinsMesh->AddBind(std::make_unique<FogConstantBuffer>(deviceResources, &fogEnd, camera, ShaderType::Vertex, 1));
+    // create and return the mesh
+    m_coinsMesh = std::make_unique<Mesh>(deviceResources, sceneLight, transform, L"Textures//coins.dds", L"fog_vs.cso", L"fog_ps.cso", D3D11_CULL_FRONT);
 
-    // Create the index buffer and store a pointer to it
+    m_coinsMesh->AddBind(std::make_unique<VertexBuffer<DirectX::VertexPositionNormalTexture>>(deviceResources, coinsModel.verticies));
+    m_coinsMesh->AddBind((std::make_unique<FogConstantBuffer>(deviceResources, &m_fogEnd, playerCamera, ShaderType::Vertex, 1)));
+    // Create the index buffer
     m_coinsMesh->AddIndexBuffer(std::make_unique<IndexBuffer>(deviceResources, coinsModel.indices));
 }
 
 void Chest::Draw(DX::DeviceResources & deviceResources, DirectX::FXMMATRIX accumulatedTransform) const
 {
-    m_accumulatedTransform = accumulatedTransform;
+    auto playerPos = m_playerCamera->getPosition();
+
+    auto distance = Vector3::Distance(playerPos, m_position);
+
+    if (distance > 30)
+    {
+        return;
+    }
 
     m_chestMesh->Draw(deviceResources, accumulatedTransform);
 
     if (!m_coinsCollected)
     {
         m_coinsMesh->Draw(deviceResources, accumulatedTransform);
+    }
+}
+
+void Chest::Update()
+{
+    if (!m_coinsCollected)
+    {
+        auto playerPos = m_playerCamera->getPosition();
+
+        auto distance = Vector3::Distance(playerPos, m_position);
+
+        if (distance < 1.5)
+        {
+            m_coinsCollected = true;
+            m_playerCamera->chestFound();
+        }
     }
 }

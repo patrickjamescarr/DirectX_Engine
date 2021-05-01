@@ -42,7 +42,7 @@ Mesh::Mesh(
     const wchar_t * vertexShaderFileName, 
     const wchar_t * pixelShaderFileName,
     D3D11_CULL_MODE cullMode
-)
+) : m_transform(transform)
 {
     AddDefaultBindables(deviceResources, light, textureFileName, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

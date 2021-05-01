@@ -7,6 +7,7 @@
 #include "MarchingCubes.h"
 #include "BrownianFunction.h"
 #include "TerrainDensityFunction.h"
+#include "Camera.h"
 
 class MarchingCubesMesh :
     public Mesh
@@ -24,7 +25,9 @@ public:
         DirectX::SimpleMath::Matrix transform,
         const wchar_t * textureFileName,
         const wchar_t * vertexShaderFileName,
-        const wchar_t * pixelShaderFileName
+        const wchar_t * pixelShaderFileName,
+        Camera * camera
+        
     );
 
     void Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accumulatedTransform) const override;
@@ -47,6 +50,8 @@ private:
     DX::DeviceResources& m_deviceResources;
 
     int m_functionType = Simplex;
+
+    float m_fogEnd = 10.0f;
 
     int m_width = 10;
     int m_depth = 10;

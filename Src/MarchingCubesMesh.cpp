@@ -1,34 +1,42 @@
 #include "pch.h"
 #include "MarchingCubesMesh.h"
 #include "GeometryShader.h"
+#include "ModelLoader.h"
+#include "FogConstantBuffer.h"
 
 using namespace DirectX::SimpleMath;
 
-MarchingCubesMesh::MarchingCubesMesh(DX::DeviceResources & deviceResources, Light * sceneLight, DirectX::SimpleMath::Matrix transform, const wchar_t * textureFileName, const wchar_t * vertexShaderFileName, const wchar_t * pixelShaderFileName)
+MarchingCubesMesh::MarchingCubesMesh(DX::DeviceResources & deviceResources, Light * sceneLight, DirectX::SimpleMath::Matrix transform, const wchar_t * textureFileName, const wchar_t * vertexShaderFileName, const wchar_t * pixelShaderFileName, Camera * camera)
     :Mesh(deviceResources, sceneLight, transform, textureFileName, vertexShaderFileName, pixelShaderFileName), 
     m_deviceResources(deviceResources)
 {
+    ModelLoader modelLoader;
+    //auto gs = std::make_unique<GeometryShader>(deviceResources, L"test_gs.cso");
+    //AddBind(std::move(gs));
 
-    auto gs = std::make_unique<GeometryShader>(deviceResources, L"test_gs.cso");
-    AddBind(std::move(gs));
+    //m_terrainFunction = std::make_unique<TerrainDensityFunction>();
+    //m_function = m_terrainFunction.get();
+    //m_functionType = Terrain;
 
-    m_terrainFunction = std::make_unique<TerrainDensityFunction>();
-    m_function = m_terrainFunction.get();
-    m_functionType = Terrain;
+    //m_marchingCubes = std::make_unique<MarchingCubes>(m_function);
 
-    m_marchingCubes = std::make_unique<MarchingCubes>(m_function);
+    //auto modelMesh = m_marchingCubes->Generate(m_width, m_height, m_depth);
 
-    auto modelMesh = m_marchingCubes->Generate(m_width, m_height, m_depth);
+
+    auto chestModel = modelLoader.LoadModel("Models//chest.obj");
 
     // create the vertex buffer and store a pointer to it
-    auto vertexBuffer = std::make_unique<VertexBuffer<DirectX::VertexPositionNormalTexture>>(deviceResources, modelMesh.verticies);
+    auto vertexBuffer = std::make_unique<VertexBuffer<DirectX::VertexPositionNormalTexture>>(deviceResources, chestModel.verticies);
     m_vertexBuffer = vertexBuffer.get();
     AddBind(std::move(vertexBuffer));
 
     // Create the index buffer and store a pointer to it
-    auto indexBuffer = std::make_unique<IndexBuffer>(deviceResources, modelMesh.indices);
+    auto indexBuffer = std::make_unique<IndexBuffer>(deviceResources, chestModel.indices);
     m_indexBuffer = indexBuffer.get();
     AddIndexBuffer(std::move(indexBuffer));
+
+
+    AddBind(std::make_unique<FogConstantBuffer>(deviceResources, &m_fogEnd, camera, ShaderType::Vertex, 1));
 }
 
 void MarchingCubesMesh::Draw(DX::DeviceResources & deviceResources, DirectX::FXMMATRIX accumulatedTransform) const
@@ -40,50 +48,50 @@ void MarchingCubesMesh::Draw(DX::DeviceResources & deviceResources, DirectX::FXM
 
 void MarchingCubesMesh::Update()
 {
-    if (ImGui::Begin("Marching Cubes"))
-    {
-        ImGui::SliderInt("Width", &m_width, 1, 200);
-        ImGui::SliderInt("Depth", &m_height, 1, 200);
-        ImGui::SliderInt("Height", &m_depth, 1, 200);
+    //if (ImGui::Begin("Marching Cubes"))
+    //{
+    //    ImGui::SliderInt("Width", &m_width, 1, 200);
+    //    ImGui::SliderInt("Depth", &m_height, 1, 200);
+    //    ImGui::SliderInt("Height", &m_depth, 1, 200);
 
-        ImGui::SliderFloat("Cube Scale", &m_marchingCubes->m_scale, 0.0f, 1.0f);
-        ImGui::SliderFloat("Iso Level", &m_marchingCubes->m_isoLevel, 0.0f, 1.0f);
+    //    ImGui::SliderFloat("Cube Scale", &m_marchingCubes->m_scale, 0.0f, 1.0f);
+    //    ImGui::SliderFloat("Iso Level", &m_marchingCubes->m_isoLevel, 0.0f, 1.0f);
 
-        static const char * listItems[]{ "Simplex", "Brownian", "Terrain"};
+    //    static const char * listItems[]{ "Simplex", "Brownian", "Terrain"};
 
-        ImGui::ListBox("Terrain Type", &m_functionType, listItems, IM_ARRAYSIZE(listItems));
+    //    ImGui::ListBox("Terrain Type", &m_functionType, listItems, IM_ARRAYSIZE(listItems));
 
-        switch (m_functionType)
-        {
-        case Brownian:
-            m_function = &m_brownianFunction;
-            break;
-        case Terrain:
-            m_function = m_terrainFunction.get();
-            break;
-        case Simplex:
-            m_function = &m_simplexFunction;
-            break;
-        default:
-            break;
-        }
+    //    switch (m_functionType)
+    //    {
+    //    case Brownian:
+    //        m_function = &m_brownianFunction;
+    //        break;
+    //    case Terrain:
+    //        m_function = m_terrainFunction.get();
+    //        break;
+    //    case Simplex:
+    //        m_function = &m_simplexFunction;
+    //        break;
+    //    default:
+    //        break;
+    //    }
 
-        if (m_functionType == Brownian || m_functionType == Terrain)
-        {
-            ShowFBMControls();
-        }
+    //    if (m_functionType == Brownian || m_functionType == Terrain)
+    //    {
+    //        ShowFBMControls();
+    //    }
 
-        if (ImGui::Button("Apply"))
-        {
-            m_marchingCubes->SetFunction(m_function);
+    //    if (ImGui::Button("Apply"))
+    //    {
+    //        m_marchingCubes->SetFunction(m_function);
 
-            auto modelMesh = m_marchingCubes->Generate(m_width, m_height, m_depth);
-            m_vertexBuffer->Update(m_deviceResources, modelMesh.verticies);
-            m_indexBuffer->CreateIndexBuffer(modelMesh.indices, m_deviceResources);
-        }
-    }
+    //        auto modelMesh = m_marchingCubes->Generate(m_width, m_height, m_depth);
+    //        m_vertexBuffer->Update(m_deviceResources, modelMesh.verticies);
+    //        m_indexBuffer->CreateIndexBuffer(modelMesh.indices, m_deviceResources);
+    //    }
+    //}
 
-    ImGui::End();
+    //ImGui::End();
 }
 
 void MarchingCubesMesh::ShowFBMControls()

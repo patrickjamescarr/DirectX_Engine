@@ -189,7 +189,7 @@ void PlayerCamera::setPosition(DirectX::SimpleMath::Vector3 newPosition)
     if(canMoveX)
         m_position.x = newPosition.x;
 
-    if (canMoveY && newPosition.y > 0.2f)
+    if (canMoveY && newPosition.y > 0.5f)
         m_position.y = newPosition.y;
 
     if (canMoveZ)

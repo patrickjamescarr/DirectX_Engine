@@ -50,6 +50,8 @@ private:
     std::unique_ptr<SceneNode> m_terrainNode;
 	std::vector<std::unique_ptr<Mesh>> m_meshes;
 
+    float m_chestRotation = 0;
+
     ModelLoader m_modelLoader;
 
     DirectX::SimpleMath::Matrix m_terrainTransform;

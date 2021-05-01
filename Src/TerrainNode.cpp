@@ -38,11 +38,11 @@ TerrainNode::TerrainNode(
 
     auto halfBlock = mcBlockOffset / 2;
 
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 5; i++)
     {
-        for (int j = 0; j < 20; j++)
+        for (int j = 0; j < 5; j++)
         {
-            for (int k = 0; k < 2; k++)
+            for (int k = 0; k < 1; k++)
             {
                 auto cubeTransform =
                     Matrix::CreateScale(mcScale) *

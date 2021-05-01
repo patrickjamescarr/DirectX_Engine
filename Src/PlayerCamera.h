@@ -20,6 +20,8 @@ public:
     void setDensities7(DirectX::SimpleMath::Vector4 densities) { m_densities_7 = densities; }
 
     void initPosition(DirectX::SimpleMath::Vector3 position) { m_position = position; }
+    void chestFound() { m_chestsFound++; };
+    int  treasureChestsFound() { return m_chestsFound; }
 private:
     Collision* m_collision;
     float m_density;
@@ -30,4 +32,7 @@ private:
     DirectX::SimpleMath::Vector4 m_densities_5;
     DirectX::SimpleMath::Vector4 m_densities_6;
     DirectX::SimpleMath::Vector4 m_densities_7;
+
+    int m_chestsFound = 0;
 };
+

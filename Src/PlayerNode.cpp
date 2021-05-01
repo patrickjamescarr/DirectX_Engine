@@ -18,7 +18,7 @@ PlayerNode::PlayerNode(DX::DeviceResources & deviceResources, PlayerCamera * pla
 
     m_meshes.push_back(std::move(playerCollider));
 
-    //_meshes.push_back(std::make_unique<TerrainCollider>(deviceResources, Matrix::Identity, playerCamera));
+    m_meshes.push_back(std::make_unique<TerrainCollider>(deviceResources, Matrix::Identity, playerCamera));
 
     // Add mesh pointers to the base mesh collection
     for (auto &mesh : m_meshes)
@@ -29,8 +29,6 @@ PlayerNode::PlayerNode(DX::DeviceResources & deviceResources, PlayerCamera * pla
 
 void PlayerNode::Draw(DX::DeviceResources & deviceResources, DirectX::SimpleMath::Matrix accumulatedTransform)
 {
-    Vector2 collisionPoint;
-
     m_transform = Matrix::CreateTranslation(m_playerCamera->getPosition());
 
     // Would need to make this position relative to the accumulated transform if the terrain were to move/rotate...

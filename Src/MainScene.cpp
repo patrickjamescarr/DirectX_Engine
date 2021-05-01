@@ -55,23 +55,24 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
 
     // create the models
 
-    //m_meshes.push_back(std::make_unique<Chest>(deviceResources, Matrix::CreateTranslation(5.0f, 0.1f, 10.0f), m_light.get(), activeCamera));
+    auto crateScale = Matrix::CreateScale(0.02);
 
-    auto chest = m_modelLoader.LoadModel("Models//chest.obj");
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(0), Vector3(5.0f, 0.1f, 5.0f), m_light.get(), m_playerCamera));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(3.14159), Vector3(27.7f, 0.1f, 5.8f), m_light.get(), m_playerCamera));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1.5), Vector3(36.1f, 0.1f, 37.2f), m_light.get(), m_playerCamera));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1.3),Vector3(63.2f, -0.5f, 59.4f), m_light.get(), m_playerCamera));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1.3), Vector3(37.3f, 0.1f, 94.3f), m_light.get(), m_playerCamera));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1), Vector3(89.6f, -0.5f, 125.57f), m_light.get(), m_playerCamera));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1), Vector3(13.71f, -0.2f, 121.48f), m_light.get(), m_playerCamera));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1), Vector3(18.81f, -0.2f, 130.57f), m_light.get(), m_playerCamera));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(-1), Vector3(40.48f, -0.2f, 182.99f), m_light.get(), m_playerCamera));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(-1), Vector3(14.9f, -0.2f, 149.25), m_light.get(), m_playerCamera));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1.5), Vector3(143.13f, 0.1f, 185.27f), m_light.get(), m_playerCamera));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(4), Vector3(185.76, -0.2f, 68.31f), m_light.get(), m_playerCamera));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(0), Vector3(186.15, -0.2f, 41.73f), m_light.get(), m_playerCamera));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(-2), Vector3(118.34, -0.1f, 25.07f), m_light.get(), m_playerCamera));
 
-    auto chestMesh = ParseMesh(deviceResources, chest, m_light.get(), SimpleMath::Matrix::CreateScale(0.02)* Matrix::CreateTranslation(5.0f, 0.1f, 10.0f), L"Textures//chest_simple.dds", L"fog_vs.cso", L"fog_ps.cso");
 
-    chestMesh->AddBind(std::make_unique<FogConstantBuffer>(deviceResources, &fogEnd, m_playerCamera, ShaderType::Vertex, 1));
-
-    m_meshes.push_back(std::move(chestMesh));
-
-    //auto sunModel = m_modelLoader.CreateSphere(5);
-    //m_meshes.push_back(ParseMesh(deviceResources, sunModel, m_sunLight.get(), Matrix::CreateTranslation(Vector3(lightPosition)), L"Textures//sun2.dds", L"light_vs.cso", L"light_ps.cso"));
-
-    //auto mcMeshCpu = std::make_unique<MarchingCubesMesh>(deviceResources, m_light.get(), Matrix::Identity, L"Textures//sun2.dds", L"test_vs.cso", L"test_ps.cso");
-    //
-    //m_meshes.push_back(std::move(mcMeshCpu));
-    
     // store the model mesh pointers in a vector
     std::vector<Mesh*> meshPointers;
 
@@ -100,12 +101,13 @@ void MainScene::Draw(DX::DeviceResources & deviceResources, const DX::StepTimer&
 {
    //m_bloom->SetSceneRenderTarget(deviceResources);
 
-    //if (ImGui::Begin("Collision output"))
-    //{
-    //    ImGui::Text("Camera Position = %f, %f, %f", m_playerCamera->getPosition().x, m_playerCamera->getPosition().y, m_playerCamera->getPosition().z);
-    //}
+    if (ImGui::Begin("Output"))
+    {
+        ImGui::Text("Chests Found: %d", m_playerCamera->treasureChestsFound());
+        ImGui::Text("Camera Position = %f, %f, %f", m_playerCamera->getPosition().x, m_playerCamera->getPosition().y, m_playerCamera->getPosition().z);
+    }
 
-    //ImGui::End();
+    ImGui::End();
 
    //m_skyBox->Draw(deviceResources);
    m_rootNode->Draw(deviceResources, m_transform);

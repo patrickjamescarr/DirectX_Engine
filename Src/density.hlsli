@@ -60,7 +60,7 @@ float DENSITY(float3 ws)
     float4 uulf_rand3 = NMQu(ws*0.000695);
 
 
-    if (ws.y < -30)
+    if (ws.y < -10)
     {
         return -1;
     }

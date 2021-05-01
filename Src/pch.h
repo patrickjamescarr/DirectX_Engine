@@ -28,6 +28,9 @@
 // WinHelp is deprecated
 #define NOHELP
 
+// enable audio
+#define DXTK_AUDIO
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
