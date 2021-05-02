@@ -54,22 +54,15 @@ private:
 
     ID3D11RenderTargetView ** m_bloomRenderTarget;
 
-    std::unique_ptr<OnScreenQuad> m_quad;
+    //std::unique_ptr<OnScreenQuad> m_quad;
 
-    std::unique_ptr<PixelShader> m_build_densities_PS;
-    std::unique_ptr<VertexShader> m_build_densities_VS;
 
     RenderTarget* m_buildDensitiesRT;
     std::vector < std::unique_ptr<Bindable>> m_densityVolumeRenderPass;
 
-    VertexBuffer<DirectX::VertexPosition>* m_densityVertexBuffer;
-
-    RenderTarget* m_generateVertsRT;
     std::vector < std::unique_ptr<Bindable>> m_generateVertsRenderPass;
     VertexBuffer<DirectX::VertexPositionTexture>* m_generateVertsVertexBuffer;
     UINT m_generateVertexCount;
-
-    StreamOutput* m_streamOutput;
 
     std::unique_ptr<Sampler> m_gsSampler;
 

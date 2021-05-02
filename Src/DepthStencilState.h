@@ -10,7 +10,7 @@ public:
 		default,
 		depthOff
 	};
-	DepthStencilState(DX::DeviceResources& deviceResources, State state);
+	DepthStencilState(DX::DeviceResources& deviceResources, State state = State::default);
 	void Bind(DX::DeviceResources& deviceResources) noexcept override;
 private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_state;
