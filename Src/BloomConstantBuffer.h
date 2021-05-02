@@ -17,7 +17,7 @@ public:
         uint8_t na[8];
     };
 
-	static constexpr BloomBufferType bloomSetting = { 0.25f, 4, 1.25f, 1, 1, 1 };
+	static constexpr BloomBufferType bloomSetting = { 0.25f, 2.5, 1.1f, 1, 0.6, 1 };
 
 public:
 	BloomConstantBuffer(DX::DeviceResources& deviceResources);

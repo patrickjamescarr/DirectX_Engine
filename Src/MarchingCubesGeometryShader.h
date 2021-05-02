@@ -34,6 +34,7 @@ public:
         Light * sceneLight,
         Camera* activeCamera,
         ViewingFrustum* viewingFrustum,
+        ID3D11RenderTargetView ** bloomRenderTarget,
         DirectX::SimpleMath::Matrix transform,
         int xPos,
         int yPos,
@@ -50,6 +51,8 @@ public:
     virtual void Update();
 private:
     DX::DeviceResources & m_deviceResources;
+
+    ID3D11RenderTargetView ** m_bloomRenderTarget;
 
     std::unique_ptr<OnScreenQuad> m_quad;
 

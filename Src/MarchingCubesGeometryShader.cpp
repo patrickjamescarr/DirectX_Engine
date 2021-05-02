@@ -25,6 +25,7 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
     Light * sceneLight,
     Camera* playerCamera,
     ViewingFrustum* viewingFrustum,
+    ID3D11RenderTargetView ** bloomRenderTarget,
     SimpleMath::Matrix transform,
     int xPos,
     int yPos,
@@ -35,7 +36,8 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
     float scale
 )
     : Mesh(transform), m_isoLevel(isoLevel), m_dimention(dimention), m_frustum(viewingFrustum), 
-    m_playerCamera(playerCamera), m_scale(scale), m_yPos(yPos), m_fogEnd(fogEnd), m_deviceResources(deviceResources)
+    m_playerCamera(playerCamera), m_scale(scale), m_yPos(yPos), m_fogEnd(fogEnd), m_deviceResources(deviceResources),
+    m_bloomRenderTarget(bloomRenderTarget)
 {
     if (yPos == 0)
     {
@@ -270,7 +272,7 @@ void MarchingCubesGeometryShader::BuildDensityVolumeRenderPass(DX::DeviceResourc
     deviceResources.GetD3DDeviceContext()->DrawInstanced(6, m_dimention, 0, 0);
 
     // reset the render target
-    deviceResources.GetD3DDeviceContext()->OMSetRenderTargets(1, deviceResources.GetRenderTargetViewAddress(), deviceResources.GetDepthStencilView());
+    deviceResources.GetD3DDeviceContext()->OMSetRenderTargets(1, m_bloomRenderTarget, deviceResources.GetDepthStencilView());
 }
 
 void MarchingCubesGeometryShader::GenerateVerticesRenderPass(DX::DeviceResources & deviceResources) const

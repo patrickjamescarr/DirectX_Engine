@@ -12,25 +12,14 @@ TerrainNode::TerrainNode(
     PlayerCamera* playerCamera, 
     Camera* activeCamera,
     ViewingFrustum* frustum,
-    Collision* collision
+    Collision* collision,
+    ID3D11RenderTargetView ** bloomRenderTarget
 )
     : SceneNode(transform), m_light(light), m_playerCamera(playerCamera)
 {
     auto terrainPosition = Matrix::CreateScale(m_scale) * Matrix::CreateTranslation(0.0f, 0.0f, 0.0f);
 
     m_transform = Matrix::CreateTranslation(0.0f, 0.0f, 0.0f);
-
-    //auto terrain = std::make_unique<Terrain>(deviceResources, light, L"Textures//seafloor.dds", terrainPosition, m_terrainWidth, m_terrainHeight, m_scale, playerCamera, frustum);
-
-    //m_meshes.push_back(std::move(terrain));
-
-    //auto terrainColliderOffset = Matrix::CreateTranslation((m_terrainWidth * m_scale) / 2, 0.0f, (m_terrainHeight* m_scale) / 2);
-
-    //auto terrainCollider = std::make_unique<BoxCollider>(deviceResources, terrainPosition * terrainColliderOffset, Vector3(m_terrainWidth, 1.f, m_terrainHeight), m_scale);
-
-    //collision->terrain_collider = terrainCollider.get();
-
-    //m_meshes.push_back(std::move(terrainCollider));
 
     float mcScale = 0.3f;
 
@@ -59,7 +48,7 @@ TerrainNode::TerrainNode(
                 //m_meshes.push_back(std::make_unique<BoxCollider>(deviceResources, cubeTransform, Vector3(m_dimention - 1, m_dimention - 1, m_dimention - 1)));
 
                 m_meshes.push_back(std::make_unique<MarchingCubesGeometryShader>(
-                    deviceResources, light, playerCamera, frustum,
+                    deviceResources, light, playerCamera, frustum, bloomRenderTarget,
                     Matrix::CreateTranslation(Vector3(mcBlockOffset * (float)i, mcBlockOffset * (float)k, mcBlockOffset * (float)j)),
                     i, k, j,
                     &m_isoLevel, &m_fogDistance, m_dimention, mcScale

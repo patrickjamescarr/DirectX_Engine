@@ -91,25 +91,24 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
         meshPointers.push_back(mesh.get());
     }
 
+    // create the effects
+    //m_skyBox = std::make_unique<SkyBox>(deviceResources);
+    //m_lensFlare = std::make_unique<LensFlareEffect>(deviceResources, playerCamera, m_light.get());
+
+    m_bloom = std::make_unique<BloomPostProcessEffect>(deviceResources);
+    m_bloomRenderTarget = m_bloom->GetSceneRenderTarget();
+    
     // create the root node
     m_rootNode = std::make_unique<SceneNode>(std::move(meshPointers), Matrix::Identity);
 
-
-    m_terrainNode = std::make_unique<TerrainNode>(deviceResources, m_terrainTransform, m_light.get(), m_playerCamera, activeCamera, frustum, m_collisionDetector.get());
+    m_terrainNode = std::make_unique<TerrainNode>(deviceResources, m_terrainTransform, m_light.get(), m_playerCamera, activeCamera, frustum, m_collisionDetector.get(), m_bloomRenderTarget);
 
     m_rootNode->AddChild(std::move(m_terrainNode));
-
-
-    // create the effects
-    //m_skyBox = std::make_unique<SkyBox>(deviceResources);
-    //m_bloom = std::make_unique<BloomPostProcessEffect>(deviceResources);
-    //m_lensFlare = std::make_unique<LensFlareEffect>(deviceResources, playerCamera, m_light.get());
-
 }
 
 void MainScene::Draw(DX::DeviceResources & deviceResources, const DX::StepTimer& timer) const
 {
-   //m_bloom->SetSceneRenderTarget(deviceResources);
+   m_bloom->SetSceneRenderTarget(deviceResources);
 
     //if (ImGui::Begin("Output"))
     //{
@@ -118,12 +117,13 @@ void MainScene::Draw(DX::DeviceResources & deviceResources, const DX::StepTimer&
     //}
 
     //ImGui::End();
+   
 
    //m_skyBox->Draw(deviceResources);
    m_rootNode->Draw(deviceResources, m_transform);
 
-
-   //m_bloom->Bind(deviceResources);
+   m_bloom->Bind(deviceResources);
+   
 
    //m_lensFlare->Draw(deviceResources);
 }

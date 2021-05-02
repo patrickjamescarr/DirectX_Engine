@@ -72,6 +72,9 @@ private:
 
     // Post processing
     std::unique_ptr<BloomPostProcessEffect> m_bloom;
+
+    ID3D11RenderTargetView ** m_bloomRenderTarget;
+
     std::unique_ptr<LensFlareEffect> m_lensFlare;
 
     // Scene transformation matrix

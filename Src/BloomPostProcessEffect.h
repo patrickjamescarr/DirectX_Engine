@@ -21,6 +21,8 @@ public:
 	BloomPostProcessEffect(DX::DeviceResources& deviceResources);
 	void Bind(DX::DeviceResources& deviceResources) noexcept override;
     void SetSceneRenderTarget(DX::DeviceResources & deviceResources);
+    ID3D11RenderTargetView ** GetSceneRenderTarget() { return m_sceneRenderTarget.GetAddressOf(); }
+
 private:
     ID3D11DeviceContext* m_deviceContext;
 

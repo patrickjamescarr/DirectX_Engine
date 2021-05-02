@@ -158,6 +158,10 @@ void BloomPostProcessEffect::Bind(DX::DeviceResources & deviceResources) noexcep
 
 void BloomPostProcessEffect::SetSceneRenderTarget(DX::DeviceResources & deviceResources)
 {
+    XMVECTORF32 darkBlue = { { { 0.0f, 0.412f, 0.58f, 1.000000000f } } };
+
+    deviceResources.GetD3DDeviceContext()->ClearRenderTargetView(m_sceneRenderTarget.Get(), darkBlue);
+
     deviceResources.GetD3DDeviceContext()->OMSetRenderTargets(1,  m_sceneRenderTarget.GetAddressOf(), deviceResources.GetDepthStencilView());
 }
 

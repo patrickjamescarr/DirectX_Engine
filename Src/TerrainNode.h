@@ -18,7 +18,8 @@ public:
         PlayerCamera* playerCamera, 
         Camera* activeCamera,
         ViewingFrustum* frustum, 
-        Collision* collision
+        Collision* collision,
+        ID3D11RenderTargetView ** bloomRenderTarget
     );
     void Draw(DX::DeviceResources& deviceResources, DirectX::SimpleMath::Matrix accumulatedTransform) override;
 private:

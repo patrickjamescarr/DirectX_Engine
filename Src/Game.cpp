@@ -230,13 +230,13 @@ void Game::Update(DX::StepTimer const& timer)
 
     Vector3 rotation = m_activeCamera->getRotation();
 
-    //if (ImGui::Begin("Performance"))
-    //{
-    //    ImGui::Text("FPS: %d", m_timer.GetFramesPerSecond());
-    //    ImGui::Text("rotation: %f, %f, %f", rotation.x, rotation.y, rotation.z);
-    //}
+    if (ImGui::Begin("Performance"))
+    {
+        ImGui::Text("FPS: %d", m_timer.GetFramesPerSecond());
+        //ImGui::Text("rotation: %f, %f, %f", rotation.x, rotation.y, rotation.z);
+    }
 
-    //ImGui::End();
+    ImGui::End();
 
     if (m_input.Quit())
     {
@@ -252,8 +252,6 @@ void Game::UpdateCameras()
     //{
     //    m_activeCamera = m_activeCamera == m_playerCamera ? m_renderToTextureCamera : m_playerCamera;
     //}
-
-
 
     // Rotation
     Vector3 rotation = m_activeCamera->getRotation();
