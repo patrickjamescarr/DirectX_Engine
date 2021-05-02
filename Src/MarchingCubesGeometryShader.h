@@ -48,7 +48,6 @@ public:
     void BuildDensityVolumeRenderPass(DX::DeviceResources & deviceResources) const;
     void GenerateVerticesRenderPass(DX::DeviceResources & deviceResources) const;
     virtual void Update();
-    void GetVertexDataFromGeometryShader() const;
 private:
     DX::DeviceResources & m_deviceResources;
 
@@ -92,7 +91,5 @@ private:
     bool m_drawn = false;
 
     TerrainDensityFunction m_density;
-
-    //mutable std::thread m_streamOutThread;
 };
 

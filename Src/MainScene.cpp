@@ -25,7 +25,7 @@ MainScene::MainScene()
 {
 }
 
-void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* playerCamera, Camera* activeCamera, ViewingFrustum* frustum)
+void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* playerCamera, Camera* activeCamera, ViewingFrustum* frustum, AudioEngine* audioEngine)
 {
     m_playerCamera = playerCamera;
 
@@ -53,25 +53,35 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
 
     m_terrainTransform = Matrix::CreateScale(0.1) * Matrix::CreateTranslation(-10.0f, 0.0f, 0.0f);
 
-    // create the models
+    m_coinsSFX = std::make_unique<SoundEffect>(audioEngine, L"Sound\\coins.wav");
 
     auto crateScale = Matrix::CreateScale(0.02);
 
-    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(0), Vector3(5.0f, 0.1f, 5.0f), m_light.get(), m_playerCamera));
-    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(3.14159), Vector3(27.7f, 0.1f, 5.8f), m_light.get(), m_playerCamera));
-    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1.5), Vector3(36.1f, 0.1f, 37.2f), m_light.get(), m_playerCamera));
-    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1.3),Vector3(63.2f, -0.5f, 59.4f), m_light.get(), m_playerCamera));
-    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1.3), Vector3(37.3f, 0.1f, 94.3f), m_light.get(), m_playerCamera));
-    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1), Vector3(89.6f, -0.5f, 125.57f), m_light.get(), m_playerCamera));
-    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1), Vector3(13.71f, -0.2f, 121.48f), m_light.get(), m_playerCamera));
-    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1), Vector3(18.81f, -0.2f, 130.57f), m_light.get(), m_playerCamera));
-    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(-1), Vector3(40.48f, -0.2f, 182.99f), m_light.get(), m_playerCamera));
-    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(-1), Vector3(14.9f, -0.2f, 149.25), m_light.get(), m_playerCamera));
-    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1.5), Vector3(143.13f, 0.1f, 185.27f), m_light.get(), m_playerCamera));
-    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(4), Vector3(185.76, -0.2f, 68.31f), m_light.get(), m_playerCamera));
-    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(0), Vector3(186.15, -0.2f, 41.73f), m_light.get(), m_playerCamera));
-    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(-2), Vector3(118.34, -0.1f, 25.07f), m_light.get(), m_playerCamera));
 
+    // create the chest
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(0), Vector3(5.0f, 0.1f, 5.0f), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(3.14159), Vector3(25.6f, 0.1f, 12.6f), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1.5), Vector3(42.66f, 0.1f, 45.23f), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1.3),Vector3(69.01f, 3.62f, 58.92f), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1.3), Vector3(39.96f, 0.1f, 84.02f), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(5), Vector3(94.65f, 0.2f, 110.55f), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(4), Vector3(2.71f, -0.2f, 103.75f), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1), Vector3(23.f, -0.2f, 130.57f), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(-1), Vector3(49.5, -0.2f, 188.5f), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(-1), Vector3(15.2f, -0.2f, 152.5f), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(1.5), Vector3(143.13f, 0.1f, 185.27f), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(4), Vector3(169, 0.2f, 66), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(0), Vector3(129.31, 0.3f, 149.f), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(-2), Vector3(119.5, -0.1f, 139.12f), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(-2), Vector3(178.82, -0.1f, 98.79f), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(-2), Vector3(143.86, -0.1f, 51.91), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(5), Vector3(99.81, -0.1f, 50.99), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(5), Vector3(120.14, -0.1f, 34.61), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(5), Vector3(98.21, -0.1f, 2.82), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(5), Vector3(51.44, -0.1f, 5.84), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(0), Vector3(94.97, -0.1f, 98.08), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(-5), Vector3(56.39, -0.1f, 87.94), m_light.get(), m_playerCamera, m_coinsSFX.get()));
+    m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(2.5), Vector3(143.5, 0.2f, 129.67), m_light.get(), m_playerCamera, m_coinsSFX.get()));
 
     // store the model mesh pointers in a vector
     std::vector<Mesh*> meshPointers;
@@ -101,13 +111,13 @@ void MainScene::Draw(DX::DeviceResources & deviceResources, const DX::StepTimer&
 {
    //m_bloom->SetSceneRenderTarget(deviceResources);
 
-    if (ImGui::Begin("Output"))
-    {
-        ImGui::Text("Chests Found: %d", m_playerCamera->treasureChestsFound());
-        ImGui::Text("Camera Position = %f, %f, %f", m_playerCamera->getPosition().x, m_playerCamera->getPosition().y, m_playerCamera->getPosition().z);
-    }
+    //if (ImGui::Begin("Output"))
+    //{
+    //    ImGui::Text("Chests Found: %d", m_playerCamera->treasureChestsFound());
+    //    ImGui::Text("Camera Position = %f, %f, %f", m_playerCamera->getPosition().x, m_playerCamera->getPosition().y, m_playerCamera->getPosition().z);
+    //}
 
-    ImGui::End();
+    //ImGui::End();
 
    //m_skyBox->Draw(deviceResources);
    m_rootNode->Draw(deviceResources, m_transform);

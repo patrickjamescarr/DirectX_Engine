@@ -26,14 +26,14 @@ void PlayerCamera::setPosition(DirectX::SimpleMath::Vector3 newPosition)
     //    return;
     //}
 
-    if (m_collision == nullptr)
-    {
-        m_position.x = newPosition.x;
-        m_position.y = newPosition.y;
-        m_position.z = newPosition.z;
+    //if (m_collision == nullptr)
+    //{
+    //    m_position.x = newPosition.x;
+    //    m_position.y = newPosition.y;
+    //    m_position.z = newPosition.z;
 
-        return;
-    }
+    //    return;
+    //}
 
     bool movingRight = (newPosition.x - m_position.x) > 0;
     bool movingLeft = (newPosition.x - m_position.x) < 0;
@@ -186,12 +186,12 @@ void PlayerCamera::setPosition(DirectX::SimpleMath::Vector3 newPosition)
         canMoveY = m_densities_7.y < 0;
     }
 
-    if(canMoveX)
+    if(canMoveX && newPosition.x > 0.0f && newPosition.x < m_boundry.x)
         m_position.x = newPosition.x;
 
-    if (canMoveY && newPosition.y > 0.5f)
+    if (canMoveY && newPosition.y > 0.5f && newPosition.y < m_boundry.y)
         m_position.y = newPosition.y;
 
-    if (canMoveZ)
+    if (canMoveZ && newPosition.z > 0.0f && newPosition.z < m_boundry.z)
         m_position.z = newPosition.z;
 }

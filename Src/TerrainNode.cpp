@@ -38,11 +38,15 @@ TerrainNode::TerrainNode(
 
     auto halfBlock = mcBlockOffset / 2;
 
-    for (int i = 0; i < 5; i++)
+    int height = 1;
+    int width = 10;
+    int length = 10;
+
+    for (int i = 0; i < width; i++)
     {
-        for (int j = 0; j < 5; j++)
+        for (int j = 0; j < length; j++)
         {
-            for (int k = 0; k < 1; k++)
+            for (int k = 0; k < height; k++)
             {
                 auto cubeTransform =
                     Matrix::CreateScale(mcScale) *
@@ -70,6 +74,8 @@ TerrainNode::TerrainNode(
         AddMesh(mesh.get());
     }
 
+    m_playerCamera->setBoundry(Vector3((float)width * mcBlockOffset, (float)height * mcBlockOffset, (float)length * mcBlockOffset));
+
     // add children 
 
     m_playerNode = std::make_unique<PlayerNode>(deviceResources, playerCamera, collision);
@@ -94,13 +100,13 @@ void TerrainNode::Draw(DX::DeviceResources & deviceResources, DirectX::SimpleMat
 
     //ImGui::End();
 
-    if (ImGui::Begin("Marching Cubes"))
-    {
-        ImGui::SliderFloat("Iso Level", &m_isoLevel, 0, 30.0f);
-        ImGui::SliderFloat("Fog Distance", &m_fogDistance, 0, 100.0f);
-    }
+    //if (ImGui::Begin("Marching Cubes"))
+    //{
+    //    ImGui::SliderFloat("Iso Level", &m_isoLevel, 0, 30.0f);
+    //    ImGui::SliderFloat("Fog Distance", &m_fogDistance, 0, 100.0f);
+    //}
 
-    ImGui::End();
+    //ImGui::End();
 
     SceneNode::Draw(deviceResources, accumulatedTransform);
 }

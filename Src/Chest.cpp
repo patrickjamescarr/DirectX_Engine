@@ -11,8 +11,16 @@
 
 using namespace DirectX::SimpleMath;
 
-Chest::Chest(DX::DeviceResources & deviceResources, DirectX::SimpleMath::Matrix scale, DirectX::SimpleMath::Matrix rotation, DirectX::SimpleMath::Vector3 position, Light * sceneLight, PlayerCamera* playerCamera)
-    : Mesh(scale * rotation * Matrix::CreateTranslation(position)), m_playerCamera(playerCamera), m_position(position)
+Chest::Chest(
+    DX::DeviceResources & deviceResources, 
+    DirectX::SimpleMath::Matrix scale, 
+    DirectX::SimpleMath::Matrix rotation, 
+    DirectX::SimpleMath::Vector3 position, 
+    Light * sceneLight, 
+    PlayerCamera* playerCamera,
+    SoundEffect* coinSoundFx
+)
+    : Mesh(scale * rotation * Matrix::CreateTranslation(position)), m_playerCamera(playerCamera), m_position(position), m_coinSoundFx(coinSoundFx)
 {
     ModelLoader modelLoader;
     auto chestModel = modelLoader.LoadModel("Models//chest.obj");
@@ -37,6 +45,8 @@ Chest::Chest(DX::DeviceResources & deviceResources, DirectX::SimpleMath::Matrix 
     m_coinsMesh->AddBind((std::make_unique<FogConstantBuffer>(deviceResources, &m_fogEnd, playerCamera, ShaderType::Vertex, 1)));
     // Create the index buffer
     m_coinsMesh->AddIndexBuffer(std::make_unique<IndexBuffer>(deviceResources, coinsModel.indices));
+
+    m_coinFxInstance = coinSoundFx->CreateInstance();
 }
 
 void Chest::Draw(DX::DeviceResources & deviceResources, DirectX::FXMMATRIX accumulatedTransform) const
@@ -70,6 +80,7 @@ void Chest::Update()
         {
             m_coinsCollected = true;
             m_playerCamera->chestFound();
+            m_coinFxInstance->Play();
         }
     }
 }

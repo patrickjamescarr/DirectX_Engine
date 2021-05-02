@@ -60,6 +60,7 @@ private:
 
     void Update(DX::StepTimer const& timer);
     void UpdateCameras();
+    void UpdateCameraView();
     void Render();
     void Clear();
     void CreateDeviceDependentResources();
@@ -82,7 +83,9 @@ private:
     std::unique_ptr<DirectX::BasicEffect>                                   m_batchEffect;
     std::unique_ptr<DirectX::EffectFactory>                                 m_fxFactory;
     std::unique_ptr<DirectX::SpriteBatch>                                   m_sprites;
-    std::unique_ptr<DirectX::SpriteFont>                                    m_font;
+    std::unique_ptr<DirectX::SpriteFont>                                    m_titleFont;
+    std::unique_ptr<DirectX::SpriteFont>                                    m_subTitleFont;
+    std::unique_ptr<DirectX::SpriteFont>                                    m_hudFont;
 
     // Scene Objects
     std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>  m_batch;
@@ -124,4 +127,18 @@ private:
     DirectX::SimpleMath::Matrix                                             m_projection;
 
     const float                                                             m_screeDepth = 100.0f;
+
+    bool                                                                    m_showTitleScreen = true;
+    bool                                                                    m_showInfo = true;
+
+    // player position
+    DirectX::SimpleMath::Vector3                                            m_titlePosition;
+    DirectX::SimpleMath::Vector3                                            m_titleRotation;
+
+    DirectX::SimpleMath::Vector3                                            m_startPosition;
+    DirectX::SimpleMath::Vector3                                            m_startRotation;
+
+    DirectX::SimpleMath::Vector3                                            m_currentPosition;
+    DirectX::SimpleMath::Vector3                                            m_currentRotation;
+
 };

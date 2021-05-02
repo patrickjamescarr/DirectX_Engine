@@ -11,7 +11,7 @@ namespace
 	constexpr float MOVEMENT_GAIN = 0.07f;
 }
 
-Input::Input() : m_MouseMode(DirectX::Mouse::MODE_RELATIVE)
+Input::Input() : m_MouseMode(DirectX::Mouse::MODE_ABSOLUTE)
 {
 }
 
@@ -53,15 +53,30 @@ void Input::Update()
 		m_quitApp = true;
 	}
 
-    if (m_KeyboardTracker.pressed.F1)
-    {
-        m_MouseMode = m_MouseMode == Mouse::MODE_RELATIVE ? Mouse::MODE_ABSOLUTE : Mouse::MODE_RELATIVE;
-        m_mouse->SetMode(m_MouseMode);
-    }
-
 	UpdateMouseMovement(mouse);
 
 	UpdateKeyboardInput(kb);
+}
+
+bool Input::UpdateMouseMode()
+{
+    auto kb = m_keyboard->GetState();	//updates the basic keyboard state
+    m_KeyboardTracker.Update(kb);		//updates the more feature filled state. Press / release etc. 
+
+    if (kb.Escape)// check has escape been pressed.  if so, quit out. 
+    {
+        m_quitApp = true;
+        return false;
+    }
+
+    if ((m_KeyboardTracker.pressed.F1 && m_MouseMode == Mouse::MODE_RELATIVE) || (m_KeyboardTracker.pressed.Enter && m_MouseMode == Mouse::MODE_ABSOLUTE))
+    {
+        m_MouseMode = m_MouseMode == Mouse::MODE_RELATIVE ? Mouse::MODE_ABSOLUTE : Mouse::MODE_RELATIVE;
+        m_mouse->SetMode(m_MouseMode);
+        return true;
+    }
+
+    return false;
 }
 
 void Input::UpdateKeyboardInput(DirectX::Keyboard::State &kb)

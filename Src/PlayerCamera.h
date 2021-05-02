@@ -19,6 +19,8 @@ public:
     void setDensities6(DirectX::SimpleMath::Vector4 densities) { m_densities_6 = densities; }
     void setDensities7(DirectX::SimpleMath::Vector4 densities) { m_densities_7 = densities; }
 
+    void setBoundry(DirectX::SimpleMath::Vector3 boundry) { m_boundry = boundry; }
+
     void initPosition(DirectX::SimpleMath::Vector3 position) { m_position = position; }
     void chestFound() { m_chestsFound++; };
     int  treasureChestsFound() { return m_chestsFound; }
@@ -32,6 +34,9 @@ private:
     DirectX::SimpleMath::Vector4 m_densities_5;
     DirectX::SimpleMath::Vector4 m_densities_6;
     DirectX::SimpleMath::Vector4 m_densities_7;
+
+    
+    DirectX::SimpleMath::Vector3 m_boundry;
 
     int m_chestsFound = 0;
 };

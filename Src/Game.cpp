@@ -81,12 +81,19 @@ void Game::Initialize(HWND window, int width, int height)
     m_CameraViewRect.bottom = 240;
 
     //setup camera
-    m_playerCamera->initPosition(Vector3(5.0f, 0.1f, 5.0f));
-    m_playerCamera->setHeight(1.0f);
-    m_playerCamera->setRotation(Vector3(-90.0f, 0.0f, 180.0f));	//orientation is -90 becuase zero will be looking up at the sky straight up. 
+
+    m_titlePosition = Vector3(23.9194317, 0.648975432, 13.3919287);
+    m_titleRotation = Vector3(-83.244370, -48.061272, 180.000000);
+
+    m_currentPosition = Vector3(5.304, 2.8422, 23.4729);
+    m_currentRotation = Vector3(-91.12, -79.95, 180.000000);
+
+    m_playerCamera->initPosition(m_titlePosition);
+    m_playerCamera->setHeight(0.648975432);
+    m_playerCamera->setRotation(m_titleRotation);	//orientation is -90 becuase zero will be looking up at the sky straight up. 
 
     m_renderToTextureCamera->setPosition(Vector3(9.f, 1.0f, 6.f));
-    m_renderToTextureCamera->setRotation(Vector3(-90.0f, 0.0f, 0.0f));//orientation is -90 becuase zero will be looking up at the sky straight up. 
+    m_renderToTextureCamera->setRotation(Vector3(-85.6783371, 55.7404251, 180.000000));//orientation is -90 becuase zero will be looking up at the sky straight up. 
 
     // Set main camera as the active camera
     m_activeCamera = m_playerCamera;
@@ -107,26 +114,56 @@ void Game::Initialize(HWND window, int width, int height)
     m_audioTimerAcc = 10.f;
     m_retryDefault = false;
 
-    m_waveBank = std::make_unique<WaveBank>(m_audEngine.get(), L"adpcmdroid.xwb");
+    //m_waveBank = std::make_unique<WaveBank>(m_audEngine.get(), L"adpcmdroid.xwb");
 
-    m_soundEffect = std::make_unique<SoundEffect>(m_audEngine.get(), L"MusicMono_adpcm.wav");
+    m_soundEffect = std::make_unique<SoundEffect>(m_audEngine.get(), L"Sound\\underwater-loop-amb.wav");
     m_effect1 = m_soundEffect->CreateInstance();
-    m_effect2 = m_waveBank->CreateInstance(10);
+
+    //m_effect2 = m_waveBank->CreateInstance(10);
 
     m_effect1->Play(true);
-    m_effect2->Play();
+    //m_effect2->Play();
 #endif
+
+    m_mainScene.Initialise(*m_deviceResources, m_playerCamera.get(), m_activeCamera.get(), m_frustum.get(), m_audEngine.get());
+
+    UpdateCameras();
 }
 
 #pragma region Frame Update
 // Executes the basic game loop.
 void Game::Tick()
 {
-    //take in input
-    m_input.Update();								//update the hardware
-    m_gameInputCommands = m_input.getGameInput();	//retrieve the input for our game
-    m_mouseMovement = m_input.getMouseMovement();
+    if (m_input.UpdateMouseMode())
+    {
+        if (m_input.AllowGameInput())
+        {
+            m_showInfo = false;
+            m_playerCamera->initPosition(m_currentPosition);
+            m_playerCamera->setHeight(m_currentPosition.y);
+            m_playerCamera->setRotation(m_currentRotation);
+            UpdateCameraView();
+        }
+        else
+        {
+            m_showInfo = true;
 
+            m_currentPosition = m_playerCamera->getPosition();
+            m_currentRotation = m_playerCamera->getRotation();
+
+            m_playerCamera->initPosition(m_titlePosition);
+            m_playerCamera->setHeight(m_titlePosition.y);
+            m_playerCamera->setRotation(m_titleRotation);
+            UpdateCameraView();
+        }
+    }
+
+    if (m_input.AllowGameInput())
+    {
+        m_input.Update();								//update the hardware
+        m_gameInputCommands = m_input.getGameInput();	//retrieve the input for our game
+        m_mouseMovement = m_input.getMouseMovement();
+    }
 
     //Update all game objects
     m_timer.Tick([&]()
@@ -146,7 +183,6 @@ void Game::Tick()
         m_retryDefault = true;
     }
 #endif
-
 
 }
 
@@ -168,7 +204,7 @@ void Game::Update(DX::StepTimer const& timer)
     m_world = Matrix::Identity;
 
 #ifdef DXTK_AUDIO
-    m_audioTimerAcc -= (float)timer.GetElapsedSeconds();
+    m_audioTimerAcc -= (float)timer.GetDeltaTime();
     if (m_audioTimerAcc < 0)
     {
         if (m_retryDefault)
@@ -192,6 +228,16 @@ void Game::Update(DX::StepTimer const& timer)
     }
 #endif
 
+    Vector3 rotation = m_activeCamera->getRotation();
+
+    //if (ImGui::Begin("Performance"))
+    //{
+    //    ImGui::Text("FPS: %d", m_timer.GetFramesPerSecond());
+    //    ImGui::Text("rotation: %f, %f, %f", rotation.x, rotation.y, rotation.z);
+    //}
+
+    //ImGui::End();
+
     if (m_input.Quit())
     {
         ExitGame();
@@ -201,11 +247,11 @@ void Game::Update(DX::StepTimer const& timer)
 }
 void Game::UpdateCameras()
 {
-    // Toggle camera
-    if (m_gameInputCommands.toggleCamera)
-    {
-        m_activeCamera = m_activeCamera == m_playerCamera ? m_renderToTextureCamera : m_playerCamera;
-    }
+    //// Toggle camera
+    //if (m_gameInputCommands.toggleCamera)
+    //{
+    //    m_activeCamera = m_activeCamera == m_playerCamera ? m_renderToTextureCamera : m_playerCamera;
+    //}
 
 
 
@@ -237,6 +283,10 @@ void Game::UpdateCameras()
 
 
 
+    UpdateCameraView();
+}
+void Game::UpdateCameraView()
+{
     m_activeCamera->Update();	//camera update.
     m_renderToTextureCamera->Update();
 
@@ -262,10 +312,7 @@ void Game::Render()
     auto renderTargetView = m_deviceResources->GetRenderTargetView();
     auto depthTargetView = m_deviceResources->GetDepthStencilView();
 
-    // Draw Text to the screen  
-    m_sprites->Begin();
-    m_font->DrawString(m_sprites.get(), L"Procedural Methods", XMFLOAT2(10, 10), Colors::Yellow);
-    m_sprites->End();
+
 
     //Set Rendering states. 
     context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
@@ -278,6 +325,21 @@ void Game::Render()
     //render our GUI
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+    // Draw Text to the screen
+    m_sprites->Begin();
+    if (m_showInfo)
+    {
+        m_titleFont->DrawString(m_sprites.get(), L"Sunken Treasure", XMFLOAT2(50, 50), Colors::Gold);
+        m_subTitleFont->DrawString(m_sprites.get(), L"Press Enter to start", XMFLOAT2(50, 500), Colors::Gold);
+    }
+    else 
+    {
+        std::string chestsFound = "Treasure chests found: " + std::to_string(m_playerCamera->treasureChestsFound()) + " / 23";
+        m_hudFont->DrawString(m_sprites.get(), chestsFound.c_str(), XMFLOAT2(10, 10), Colors::Gold);
+    }
+
+    m_sprites->End();
 
     m_deviceResources->Present();
 }
@@ -377,12 +439,14 @@ void Game::CreateDeviceDependentResources()
     m_states = std::make_unique<CommonStates>(device);
     m_fxFactory = std::make_unique<EffectFactory>(device);
     m_sprites = std::make_unique<SpriteBatch>(context);
-    m_font = std::make_unique<SpriteFont>(device, L"SegoeUI_18.spritefont");
+    m_titleFont = std::make_unique<SpriteFont>(device, L"treasureMapDeadhand_150.spritefont");
+    m_subTitleFont = std::make_unique<SpriteFont>(device, L"treasureMapDeadhand_72.spritefont");
+    m_hudFont = std::make_unique<SpriteFont>(device, L"treasureMapDeadhand.spritefont");
     m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
     m_frustum = std::make_unique<ViewingFrustum>();
 
-    m_mainScene.Initialise(*m_deviceResources, m_playerCamera.get(), m_activeCamera.get(), m_frustum.get());
+    
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
@@ -423,7 +487,9 @@ void Game::OnDeviceLost()
     m_states.reset();
     m_fxFactory.reset();
     m_sprites.reset();
-    m_font.reset();
+    m_titleFont.reset();
+    m_subTitleFont.reset();
+    m_hudFont.reset();
     m_batch.reset();
     m_batchInputLayout.Reset();
 }

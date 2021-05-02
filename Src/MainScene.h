@@ -19,7 +19,7 @@ class MainScene
 {
 public:
 	MainScene();
-	void Initialise(DX::DeviceResources& deviceResources, PlayerCamera* playerCamera, Camera* activeCamera, ViewingFrustum* frustum);
+	void Initialise(DX::DeviceResources& deviceResources, PlayerCamera* playerCamera, Camera* activeCamera, ViewingFrustum* frustum, AudioEngine* audioEngine);
 	void Draw(DX::DeviceResources& deviceResources, const DX::StepTimer& timer) const;
 private:
 
@@ -82,5 +82,8 @@ private:
 
 
     std::unique_ptr<Collision> m_collisionDetector;
+
+    std::unique_ptr<DirectX::SoundEffect>                                   m_coinsSFX;
+    std::unique_ptr<DirectX::SoundEffectInstance>                           m_coinsEffect;
 };
 

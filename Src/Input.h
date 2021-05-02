@@ -28,6 +28,7 @@ public:
 	~Input();
 	void Initialise(HWND window);
 	void Update();
+    bool UpdateMouseMode();
 	void UpdateKeyboardInput(DirectX::Keyboard::State &kb);
 	void UpdateMouseMovement(DirectX::Mouse::State &mouse);
 	bool Quit();

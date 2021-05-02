@@ -35,7 +35,7 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
     float scale
 )
     : Mesh(transform), m_isoLevel(isoLevel), m_dimention(dimention), m_frustum(viewingFrustum), 
-    m_playerCamera(playerCamera), m_scale(scale), m_yPos(yPos), m_fogEnd(fogEnd), m_deviceResources(deviceResources)//, m_streamOutThread{}
+    m_playerCamera(playerCamera), m_scale(scale), m_yPos(yPos), m_fogEnd(fogEnd), m_deviceResources(deviceResources)
 {
     if (yPos == 0)
     {
@@ -189,13 +189,6 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
 
         // Create the input layout
         m_generateVertsRenderPass.push_back(std::make_unique<InputLayout>(deviceResources, layout, vsBytecode));
-
-        //int bufferSize = pow((m_dimention - 1), 3) * sizeof(GSOutput) * 15;;
-
-        //// create stream output stage to access vertices created in the geometry shader
-        //auto streamOutput = std::make_unique<StreamOutput>(deviceResources, bufferSize);
-        //m_streamOutput = streamOutput.get();
-        //m_generateVertsRenderPass.push_back(std::move(streamOutput));
     }
 }
 
@@ -242,10 +235,6 @@ void MarchingCubesGeometryShader::Draw(
 
 
     RenderCubeTerrain(deviceResources, accumulatedTransform);
-
-    // GetVertexDataFromGeometryShader();
-
-    //m_streamOutThread = std::thread{ &MarchingCubesGeometryShader::GetVertexDataFromGeometryShader, this };
 }
 
 void MarchingCubesGeometryShader::RenderCubeTerrain(DX::DeviceResources & deviceResources, const DirectX::XMMATRIX &accumulatedTransform) const
@@ -325,48 +314,12 @@ void MarchingCubesGeometryShader::Update()
 
     m_playerCamera->playerDensityPosition = Vector3(playerX, playerY, playerZ);
 
-    if (ImGui::Begin("Cube Collision"))
-    {
-        ImGui::Text("Player in cube x:%f, y:%f, z:%f", m_worldPosition.x, m_worldPosition.y, m_worldPosition.z);
+    //if (ImGui::Begin("Cube Collision"))
+    //{
+    //    ImGui::Text("Player in cube x:%f, y:%f, z:%f", m_worldPosition.x, m_worldPosition.y, m_worldPosition.z);
 
-        ImGui::Text("Player world pos x:%f, y:%f, z:%f", playerX, playerY, playerZ);
-    }
+    //    ImGui::Text("Player world pos x:%f, y:%f, z:%f", playerX, playerY, playerZ);
+    //}
 
-    ImGui::End();
-}
-
-void MarchingCubesGeometryShader::GetVertexDataFromGeometryShader() const
-{
-    if (!m_vertexData.empty()) return;
-
-    auto output = m_streamOutput->GetOutputBuffer();
-
-    D3D11_BUFFER_DESC bufferDesc;
-
-    output->GetDesc(&bufferDesc);
-
-    bufferDesc.BindFlags = 0;
-    bufferDesc.Usage = D3D11_USAGE_STAGING;
-    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-
-    Microsoft::WRL::ComPtr<ID3D11Buffer> stagingBuffer;
-
-    DX::ThrowIfFailed(m_deviceResources.GetD3DDevice()->CreateBuffer(&bufferDesc, nullptr, stagingBuffer.GetAddressOf()));
-
-    m_deviceResources.GetD3DDeviceContext()->CopyResource(stagingBuffer.Get(), output);
-
-    D3D11_MAPPED_SUBRESOURCE mappedResource;
-    GSOutput* vertexData;
-
-    m_deviceResources.GetD3DDeviceContext()->Map(stagingBuffer.Get(), 0, D3D11_MAP_READ, 0, &mappedResource);
-
-    auto arraySize = (int)pow((m_dimention - 1), 3) * 15;
-
-    vertexData = (GSOutput*)mappedResource.pData;
-
-    //std::vector<GSOutput> test(arraySize);
-
-    //copy(vertexData, vertexData + arraySize, test.begin());
-
-    //m_vertexData = test;
+    //ImGui::End();
 }
