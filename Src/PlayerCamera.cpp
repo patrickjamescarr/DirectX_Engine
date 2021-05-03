@@ -14,27 +14,16 @@ void PlayerCamera::setHeight(float height)
 
 void PlayerCamera::setPosition(DirectX::SimpleMath::Vector3 newPosition)
 {
-    //if (m_density < 0)
-    //{
-    //    m_position.x = newPosition.x;
-    //    m_position.y = newPosition.y;
-    //    m_position.z = newPosition.z;
-    //    return;
-    //}
-    //else
-    //{
-    //    return;
-    //}
+    if (m_collisionDisabled)
+    {
+        m_position.x = newPosition.x;
+        m_position.y = newPosition.y;
+        m_position.z = newPosition.z;
 
-    //if (m_collision == nullptr)
-    //{
-    //    m_position.x = newPosition.x;
-    //    m_position.y = newPosition.y;
-    //    m_position.z = newPosition.z;
+        return;
+    }
 
-    //    return;
-    //}
-
+    // determine which axes of direction we're moving in
     bool movingRight = (newPosition.x - m_position.x) > 0;
     bool movingLeft = (newPosition.x - m_position.x) < 0;
     bool movingForward = (newPosition.z - m_position.z) > 0;
@@ -42,11 +31,11 @@ void PlayerCamera::setPosition(DirectX::SimpleMath::Vector3 newPosition)
     bool movingUp = (newPosition.y - m_position.y) > 0;
     bool movingDown = (newPosition.y - m_position.y) < 0;
 
-
     bool canMoveX = false;
     bool canMoveY = false;
     bool canMoveZ = false;
 
+    // 3D up conditions
     if (movingForward && movingUp && movingRight)
     {
         canMoveX = m_densities_3.z < 0;
@@ -72,6 +61,7 @@ void PlayerCamera::setPosition(DirectX::SimpleMath::Vector3 newPosition)
         canMoveZ = m_densities_5.x < 0;
     }
 
+    // 3D down conditions
     else if (movingForward && movingDown && movingRight)
     {
         canMoveX = m_densities_5.z < 0;
@@ -97,7 +87,7 @@ void PlayerCamera::setPosition(DirectX::SimpleMath::Vector3 newPosition)
         canMoveZ = m_densities_7.x < 0;
     }
 
-
+    // 2D up conditions
     else if (movingForward && movingUp)
     {
         canMoveZ = m_densities_3.y < 0;
@@ -119,6 +109,7 @@ void PlayerCamera::setPosition(DirectX::SimpleMath::Vector3 newPosition)
         canMoveY = m_densities_4.w < 0;
     }
 
+    // 2D down conditions
     else if (movingForward && movingDown)
     {
         canMoveZ = m_densities_5.y < 0;
@@ -140,6 +131,7 @@ void PlayerCamera::setPosition(DirectX::SimpleMath::Vector3 newPosition)
         canMoveY = m_densities_6.w < 0;
     }
 
+    // horizontal movement conditions
     else if (movingForward && movingLeft)
     {
         canMoveZ = m_densities_1.y < 0;
@@ -161,6 +153,7 @@ void PlayerCamera::setPosition(DirectX::SimpleMath::Vector3 newPosition)
         canMoveX = m_densities_2.w < 0;
     }
 
+    // 1D movement conditions
     else if (movingForward)
     {
         canMoveZ = m_densities_1.x < 0;
@@ -186,6 +179,7 @@ void PlayerCamera::setPosition(DirectX::SimpleMath::Vector3 newPosition)
         canMoveY = m_densities_7.y < 0;
     }
 
+    // Set movement accordingly 
     if(canMoveX && newPosition.x > 0.0f && newPosition.x < m_boundry.x)
         m_position.x = newPosition.x;
 

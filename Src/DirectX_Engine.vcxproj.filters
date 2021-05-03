@@ -352,7 +352,9 @@
     <ClInclude Include="Simplex3D.h">
       <Filter>Header Files\Proc Gen</Filter>
     </ClInclude>
-    <ClInclude Include="Chest.h" />
+    <ClInclude Include="Chest.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -586,7 +588,9 @@
     <ClCompile Include="Simplex3D.cpp">
       <Filter>Header Files\Proc Gen</Filter>
     </ClCompile>
-    <ClCompile Include="Chest.cpp" />
+    <ClCompile Include="Chest.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

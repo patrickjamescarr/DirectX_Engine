@@ -10,7 +10,6 @@ public:
     void setHeight(float height);
     void setPosition(DirectX::SimpleMath::Vector3 newPosition) override;;
     void setCollision(Collision* collision) { m_collision = collision; }
-    void setDensity(float density) { m_density = density; }
     void setDensities1(DirectX::SimpleMath::Vector4 densities) { m_densities_1 = densities; }
     void setDensities2(DirectX::SimpleMath::Vector4 densities) { m_densities_2 = densities; }
     void setDensities3(DirectX::SimpleMath::Vector4 densities) { m_densities_3 = densities; }
@@ -26,7 +25,6 @@ public:
     int  treasureChestsFound() { return m_chestsFound; }
 private:
     Collision* m_collision;
-    float m_density;
     DirectX::SimpleMath::Vector4 m_densities_1;
     DirectX::SimpleMath::Vector4 m_densities_2;
     DirectX::SimpleMath::Vector4 m_densities_3;
@@ -39,5 +37,7 @@ private:
     DirectX::SimpleMath::Vector3 m_boundry;
 
     int m_chestsFound = 0;
+
+    bool m_collisionDisabled = false;
 };
 

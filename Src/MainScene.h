@@ -79,14 +79,5 @@ private:
 
     // Scene transformation matrix
     DirectX::XMMATRIX m_transform = DirectX::SimpleMath::Matrix::Identity;
-
-
-    CollisionDetection m_collisionDetection;
-
-
-    std::unique_ptr<Collision> m_collisionDetector;
-
-    std::unique_ptr<DirectX::SoundEffect>                                   m_coinsSFX;
-    std::unique_ptr<DirectX::SoundEffectInstance>                           m_coinsEffect;
 };
 

@@ -54,9 +54,6 @@ private:
 
     ID3D11RenderTargetView ** m_bloomRenderTarget;
 
-    //std::unique_ptr<OnScreenQuad> m_quad;
-
-
     RenderTarget* m_buildDensitiesRT;
     std::vector < std::unique_ptr<Bindable>> m_densityVolumeRenderPass;
 
@@ -85,6 +82,7 @@ private:
     int m_yPos;
     float m_fogStart = 0.0f;
     bool m_drawn = false;
+    float m_cubeRadius;
 
     TerrainDensityFunction m_density;
 };

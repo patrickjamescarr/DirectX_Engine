@@ -24,11 +24,12 @@
 ///
 /// 1st pass -  renders a 3D density volume to texture using a density function 
 ///             defined in shader code. Density is calculated in the pixel shader 
-///             and defined by the position of section of terrain.
+///             and defined by the position of the section of terrain.
 ///
 /// 2nd pass -  generates the vertices of the terrain in the geometry shader using the marching
 ///             cubes algorithm. the algorithm samples the 3D density texture to determine where
 ///             geometry is to be placed.
+///
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -83,6 +84,8 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
                 halfBlock + (yIncrement * m_scale),
                 halfBlock + (zIncrement * m_scale)
             );
+
+        m_cubeRadius = sqrtf(pow(halfBlock, 2.0f) + pow(halfBlock, 2.0f));
 
         m_position = Vector3(xPos, yPos, zPos);
         m_worldPosition = Vector3(xPos * scaledOffset, yPos * scaledOffset, zPos * scaledOffset);
@@ -211,8 +214,7 @@ void MarchingCubesGeometryShader::Draw(
     Vector3 pos = Vector3::Transform(m_position, m_accumulatedTransform * m_viewingFrustumTransform);
 
     // cull sections outwith the current view frustum
-    auto cubeRadius = ((float)m_dimention / 2.0f) * m_scale;
-    bool draw = m_frustum->CheckCube(pos.x, pos.y, pos.z, cubeRadius);
+    bool draw = m_frustum->CheckCube(pos.x, pos.y, pos.z, m_cubeRadius);
 
     if (!draw)
     {
@@ -220,10 +222,10 @@ void MarchingCubesGeometryShader::Draw(
     }
 
     // cull sections outwith a certain range to save on draw calls
-    auto playerPos = m_playerCamera->getPosition(); 
+    auto playerPos = m_playerCamera->getPosition();
     auto distance = Vector3::Distance(pos, playerPos);
 
-    if (distance > 30) 
+    if (distance > 33) 
     {
         return;
     }

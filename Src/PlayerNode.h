@@ -8,12 +8,11 @@ class PlayerNode
     : public SceneNode
 {
 public:
-    PlayerNode(DX::DeviceResources& deviceResources, PlayerCamera* playerCamera, Collision* collision);
+    PlayerNode(DX::DeviceResources& deviceResources, PlayerCamera* playerCamera);
     void Draw(DX::DeviceResources& deviceResources, DirectX::SimpleMath::Matrix accumulatedTransform) override;
 private :
     std::vector<std::unique_ptr<Mesh>> m_meshes;
     PlayerCamera* m_playerCamera;
-    Collision* m_collision;
 
     int m_chestsFound = 0;
 };

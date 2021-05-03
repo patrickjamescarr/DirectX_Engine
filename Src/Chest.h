@@ -16,7 +16,8 @@ public:
         DirectX::SimpleMath::Vector3 position,
         Light * sceneLight,
         PlayerCamera* playerCamera,
-        SoundEffect* coinSoundFx
+        SoundEffect* coinSoundFx,
+        float fogDistance
     );
     void Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accumulatedTransform) const override;
     void Update() override;

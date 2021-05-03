@@ -18,9 +18,11 @@ Chest::Chest(
     DirectX::SimpleMath::Vector3 position, 
     Light * sceneLight, 
     PlayerCamera* playerCamera,
-    SoundEffect* coinSoundFx
+    SoundEffect* coinSoundFx,
+    float fogDistance
 )
-    : Mesh(scale * rotation * Matrix::CreateTranslation(position)), m_playerCamera(playerCamera), m_position(position), m_coinSoundFx(coinSoundFx)
+    : Mesh(scale * rotation * Matrix::CreateTranslation(position)), 
+    m_playerCamera(playerCamera), m_position(position), m_coinSoundFx(coinSoundFx), m_fogEnd(fogDistance)
 {
     ModelLoader modelLoader;
     auto chestModel = modelLoader.LoadModel("Models//chest.obj");
@@ -55,7 +57,7 @@ void Chest::Draw(DX::DeviceResources & deviceResources, DirectX::FXMMATRIX accum
 
     auto distance = Vector3::Distance(playerPos, m_position);
 
-    if (distance > 30)
+    if (distance > 35)
     {
         return;
     }

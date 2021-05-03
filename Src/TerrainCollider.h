@@ -9,8 +9,6 @@ class TerrainCollider :
 private:
     struct GSOutput
     {
-        DirectX::SimpleMath::Vector4 position;
-        DirectX::SimpleMath::Vector4 camPosition;
         DirectX::SimpleMath::Vector4 densities1;
         DirectX::SimpleMath::Vector4 densities2;
         DirectX::SimpleMath::Vector4 densities3;
@@ -22,6 +20,8 @@ private:
 public:
     TerrainCollider(DX::DeviceResources& deviceResources, DirectX::SimpleMath::Matrix transform, PlayerCamera* camera);
     void Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accumulatedTransform) const override;
+private:
+    void UpdateDensityValues(DX::DeviceResources & deviceResources) const;
 private:
     PlayerCamera* m_camera;
     std::vector<std::unique_ptr<Bindable>> m_collisionPass;

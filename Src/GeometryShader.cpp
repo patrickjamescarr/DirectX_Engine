@@ -7,12 +7,11 @@ GeometryShader::GeometryShader(DX::DeviceResources& deviceResources, const WCHAR
 
     if (streamOutput) {
 
+        // TODO: Refactor to pass this in when more uses of this are required. OK in here for now 
         D3D11_SO_DECLARATION_ENTRY pDecl[] =
         {
             // semantic name, semantic index, start component, component count, output slot
             // matches GS output
-            { 0, "SV_POSITION", 0, 0, 4, 0 },
-            { 0, "CAMPOSITION", 0, 0, 4, 0 },
             { 0, "DENSITY", 0, 0, 4, 0 },
             { 0, "DENSITY", 1, 0, 4, 0 },
             { 0, "DENSITY", 2, 0, 4, 0 },

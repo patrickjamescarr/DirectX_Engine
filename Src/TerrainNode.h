@@ -17,26 +17,32 @@ public:
         Light* light, 
         PlayerCamera* playerCamera, 
         Camera* activeCamera,
-        ViewingFrustum* frustum, 
-        Collision* collision,
+        ViewingFrustum* frustum,
+        AudioEngine* audioEngine,
         ID3D11RenderTargetView ** bloomRenderTarget
     );
+
     void Draw(DX::DeviceResources& deviceResources, DirectX::SimpleMath::Matrix accumulatedTransform) override;
 private:
-    int m_terrainWidth = 128;
-    int m_terrainHeight = 128;
-    float m_scale = 0.1;
+    void CreateChests(DirectX::AudioEngine * &audioEngine, DX::DeviceResources & deviceResources);
+private:
 
-    std::vector<std::unique_ptr<Mesh>> m_meshes;
+    int m_height = 1;
+    int m_width = 10;
+    int m_length = 10;
+    float m_scale = 0.3f;
 
-    std::unique_ptr<PlayerNode> m_playerNode;
+    std::vector<std::unique_ptr<Mesh>>              m_meshes;
+    std::unique_ptr<PlayerNode>                     m_playerNode;
 
-    float m_isoLevel = 0.0f;
-    float m_fogDistance = 20.0f;
-    int m_dimention = 65;
+    std::unique_ptr<DirectX::SoundEffect>           m_coinsSFX;
 
-    Light* m_light;
-    PlayerCamera* m_playerCamera;
+    Light*          m_light;
+    PlayerCamera*   m_playerCamera;
+
+    float           m_isoLevel = 0.0f;
+    float           m_fogDistance = 20.0f;
+    int             m_dimention = 65;
 
     float m_lightPosX = 0.0f;
     float m_lightPosY = 10.0f;
