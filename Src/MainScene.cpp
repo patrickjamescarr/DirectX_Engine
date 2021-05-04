@@ -15,7 +15,7 @@
 #include "MarchingCubes.h"
 #include "SimplexFunction.h"
 #include "MarchingCubesMesh.h"
-#include "MarchingCubesGeometryShader.h"
+#include "MarchingCubesTerrainBlock.h"
 #include "Chest.h"
 
 using namespace DirectX::SimpleMath;

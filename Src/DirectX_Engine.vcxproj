@@ -216,7 +216,7 @@
     <ClInclude Include="MarchingCubesConstantBufferGS.h" />
     <ClInclude Include="MarchingCubesConstantBufferVS.h" />
     <ClInclude Include="MarchingCubesGenerateConstantBufferVS.h" />
-    <ClInclude Include="MarchingCubesGeometryShader.h" />
+    <ClInclude Include="MarchingCubesTerrainBlock.h" />
     <ClInclude Include="MarchingCubesHeader.h" />
     <ClInclude Include="MarchingCubesMesh.h" />
     <ClInclude Include="Mesh.h" />
@@ -304,7 +304,7 @@
     <ClCompile Include="MarchingCubesConstantBufferGS.cpp" />
     <ClCompile Include="MarchingCubesConstantBufferVS.cpp" />
     <ClCompile Include="MarchingCubesGenerateConstantBufferVS.cpp" />
-    <ClCompile Include="MarchingCubesGeometryShader.cpp" />
+    <ClCompile Include="MarchingCubesTerrainBlock.cpp" />
     <ClCompile Include="MarchingCubesMesh.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="modelclass.cpp" />

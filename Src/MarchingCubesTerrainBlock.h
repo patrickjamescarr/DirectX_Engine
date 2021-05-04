@@ -17,7 +17,7 @@
 #include "TerrainDensityFunction.h"
 #include <thread>
 
-class MarchingCubesGeometryShader :
+class MarchingCubesTerrainBlock :
     public Mesh
 {
 private:
@@ -29,7 +29,7 @@ private:
         float fog;
     };
 public:
-    MarchingCubesGeometryShader(
+    MarchingCubesTerrainBlock(
         DX::DeviceResources& deviceResources,
         Light * sceneLight,
         Camera* activeCamera,

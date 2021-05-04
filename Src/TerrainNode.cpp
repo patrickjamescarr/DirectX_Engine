@@ -2,7 +2,7 @@
 #include "TerrainNode.h"
 #include "Terrain.h"
 #include "BoxCollider.h"
-#include "MarchingCubesGeometryShader.h"
+#include "MarchingCubesTerrainBlock.h"
 #include "Chest.h"
 
 ///
@@ -47,7 +47,7 @@ TerrainNode::TerrainNode(
 
                 //m_meshes.push_back(std::make_unique<BoxCollider>(deviceResources, cubeTransform, Vector3(m_dimention - 1, m_dimention - 1, m_dimention - 1)));
 
-                m_meshes.push_back(std::make_unique<MarchingCubesGeometryShader>(
+                m_meshes.push_back(std::make_unique<MarchingCubesTerrainBlock>(
                     deviceResources, light, playerCamera, frustum, bloomRenderTarget,
                     Matrix::CreateTranslation(Vector3(mcBlockOffset * (float)i, mcBlockOffset * (float)k, mcBlockOffset * (float)j)),
                     i, k, j,

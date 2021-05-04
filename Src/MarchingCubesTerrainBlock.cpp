@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "MarchingCubesGeometryShader.h"
+#include "MarchingCubesTerrainBlock.h"
 #include "GeometryShader.h"
 #include "InputLayout.h"
 #include "Topology.h"
@@ -34,7 +34,7 @@
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
-MarchingCubesGeometryShader::MarchingCubesGeometryShader(
+MarchingCubesTerrainBlock::MarchingCubesTerrainBlock(
     DX::DeviceResources & deviceResources,
     Light * sceneLight,
     Camera* playerCamera,
@@ -204,7 +204,7 @@ MarchingCubesGeometryShader::MarchingCubesGeometryShader(
     }
 }
 
-void MarchingCubesGeometryShader::Draw(
+void MarchingCubesTerrainBlock::Draw(
     DX::DeviceResources & deviceResources,
     FXMMATRIX accumulatedTransform
 ) const noexcept
@@ -240,7 +240,7 @@ void MarchingCubesGeometryShader::Draw(
     RenderCubeTerrain(deviceResources, accumulatedTransform);
 }
 
-void MarchingCubesGeometryShader::RenderCubeTerrain(DX::DeviceResources & deviceResources, const DirectX::XMMATRIX &accumulatedTransform) const
+void MarchingCubesTerrainBlock::RenderCubeTerrain(DX::DeviceResources & deviceResources, const DirectX::XMMATRIX &accumulatedTransform) const
 {
     ID3D11ShaderResourceView* nullSRV[] = { nullptr };
     ID3D11Buffer* nullBuffer[] = { nullptr };
@@ -261,7 +261,7 @@ void MarchingCubesGeometryShader::RenderCubeTerrain(DX::DeviceResources & device
     deviceResources.GetD3DDeviceContext()->GSSetShader(0, 0, 0);
 }
 
-void MarchingCubesGeometryShader::BuildDensityVolumeRenderPass(DX::DeviceResources & deviceResources) const
+void MarchingCubesTerrainBlock::BuildDensityVolumeRenderPass(DX::DeviceResources & deviceResources) const
 {
     // bind the resources for this pass
     for (auto& b : m_densityVolumeRenderPass)
@@ -276,7 +276,7 @@ void MarchingCubesGeometryShader::BuildDensityVolumeRenderPass(DX::DeviceResourc
     deviceResources.GetD3DDeviceContext()->OMSetRenderTargets(1, m_bloomRenderTarget, deviceResources.GetDepthStencilView());
 }
 
-void MarchingCubesGeometryShader::GenerateVerticesRenderPass(DX::DeviceResources & deviceResources) const
+void MarchingCubesTerrainBlock::GenerateVerticesRenderPass(DX::DeviceResources & deviceResources) const
 {
     // set the GS SRV to the 3D density volume created in the first pass.
     // this is used by the marching cubes algorithm to determine where the geometry is located
@@ -296,7 +296,7 @@ void MarchingCubesGeometryShader::GenerateVerticesRenderPass(DX::DeviceResources
     deviceResources.GetD3DDeviceContext()->DrawInstanced(m_generateVertexCount, m_dimention - 1, 0, 0);
 }
 
-void MarchingCubesGeometryShader::Update()
+void MarchingCubesTerrainBlock::Update()
 {
     // perform collision detection to see if the player is inside this cube
     // if so, calculate the players positon relative to the 3D density volume

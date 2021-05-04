@@ -316,9 +316,6 @@
     <ClInclude Include="MarchingCubesConstantBufferVS.h">
       <Filter>Header Files\Bindable\Constant Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="MarchingCubesGeometryShader.h">
-      <Filter>Header Files\Proc Gen</Filter>
-    </ClInclude>
     <ClInclude Include="OnScreenQuad.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
@@ -354,6 +351,9 @@
     </ClInclude>
     <ClInclude Include="Chest.h">
       <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="MarchingCubesTerrainBlock.h">
+      <Filter>Header Files\Proc Gen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -552,9 +552,6 @@
     <ClCompile Include="TransformConstantBufferGS.cpp">
       <Filter>Source Files\Bindable\Constant Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="MarchingCubesGeometryShader.cpp">
-      <Filter>Source Files\Proc Gen</Filter>
-    </ClCompile>
     <ClCompile Include="OnScreenQuad.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
@@ -590,6 +587,9 @@
     </ClCompile>
     <ClCompile Include="Chest.cpp">
       <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="MarchingCubesTerrainBlock.cpp">
+      <Filter>Source Files\Proc Gen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
