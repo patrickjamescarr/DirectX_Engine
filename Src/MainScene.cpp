@@ -37,7 +37,7 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     m_light->setPosition(lightPosition.x, lightPosition.y, lightPosition.z);
     m_light->setDirection(0.0f, 0.0f, 0.0f);
 
-    m_terrainTransform = Matrix::CreateScale(0.1) * Matrix::CreateTranslation(-10.0f, 0.0f, 0.0f);
+    m_terrainTransform = Matrix::Identity;
 
     // store the model mesh pointers in a vector
     std::vector<Mesh*> meshPointers;
@@ -55,9 +55,7 @@ void MainScene::Initialise(DX::DeviceResources & deviceResources, PlayerCamera* 
     m_rootNode = std::make_unique<SceneNode>(std::move(meshPointers), Matrix::Identity);
 
     // create the terrain node
-    m_terrainNode = std::make_unique<TerrainNode>(deviceResources, m_terrainTransform, m_light.get(), m_playerCamera, activeCamera, frustum, audioEngine, m_bloomRenderTarget);
-
-    m_rootNode->AddChild(std::move(m_terrainNode));
+    m_rootNode->AddChild(std::make_unique<TerrainNode>(deviceResources, m_terrainTransform, m_light.get(), m_playerCamera, activeCamera, frustum, audioEngine, m_bloomRenderTarget));
 }
 
 void MainScene::Draw(DX::DeviceResources & deviceResources, const DX::StepTimer& timer) const

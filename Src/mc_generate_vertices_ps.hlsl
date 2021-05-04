@@ -11,7 +11,7 @@ cbuffer LightBuffer : register(b0)
 
 struct InputType
 {
-    float4 wsCoordAmbo  : SV_POSITION;
+    float4 wsCoord  : SV_POSITION;
     float3 wsNormal     : NORMAL;
     float3 position3D   : TEXCOORD2;
     float  fogFactor    : FOG;
@@ -34,24 +34,7 @@ float4 main(InputType input) : SV_TARGET
     color = ambientColor + (diffuseColor * lightIntensity); //adding ambient
     color = saturate(color);
 
-
-    //if (input.wsCoordAmbo.y < -0.6f)
-    //{
-    //    textureColor = float4(0.93f, 0.79f, 0.7f, 1);
-    //}
-    //else if (input.wsCoordAmbo.y < 0.0f)
-    //{
-
-    //}
-    //else if (input.wsCoordAmbo.y < 0.6f)
-    //{
-    //    textureColor = float4(0.439f, 0.502f, 0.565f, 1);
-    //}
-    //else
-    //{
-    //    textureColor = float4(1.0f, 0.98f, 0.98f, 1);
-    //}
-
+    // gray colour for the rock
     textureColor = float4(0.608f, 0.651f, 0.694f, 1.0f);
 
     color = color * textureColor;

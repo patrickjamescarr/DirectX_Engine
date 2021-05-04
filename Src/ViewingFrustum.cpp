@@ -19,7 +19,6 @@ void ViewingFrustum::ConstructFrustum(float screenDepth, DirectX::SimpleMath::Ma
     projection._33 = r;
     projection._43 = -r * zMinimum;
 
-    
     // Create the frustum matrix from the view matrix and updated projection matrix.
     Matrix matrix = DirectX::XMMatrixMultiply(view, projection);
 
@@ -70,10 +69,8 @@ void ViewingFrustum::ConstructFrustum(float screenDepth, DirectX::SimpleMath::Ma
 
 bool ViewingFrustum::CheckCube(float xCenter, float yCenter, float zCenter, float radius)
 {
-    int i;
-
     // Check if any one point of the cube is in the view frustum.
-    for (i = 0; i < 6; i++)
+    for (int i = 0; i < 6; i++)
     {
         if (m_planes[i].DotCoordinate(Vector3((xCenter - radius), (yCenter - radius), (zCenter - radius))) >= 0.0f)
         {

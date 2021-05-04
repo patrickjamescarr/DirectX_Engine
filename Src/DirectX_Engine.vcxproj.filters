@@ -699,15 +699,6 @@
     <FxCompile Include="mc_generate_vertices_vs.hlsl">
       <Filter>Shaders\Marching Cubes</Filter>
     </FxCompile>
-    <FxCompile Include="billboard_gs.hlsl">
-      <Filter>Shaders\Marching Cubes</Filter>
-    </FxCompile>
-    <FxCompile Include="billboard_vs.hlsl">
-      <Filter>Shaders\Marching Cubes</Filter>
-    </FxCompile>
-    <FxCompile Include="billboard_ps.hlsl">
-      <Filter>Shaders\Marching Cubes</Filter>
-    </FxCompile>
     <FxCompile Include="quad_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
@@ -730,9 +721,18 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="terrain_collision_gs.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Marching Cubes</Filter>
     </FxCompile>
     <FxCompile Include="terrain_collision_vs.hlsl">
+      <Filter>Shaders\Marching Cubes</Filter>
+    </FxCompile>
+    <FxCompile Include="billboard_gs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="billboard_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="billboard_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -47,7 +47,6 @@ private:
 private:
     // object containers
 	std::unique_ptr<SceneNode> m_rootNode;
-    std::unique_ptr<SceneNode> m_terrainNode;
 	std::vector<std::unique_ptr<Mesh>> m_meshes;
 
     float m_chestRotation = 0;

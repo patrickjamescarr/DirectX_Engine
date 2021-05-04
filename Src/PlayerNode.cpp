@@ -4,7 +4,7 @@
 #include "TerrainCollider.h"
 
 ///
-/// Terrain Node
+/// Player Node
 ///
 ///
 ///

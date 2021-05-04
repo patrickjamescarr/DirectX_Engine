@@ -21,18 +21,13 @@ OutputType main(InputType input)
 {
     OutputType output;
 
-    //// Change the position vector to be 4 units for proper matrix calculations.
+    // Change the position vector to be 4 units for proper matrix calculations.
     input.position.w = 1.0f;
 
-    //float4 pos = (float4(camPosition.xyz, 1.0f) / 0.12) + 1;
-
-    //pos.x -= 16.50f;
-    //pos.y -= 16.50f;
-
+    // pass the camera position through to the geometry shader
     float4 pos = float4(camPosition.xyz, 1.0f);
 
     output.position = pos;
-
 
     return output;
 }
