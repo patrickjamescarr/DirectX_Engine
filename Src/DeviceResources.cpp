@@ -220,7 +220,7 @@ void DeviceResources::CreateDeviceResources()
         (void) m_d3dContext.As(&m_d3dAnnotation);
     }
 
-    DX::ThrowIfFailed(m_d3dDevice->QueryInterface(IID_PPV_ARGS(&m_debug)));
+    m_d3dDevice->QueryInterface(IID_PPV_ARGS(&m_debug));
 }
 
 // These resources need to be recreated every time the window size is changed.

@@ -660,12 +660,6 @@
     <FxCompile Include="BloomCombine.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="texture_ps.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="texture_vs.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="flare_ps.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>

@@ -154,8 +154,8 @@ void main(
     if (edgeVal == 0)
         return;
 
-    float3 vertlist[12];
-    float3 normList[12];
+    float3 vertlist[12] = { float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0) };
+    float3 normList[12] = { float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0), float3(0,0,0) };
 
     /* Find the vertices and their normals where the surface intersects the cube */
     if (edgeVal & 1)
