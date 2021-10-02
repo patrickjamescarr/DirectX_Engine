@@ -2,7 +2,6 @@
 #include "Chest.h"
 #include "VertexBuffer.h"
 #include "FogConstantBuffer.h"
-#include "Types.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "Sampler.h"
@@ -16,6 +15,8 @@ Chest::Chest(
     DirectX::SimpleMath::Matrix scale, 
     DirectX::SimpleMath::Matrix rotation, 
     DirectX::SimpleMath::Vector3 position, 
+    const MeshObject& chestModel,
+    const MeshObject& coinsModel,
     Light * sceneLight, 
     PlayerCamera* playerCamera,
     SoundEffect* coinSoundFx,
@@ -24,9 +25,6 @@ Chest::Chest(
     : Mesh(scale * rotation * Matrix::CreateTranslation(position)), 
     m_playerCamera(playerCamera), m_position(position), m_coinSoundFx(coinSoundFx), m_fogEnd(fogDistance)
 {
-    ModelLoader modelLoader;
-    auto chestModel = modelLoader.LoadModel("Models//chest.obj");
-
     auto transform = scale * rotation * Matrix::CreateTranslation(position);
 
     // create and return the mesh
@@ -36,9 +34,6 @@ Chest::Chest(
     m_chestMesh->AddBind((std::make_unique<FogConstantBuffer>(deviceResources, &m_fogEnd, playerCamera, ShaderType::Vertex, 1)));
     // Create the index buffer
     m_chestMesh->AddIndexBuffer(std::make_unique<IndexBuffer>(deviceResources, chestModel.indices));
-
-
-    auto coinsModel = modelLoader.LoadModel("Models//coins.obj");
 
     // create and return the mesh
     m_coinsMesh = std::make_unique<Mesh>(deviceResources, sceneLight, transform, L"Textures//coins.dds", L"fog_vs.cso", L"fog_ps.cso", D3D11_CULL_FRONT);

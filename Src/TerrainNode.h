@@ -50,5 +50,8 @@ private:
     float m_lightDirX = 0.0f;
     float m_lightDirY = -1.0f;
     float m_lightDirZ = 0.0f;
+
+    MeshObject m_chestModel;
+    MeshObject m_coinsModel;
 };
 

@@ -1,9 +1,7 @@
 #pragma once
+#include "Types.h"
 #include "Mesh.h"
-#include "ModelLoader.h"
 #include "PlayerCamera.h"
-#include "ModelLoader.h"
-
 
 class Chest :
     public Mesh
@@ -14,6 +12,8 @@ public:
         DirectX::SimpleMath::Matrix scale,
         DirectX::SimpleMath::Matrix rotation,
         DirectX::SimpleMath::Vector3 position,
+        const MeshObject& chestModel,
+        const MeshObject& coinsModel,
         Light * sceneLight,
         PlayerCamera* playerCamera,
         SoundEffect* coinSoundFx,
