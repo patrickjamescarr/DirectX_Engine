@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include "CollisionDetection.h"
 #include "Types.h"
 
