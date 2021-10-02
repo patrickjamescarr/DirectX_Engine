@@ -6,7 +6,6 @@
 #include "fBm.h"
 #include "CollisionDetection.h"
 #include "PlayerCamera.h"
-#include "Types.h"
 #include "ViewingFrustum.h"
 #include "QuadTree.h"
 

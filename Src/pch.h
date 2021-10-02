@@ -70,6 +70,8 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
+#include "Types.h"
+
 namespace DX
 {
     // Helper class for COM exceptions

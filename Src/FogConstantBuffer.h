@@ -4,7 +4,6 @@
 #include "VertexConstantBuffer.h"
 #include "PixelConstantBuffer.h"
 #include "Camera.h"
-#include "Types.h"
 
 class FogConstantBuffer :
     public Bindable

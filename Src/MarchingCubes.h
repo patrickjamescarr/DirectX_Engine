@@ -1,8 +1,6 @@
 #pragma once
-#include "Types.h"
 #include "MarchingCubesHeader.h"
 #include "DensityFunction.h"
-#include <map>
 
 class MarchingCubes
 {

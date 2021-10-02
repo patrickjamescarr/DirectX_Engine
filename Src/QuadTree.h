@@ -1,7 +1,6 @@
 #pragma once
 #include "Bindable.h"
 #include "ViewingFrustum.h"
-#include "Types.h"
 #include "CollisionDetection.h"
 
 class QuadTree

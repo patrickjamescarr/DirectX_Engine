@@ -1,6 +1,4 @@
 #pragma once
-#include "pch.h"
-#include "VertexTypes.h"
 
 struct MeshObject {
     int vertexCount;

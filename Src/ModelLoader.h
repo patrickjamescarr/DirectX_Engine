@@ -1,6 +1,5 @@
 #pragma once
 #include "CollisionDetection.h"
-#include "Types.h"
 
 class ModelLoader
 {

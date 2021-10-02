@@ -1,5 +1,4 @@
 #pragma once
-#include "Types.h"
 #include "Mesh.h"
 #include "PlayerCamera.h"
 
