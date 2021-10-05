@@ -263,15 +263,12 @@
     <ClInclude Include="ViewingFrustum.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Bindable.cpp" />
     <ClCompile Include="BloomConstantBuffer.cpp" />
     <ClCompile Include="BloomPostProcessEffect.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
-    <ClCompile Include="BrownianFunction.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraConstantBuffer.cpp" />
     <ClCompile Include="Chest.cpp" />
-    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CollisionDetection.cpp" />
     <ClCompile Include="CubeTexture.cpp" />
     <ClCompile Include="DensityFunction.cpp" />
@@ -328,7 +325,6 @@
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Simplex3D.cpp" />
-    <ClCompile Include="SimplexFunction.cpp" />
     <ClCompile Include="SimplexNoise.cpp" />
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="SkyboxConstantBuffer.cpp" />
@@ -343,7 +339,6 @@
     <ClCompile Include="Topology.cpp" />
     <ClCompile Include="TransformConstantBufferGS.cpp" />
     <ClCompile Include="TransformConstantBufferVS.cpp" />
-    <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="ViewingFrustum.cpp" />
   </ItemGroup>

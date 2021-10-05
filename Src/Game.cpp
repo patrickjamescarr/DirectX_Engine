@@ -142,7 +142,6 @@ void Game::Tick()
             m_playerCamera->initPosition(m_currentPosition);
             m_playerCamera->setHeight(m_currentPosition.y);
             m_playerCamera->setRotation(m_currentRotation);
-            UpdateCameraView();
         }
         else
         {
@@ -154,8 +153,9 @@ void Game::Tick()
             m_playerCamera->initPosition(m_titlePosition);
             m_playerCamera->setHeight(m_titlePosition.y);
             m_playerCamera->setRotation(m_titleRotation);
-            UpdateCameraView();
         }
+
+        UpdateCameraView();
     }
 
     if (m_input.AllowGameInput())

@@ -387,13 +387,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Bindable.cpp">
-      <Filter>Source Files\Bindable</Filter>
-    </ClCompile>
     <ClCompile Include="IndexBuffer.cpp">
-      <Filter>Source Files\Bindable</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexBuffer.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
     <ClCompile Include="InputLayout.cpp">
@@ -501,20 +495,11 @@
     <ClCompile Include="ViewingFrustum.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Collision.cpp">
-      <Filter>Source Files\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="QuadTree.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="MarchingCubes.cpp">
       <Filter>Source Files\Proc Gen</Filter>
-    </ClCompile>
-    <ClCompile Include="SimplexFunction.cpp">
-      <Filter>Source Files\Proc Gen\Functions</Filter>
-    </ClCompile>
-    <ClCompile Include="BrownianFunction.cpp">
-      <Filter>Source Files\Proc Gen\Functions</Filter>
     </ClCompile>
     <ClCompile Include="MarchingCubesMesh.cpp">
       <Filter>Source Files\Proc Gen</Filter>
