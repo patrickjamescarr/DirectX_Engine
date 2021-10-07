@@ -4,20 +4,14 @@
 #ifndef _MODELCLASS_H_
 #define _MODELCLASS_H_
 
-
 //////////////
 // INCLUDES //
 //////////////
 #include "pch.h"
 #include "Light.h"
-#include <fstream>
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "DeviceResources.h"
-
-//#include <d3dx10math.h>
-//#include <fstream>
-//using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: ModelClass

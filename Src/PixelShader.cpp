@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "PixelShader.h"
-#include <d3dcompiler.h>
 
 PixelShader::PixelShader(DX::DeviceResources & deviceResources, const  WCHAR * fileName)
     : m_deviceResources(deviceResources)

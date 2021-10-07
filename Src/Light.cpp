@@ -3,7 +3,6 @@
 #include "pch.h"
 #include "light.h"
 
-
 Light::Light()
 {
 	m_ambientColour	=	DirectX::SimpleMath::Vector4(0.0f,0.0f,0.0f, 0.0f);

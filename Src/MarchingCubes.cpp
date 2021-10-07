@@ -1,8 +1,5 @@
 #include "pch.h"
 #include "MarchingCubes.h"
-#include <sstream> 
-#include <iostream>
-#include <map>
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;

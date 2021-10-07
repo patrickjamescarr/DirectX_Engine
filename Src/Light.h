@@ -6,8 +6,6 @@
 #ifndef _LIGHT_H_
 #define _LIGHT_H_
 
-#include <directxmath.h>
-
 using namespace DirectX;
 
 class Light

@@ -6,18 +6,6 @@
 #include "Game.h"
 #include "PlayerCamera.h"
 
-
-//toreorganise
-#include <fstream>
-#include <comdef.h>
-
-// Mouse tutorial globals
-namespace
-{
-    const XMVECTORF32 START_POSITION = { 0.f, -1.5f, 0.f, 0.f };
-    const XMVECTORF32 ROOM_BOUNDS = { 8.f, 6.f, 12.f, 0.f };
-}
-
 extern void ExitGame();
 
 using namespace DirectX;

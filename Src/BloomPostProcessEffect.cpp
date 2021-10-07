@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "BloomPostProcessEffect.h"
 
+using namespace DirectX;
+
 BloomPostProcessEffect::BloomPostProcessEffect(DX::DeviceResources & deviceResources)
 {
     m_deviceContext = deviceResources.GetD3DDeviceContext();

@@ -1,13 +1,10 @@
 #pragma once
-#include "pch.h"
-
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "PixelShader.h"
 #include "VertexShader.h"
 #include "InputLayout.h"
 #include "Bindable.h"
-#include "RenderTexture.h"
 #include "BloomConstantBuffer.h"
 #include "GaussianBlurConstantBuffer.h"
 #include "Texture.h"

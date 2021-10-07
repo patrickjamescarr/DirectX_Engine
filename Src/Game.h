@@ -5,13 +5,11 @@
 
 #include "DeviceResources.h"
 #include "StepTimer.h"
-#include "Shader.h"
 #include "modelclass.h"
 #include "Light.h"
 #include "Input.h"
 #include "Camera.h"
 #include "PlayerCamera.h"
-#include "RenderTexture.h"
 #include "MainScene.h"
 #include "SkyBox.h"
 #include "ViewingFrustum.h"

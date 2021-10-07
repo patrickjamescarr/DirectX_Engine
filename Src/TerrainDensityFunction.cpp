@@ -1,8 +1,5 @@
 #include "pch.h"
 #include "TerrainDensityFunction.h"
-#include <math.h>
-#include <algorithm>
-
 
 using namespace DirectX::SimpleMath;
 

@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "ModelLoader.h"
-#include <iostream>
-#include <fstream>
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;

@@ -12,11 +12,7 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <exception>
-#include <fstream>
-#include <vector>
-
+#include "pch.h"
 
 namespace DX
 {

@@ -2,9 +2,6 @@
 #include "pch.h"
 #include "Game.h"
 
-#ifdef DXTK_AUDIO
-#include <Dbt.h>
-#endif
 using namespace DirectX;
 
 namespace

@@ -15,7 +15,6 @@
 #include "HeightMapTerrain.h"
 #include "StreamOutput.h"
 #include "TerrainDensityFunction.h"
-#include <thread>
 
 class MarchingCubesTerrainBlock :
     public Mesh
@@ -45,10 +44,12 @@ public:
         float scale
         );
     void Draw(DX::DeviceResources& deviceResources, DirectX::FXMMATRIX accumulatedTransform) const noexcept override;
+    void Update() override;
+private:
     void RenderCubeTerrain(DX::DeviceResources & deviceResources, const DirectX::XMMATRIX &accumulatedTransform) const;
     void BuildDensityVolumeRenderPass(DX::DeviceResources & deviceResources) const;
     void GenerateVerticesRenderPass(DX::DeviceResources & deviceResources) const;
-    virtual void Update();
+
 private:
     DX::DeviceResources & m_deviceResources;
 

@@ -9,7 +9,6 @@
 #include "DepthStencil.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
-#include "Shader.h"
 #include "InputLayout.h"
 #include "Sampler.h"
 

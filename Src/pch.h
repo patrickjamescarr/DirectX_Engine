@@ -36,19 +36,30 @@
 
 #include <wrl/client.h>
 
+#include <d3d11.h>
 #include <d3d11_1.h>
 #include <DirectXMath.h>
 #include <DirectXColors.h>
+#include <d3dcompiler.h>
 
 #include <algorithm>
 #include <exception>
 #include <memory>
 #include <stdexcept>
 #include <vector>
-
+#include <cmath>
+#include <math.h>
+#include <stdint.h>
 #include <stdio.h>
+#include <fstream>
+#include <comdef.h>
+
+#include <sstream> 
+#include <iostream>
+#include <map>
 
 #ifdef DXTK_AUDIO
+#include <Dbt.h>
 #include "Audio.h"
 #endif
 

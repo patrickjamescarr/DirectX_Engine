@@ -4,9 +4,7 @@
 
 #pragma once
 
-#include <cmath>
-#include <exception>
-#include <stdint.h>
+#include "pch.h"
 
 namespace DX
 {

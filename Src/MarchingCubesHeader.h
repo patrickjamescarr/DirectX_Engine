@@ -1,5 +1,5 @@
 #pragma once
-#include <SimpleMath.h>
+#include "pch.h"
 
 typedef struct {
     DirectX::SimpleMath::Vector3 p[3];
