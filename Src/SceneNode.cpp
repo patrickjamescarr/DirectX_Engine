@@ -19,7 +19,7 @@ void SceneNode::Draw(DX::DeviceResources& deviceResources, const DirectX::Simple
 	const auto newTransform = m_transform * accumulatedTransform;
 
 	// draw all the mesh obejcts, passing in the updated transform
-	for (const auto mesh : m_meshes)
+	for (const auto& mesh : m_meshes)
 	{
         mesh->Update();
 		mesh->Draw(deviceResources, newTransform);
