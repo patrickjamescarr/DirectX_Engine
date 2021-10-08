@@ -13,7 +13,7 @@ SceneNode::SceneNode(const DirectX::SimpleMath::Matrix & transform)
 /// <summary>
 /// Draw the meshes in this node, and all the child nodes
 /// </summary>
-void SceneNode::Draw(DX::DeviceResources& deviceResources, DirectX::SimpleMath::Matrix accumulatedTransform)
+void SceneNode::Draw(DX::DeviceResources& deviceResources, const DirectX::SimpleMath::Matrix& accumulatedTransform)
 {
 	// multiply the accumulated transform passed in with the current transform to create an updated transfom
 	const auto newTransform = m_transform * accumulatedTransform;

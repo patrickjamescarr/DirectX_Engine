@@ -9,7 +9,7 @@ class PlayerNode
 {
 public:
     PlayerNode(DX::DeviceResources& deviceResources, PlayerCamera* playerCamera);
-    void Draw(DX::DeviceResources& deviceResources, DirectX::SimpleMath::Matrix accumulatedTransform) override;
+    void Draw(DX::DeviceResources& deviceResources, const DirectX::SimpleMath::Matrix& accumulatedTransform) override;
 private :
     std::vector<std::unique_ptr<Mesh>> m_meshes;
     PlayerCamera* m_playerCamera;

@@ -10,7 +10,7 @@ class SceneNode
 public:
 	SceneNode(std::vector<Mesh*> meshes, const DirectX::SimpleMath::Matrix & transform);
     SceneNode(const DirectX::SimpleMath::Matrix & transform);
-    virtual void Draw(DX::DeviceResources& deviceResources, DirectX::SimpleMath::Matrix accumulatedTransform);
+    virtual void Draw(DX::DeviceResources& deviceResources, const DirectX::SimpleMath::Matrix& accumulatedTransform);
 protected:
     void AddMesh(Mesh* mesh);
     void AddChild(std::unique_ptr<SceneNode> node);

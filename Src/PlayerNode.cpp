@@ -25,7 +25,7 @@ PlayerNode::PlayerNode(DX::DeviceResources & deviceResources, PlayerCamera * pla
     }
 }
 
-void PlayerNode::Draw(DX::DeviceResources & deviceResources, DirectX::SimpleMath::Matrix accumulatedTransform)
+void PlayerNode::Draw(DX::DeviceResources & deviceResources, const DirectX::SimpleMath::Matrix& accumulatedTransform)
 {
     m_transform = Matrix::CreateTranslation(m_playerCamera->getPosition());
 

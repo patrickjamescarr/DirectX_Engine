@@ -25,3 +25,4 @@ void PixelShader::Set()
 {
     m_deviceResources.GetD3DDeviceContext()->PSSetShader(m_pixelShader.Get(), nullptr, 0);
 }
+

@@ -22,7 +22,7 @@ public:
         ID3D11RenderTargetView ** bloomRenderTarget
     );
 
-    void Draw(DX::DeviceResources& deviceResources, DirectX::SimpleMath::Matrix accumulatedTransform) override;
+    void Draw(DX::DeviceResources& deviceResources, const DirectX::SimpleMath::Matrix& accumulatedTransform) override;
 private:
     void CreateChests(DirectX::AudioEngine * &audioEngine, DX::DeviceResources & deviceResources);
 private:

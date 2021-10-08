@@ -108,7 +108,7 @@ void TerrainNode::CreateChests(DirectX::AudioEngine * &audioEngine, DX::DeviceRe
     m_meshes.push_back(std::make_unique<Chest>(deviceResources, crateScale, Matrix::CreateRotationY(2.5), Vector3(143.5, 0.2f, 129.67), m_chestModel, m_coinsModel, m_light, m_playerCamera, m_coinsSFX.get(), m_fogDistance));
 }
 
-void TerrainNode::Draw(DX::DeviceResources & deviceResources, DirectX::SimpleMath::Matrix accumulatedTransform)
+void TerrainNode::Draw(DX::DeviceResources & deviceResources, const DirectX::SimpleMath::Matrix& accumulatedTransform)
 {
     //ImGui::End();
 
